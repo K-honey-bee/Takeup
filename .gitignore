@@ -1,0 +1,16 @@
+# Unity generated files and local builds
+**/[Ll]ibrary/
+**/[Tt]emp/
+**/[Oo]bj/
+**/[Bb]uilds/
+**/[Ll]ogs/
+**/[Uu]ser[Ss]ettings/
+**/.vs/
+*.csproj
+*.sln
+*.slnx
+*.user
+*.pidb
+*.booproj
+*.unityproj
+*.log

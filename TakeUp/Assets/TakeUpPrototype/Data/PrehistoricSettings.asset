@@ -1,0 +1,132 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a8267b01a885e845a79d15139df9ba4, type: 3}
+  m_Name: PrehistoricSettings
+  m_EditorClassIdentifier: Assembly-CSharp::TakeUp.Prototype.SurvivalSettings
+  playerSprite: {fileID: 0}
+  playerTint: {r: 0.97, g: 0.74, b: 0.35, a: 1}
+  playerSize: 0.8
+  maxHealth: 100
+  moveSpeed: 5
+  hurtInvulnerability: 0.6
+  stoneSprite: {fileID: 0}
+  stoneTint: {r: 0.85, g: 0.88, b: 0.86, a: 1}
+  stoneDamage: 18
+  stoneInterval: 0.65
+  stoneSpeed: 12
+  attackRange: 10
+  stoneSize: 0.25
+  spearSprite: {fileID: 0}
+  spearTint: {r: 1, g: 0.8, b: 0.45, a: 1}
+  spearDamage: 32
+  spearInterval: 1.5
+  spearSpeed: 16
+  spearSize: {x: 0.8, y: 0.18}
+  experienceSprite: {fileID: 0}
+  experienceTint: {r: 0.3, g: 1, b: 0.7, a: 1}
+  firstLevelExperience: 6
+  experienceGrowth: 4
+  pickupRadius: 2
+  pickupSpeed: 10
+  groundSprite: {fileID: 0}
+  groundTint: {r: 0.12, g: 0.19, b: 0.16, a: 1}
+  arenaHalfSize: {x: 32, y: 24}
+  cameraSize: 9
+  maxAliveEnemies: 100
+  waveDuration: 30
+  stageDuration: 180
+  initialSpawnInterval: 0.9
+  minimumSpawnInterval: 0.18
+  spawnIntervalMultiplierPerWave: 0.78
+  healthGrowthPerWave: 0.25
+  damageGrowthPerWave: 0.12
+  enemies:
+  - displayName: "\uC791\uC740 \uC57C\uC218"
+    sprite: {fileID: 0}
+    tint: {r: 0.8, g: 0.36, b: 0.3, a: 1}
+    size: 0.75
+    health: 28
+    speed: 1.65
+    damage: 8
+    experience: 1
+    firstWave: 1
+    spawnWeight: 1
+  - displayName: "\uB0A0\uC318 \uC57C\uC218"
+    sprite: {fileID: 0}
+    tint: {r: 0.8, g: 0.65, b: 0.28, a: 1}
+    size: 0.55
+    health: 20
+    speed: 2.8
+    damage: 6
+    experience: 2
+    firstWave: 2
+    spawnWeight: 0.5
+  - displayName: "\uD070 \uC57C\uC218"
+    sprite: {fileID: 0}
+    tint: {r: 0.53, g: 0.4, b: 0.75, a: 1}
+    size: 1.3
+    health: 85
+    speed: 1.1
+    damage: 16
+    experience: 4
+    firstWave: 3
+    spawnWeight: 0.3
+  augments:
+  - title: "\uB0A0\uCE74\uB85C\uC6B4 \uB3CC"
+    description: "\uB3CC\uACFC \uCC3D\uC758 \uD53C\uD574\uB7C9 +25%"
+    icon: {fileID: 0}
+    kind: 0
+    amount: 0.25
+    maxStacks: 8
+  - title: "\uC7AC\uBE60\uB978 \uC190"
+    description: "\uB3CC\uACFC \uCC3D\uC758 \uACF5\uACA9 \uC18D\uB3C4 +20%"
+    icon: {fileID: 0}
+    kind: 1
+    amount: 0.2
+    maxStacks: 6
+  - title: "\uC0AC\uB0E5\uAFBC\uC758 \uBC1C"
+    description: "\uC774\uB3D9 \uC18D\uB3C4 +15%"
+    icon: {fileID: 0}
+    kind: 2
+    amount: 0.15
+    maxStacks: 4
+  - title: "\uAC15\uC778\uD55C \uBAB8"
+    description: "\uCD5C\uB300 \uCCB4\uB825 +25\n\uCCB4\uB825 25 \uD68C\uBCF5"
+    icon: {fileID: 0}
+    kind: 3
+    amount: 25
+    maxStacks: 6
+  - title: "\uCC44\uC9D1 \uBCF8\uB2A5"
+    description: "\uACBD\uD5D8\uCE58 \uD68D\uB4DD \uBC18\uACBD +1.2"
+    icon: {fileID: 0}
+    kind: 4
+    amount: 1.2
+    maxStacks: 5
+  - title: "\uD55C \uC90C\uC758 \uB3CC"
+    description: "\uB3D9\uC2DC\uC5D0 \uB358\uC9C0\uB294 \uB3CC +1"
+    icon: {fileID: 0}
+    kind: 5
+    amount: 1
+    maxStacks: 3
+  - title: "\uCCAB \uBC88\uC9F8 \uCC3D"
+    description: "\uC790\uB3D9 \uCC3D \uB358\uC9C0\uAE30 \uD574\uAE08\n\uD55C \uBC88\uC5D0
+      \uC801 3\uB9C8\uB9AC \uAD00\uD1B5"
+    icon: {fileID: 0}
+    kind: 6
+    amount: 1
+    maxStacks: 1
+  - title: "\uC790\uC5F0 \uD68C\uBCF5"
+    description: "\uB9E4\uCD08 \uCCB4\uB825 1 \uD68C\uBCF5"
+    icon: {fileID: 0}
+    kind: 7
+    amount: 1
+    maxStacks: 4
