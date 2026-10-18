@@ -130,3 +130,42 @@ MonoBehaviour:
     kind: 7
     amount: 1
     maxStacks: 4
+  - title: "[\uC804\uC124] \uBC1C\uAD6C\uB974\uAE30 \uB304\uC2A4"
+    description: "Q: \uC81C\uC790\uB9AC \uB9AC\uB4EC \uC758\uC2DD\n\uC804\uBD80 \uC131\uACF5\uD558\uBA74
+      \uAC70\uB300\uD55C \uCDA9\uACA9\uD30C!"
+    icon: {fileID: 0}
+    kind: 8
+    amount: 1
+    maxStacks: 1
+  dashDistance: 3.5
+  dashDuration: 0.18
+  dashCooldown: 2
+  dashSound: {fileID: 0}
+  dance:
+    startUnlocked: 1
+    sequence: 00000000010000000000000001000000000000000000000001000000
+    bpm: 110
+    firstBeatTime: 1.5
+    hitWindow: 0.16
+    enemyTimeScale: 0.15
+    finalZoomRatio: 0.5
+    beatZoomKick: 0.25
+    cameraReturnSpeed: 7
+    cooldown: 12
+    damage: 100
+    radius: 14
+    waveSpeed: 20
+    shockwaveColor: {r: 1, g: 0.78, b: 0.3, a: 0.85}
+    danceFrames: []
+    shockwaveSprite: {fileID: 0}
+    leftArrow: {fileID: 0}
+    rightArrow: {fileID: 0}
+    panelSprite: {fileID: 0}
+    music: {fileID: 0}
+    beatSound: {fileID: 0}
+    hitSound: {fileID: 0}
+    successSound: {fileID: 0}
+    failureSound: {fileID: 0}
+    volume: 0.6
+    playMetronome: 1
+    inputLatencyOffset: 0

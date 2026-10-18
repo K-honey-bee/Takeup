@@ -5,9 +5,9 @@ using UnityEngine.SceneManagement;
 
 namespace TakeUp.Prototype
 {
-    public enum RunState { Playing, ChoosingAugment, Paused, Dead, BossReady }
+    public enum RunState { Playing, ChoosingAugment, Paused, Dead, BossReady, Dancing, Codex }
 
-    public sealed class SurvivalGame : MonoBehaviour
+    public sealed partial class SurvivalGame : MonoBehaviour
     {
         [Tooltip("모든 이미지와 수치를 이 설정 에셋에서 교체합니다.")]
         public SurvivalSettings settings;
@@ -82,25 +82,33 @@ namespace TakeUp.Prototype
             worldCamera.transform.SetPositionAndRotation(new Vector3(0, 0, -10), Quaternion.identity);
             worldCamera.clearFlags = CameraClearFlags.SolidColor;
             worldCamera.backgroundColor = new Color(0.035f, 0.06f, 0.055f);
+            if (settings.dance == null) settings.dance = new StompDanceSettings();
             if (hud == null) hud = gameObject.AddComponent<SurvivalHud>();
             hud.Initialize(this);
             State = RunState.Playing;
+            InitializeSkills();
             smokeMode = System.Array.IndexOf(System.Environment.GetCommandLineArgs(), "--takeup-smoke") >= 0;
             if (smokeMode) gameObject.AddComponent<SurvivalSmokeTest>().game = this;
+            if (System.Array.IndexOf(System.Environment.GetCommandLineArgs(), "--takeup-dance-smoke") >= 0)
+                gameObject.AddComponent<DanceSmokeTest>().game = this;
         }
 
         void Update()
         {
             var keyboard = Keyboard.current;
             if (keyboard != null && keyboard.escapeKey.wasPressedThisFrame) TogglePause();
+            if (keyboard != null && keyboard.tabKey.wasPressedThisFrame) ToggleCodex();
             if (State == RunState.ChoosingAugment && keyboard != null)
             {
                 if (keyboard.digit1Key.wasPressedThisFrame) ChooseAugment(0);
                 else if (keyboard.digit2Key.wasPressedThisFrame) ChooseAugment(1);
                 else if (keyboard.digit3Key.wasPressedThisFrame) ChooseAugment(2);
             }
+            if (State == RunState.Dancing) { TickDance(Time.unscaledDeltaTime); return; }
             if (State != RunState.Playing) return;
             float dt = Mathf.Min(Time.deltaTime, 0.05f);
+            TickSkills(dt);
+            if (keyboard != null && keyboard.qKey.wasPressedThisFrame && StartDance()) return;
             Elapsed += dt;
             invulnerability = Mathf.Max(0, invulnerability - dt);
             Health = Mathf.Min(MaximumHealth, Health + regeneration * dt);
@@ -114,7 +122,9 @@ namespace TakeUp.Prototype
             }
             if (Gamepad.current != null && Gamepad.current.leftStick.ReadValue().sqrMagnitude > input.sqrMagnitude)
                 input = Gamepad.current.leftStick.ReadValue();
-            MovePlayer(input, dt);
+            if (input.sqrMagnitude > 0.01f) lastDirection = input.normalized;
+            if (keyboard != null && (keyboard.leftShiftKey.wasPressedThisFrame || keyboard.rightShiftKey.wasPressedThisFrame)) StartDash();
+            if (dashRemaining > 0) TickDash(dt); else MovePlayer(input, dt);
             playerRenderer.color = invulnerability > 0 ? Color.Lerp(settings.playerTint, Color.white, 0.65f) : settings.playerTint;
             TickSpawner(dt);
             TickEnemies(dt);
@@ -130,6 +140,7 @@ namespace TakeUp.Prototype
             if (player == null || worldCamera == null) return;
             Vector3 target = player.position + Vector3.back * 10;
             worldCamera.transform.position = Vector3.Lerp(worldCamera.transform.position, target, 1 - Mathf.Exp(-10 * Time.unscaledDeltaTime));
+            UpdateSkillCamera();
         }
 
         public void MovePlayer(Vector2 input, float dt)
@@ -362,20 +373,28 @@ namespace TakeUp.Prototype
                 case AugmentKind.ExtraStone: stoneCount += Mathf.Max(1, Mathf.RoundToInt(augment.amount)); break;
                 case AugmentKind.Spear: HasSpear = true; break;
                 case AugmentKind.Regeneration: regeneration += augment.amount; break;
+                case AugmentKind.StompDance: break;
             }
         }
 
         public void DamagePlayer(float amount)
         {
-            if (State != RunState.Playing || invulnerability > 0 || amount <= 0) return;
+            if (State != RunState.Playing || invulnerability > 0 || dashRemaining > 0 || amount <= 0) return;
             Health = Mathf.Max(0, Health - amount); invulnerability = settings.hurtInvulnerability;
             if (Health <= 0) { State = RunState.Dead; hud.ShowEnd(false); }
         }
 
         public void TogglePause()
         {
-            if (State == RunState.Playing) { State = RunState.Paused; hud.ShowPause(); }
-            else if (State == RunState.Paused) { State = RunState.Playing; hud.HideOverlay(); }
+            if (State == RunState.Codex) { ToggleCodex(); return; }
+            if (State == RunState.Playing || State == RunState.Dancing)
+            {
+                pausedState = State; PauseSkillAudio(); State = RunState.Paused; hud.ShowPause();
+            }
+            else if (State == RunState.Paused)
+            {
+                State = pausedState; ResumeSkillAudio(); hud.HideOverlay();
+            }
         }
 
         public void FinishStage()
@@ -437,6 +456,7 @@ namespace TakeUp.Prototype
 
         void OnDestroy()
         {
+            CleanupSkills();
             foreach (var sprite in generatedSprites) if (sprite != null) { Destroy(sprite.texture); Destroy(sprite); }
         }
     }

@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace TakeUp.Prototype
 {
-    public sealed class SurvivalHud : MonoBehaviour
+    public sealed partial class SurvivalHud : MonoBehaviour
     {
         SurvivalGame game;
         Font font;
@@ -42,11 +42,12 @@ namespace TakeUp.Prototype
             equipment = Label(header, "", 15, new Color(0.7f, 0.78f, 0.76f), new Vector2(460, -50), new Vector2(740, 28));
             stageFill = Bar(header, "Stage", new Vector2(460, -86), new Vector2(740, 5), gold);
             var footer = Panel(root, "Controls", ink, Vector2.zero, new Vector2(1, 0), new Vector2(18, 16), new Vector2(-18, 58));
-            Label(footer, "WASD / 방향키  이동     ·     자동 공격     ·     1 / 2 / 3  증강 선택     ·     ESC  일시정지", 16,
+            Label(footer, "WASD 이동 · Shift 대시 · Q 발구르기 · 춤: A/D 또는 ←/→ · Tab 증강 · ESC 정지", 16,
                 new Color(0.75f, 0.81f, 0.79f), new Vector2(20, -6), new Vector2(1200, 30));
             overlay = Panel(root, "Overlay", new Color(0.015f, 0.03f, 0.03f, 0.92f), Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
             content = Panel(overlay, "Content", Color.clear, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(-530, -230), new Vector2(530, 230));
             HideOverlay();
+            InitializeSkillHud();
         }
 
         void Update()
@@ -60,6 +61,7 @@ namespace TakeUp.Prototype
             Fill(xpFill, (float)game.Experience / game.RequiredExperience);
             Fill(stageFill, game.Elapsed / game.settings.stageDuration);
             equipment.text = $"돌 던지기  ·  {(game.HasSpear ? "관통 창 장착" : "창 미해금")}     |     생존 목표 {game.settings.stageDuration:0}초";
+            RefreshSkillHud();
         }
 
         public void ShowChoices()

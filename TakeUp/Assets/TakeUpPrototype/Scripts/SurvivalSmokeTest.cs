@@ -83,6 +83,7 @@ namespace TakeUp.Prototype
             var oldMode = canvas.renderMode;
             var oldCamera = canvas.worldCamera;
             var oldDistance = canvas.planeDistance;
+            var oldOrder = canvas.sortingOrder;
             var target = new RenderTexture(1280, 720, 24);
             var previous = RenderTexture.active;
             Texture2D image = null;
@@ -91,6 +92,7 @@ namespace TakeUp.Prototype
                 canvas.renderMode = RenderMode.ScreenSpaceCamera;
                 canvas.worldCamera = game.worldCamera;
                 canvas.planeDistance = 1;
+                canvas.sortingOrder = 1000;
                 Canvas.ForceUpdateCanvases();
                 UnityEngine.Rendering.RenderPipeline.SubmitRenderRequest(game.worldCamera,
                     new UnityEngine.Rendering.RenderPipeline.StandardRequest { destination = target });
@@ -103,6 +105,7 @@ namespace TakeUp.Prototype
             {
                 RenderTexture.active = previous;
                 canvas.renderMode = oldMode; canvas.worldCamera = oldCamera; canvas.planeDistance = oldDistance;
+                canvas.sortingOrder = oldOrder;
                 target.Release(); Destroy(target); if (image != null) Destroy(image);
             }
         }

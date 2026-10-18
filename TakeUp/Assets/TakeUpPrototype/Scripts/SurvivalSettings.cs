@@ -52,6 +52,13 @@ namespace TakeUp.Prototype
         public EnemyDefinition[] enemies;
         [Header("레벨업 카드 / Three random choices")]
         public AugmentDefinition[] augments;
+        [Header("대시 / Shift")]
+        [Min(0.1f)] public float dashDistance = 3.5f;
+        [Min(0.05f)] public float dashDuration = 0.18f;
+        [Min(0.1f)] public float dashCooldown = 2;
+        public AudioClip dashSound;
+        [Header("전설 스킬 / 발구르기 댄스")]
+        public StompDanceSettings dance = new StompDanceSettings();
     }
 
     [Serializable]
@@ -69,7 +76,47 @@ namespace TakeUp.Prototype
         [Min(0.01f)] public float spawnWeight = 1;
     }
 
-    public enum AugmentKind { Damage, AttackSpeed, MoveSpeed, MaxHealth, PickupRadius, ExtraStone, Spear, Regeneration }
+    public enum AugmentKind { Damage, AttackSpeed, MoveSpeed, MaxHealth, PickupRadius, ExtraStone, Spear, Regeneration, StompDance }
+
+    public enum BeatDirection { Left, Right }
+
+    [Serializable]
+    public sealed class StompDanceSettings
+    {
+        [Tooltip("프로토타입에서 Q로 즉시 테스트. 끄면 증강을 획득해야 합니다.")]
+        public bool startUnlocked = true;
+        public BeatDirection[] sequence = { BeatDirection.Left, BeatDirection.Right, BeatDirection.Left,
+            BeatDirection.Right, BeatDirection.Left, BeatDirection.Left, BeatDirection.Right };
+        [Range(40, 240)] public float bpm = 110;
+        [Tooltip("음악 시작부터 첫 입력 박자까지의 초. 음악 BPM과 함께 맞춰주세요.")]
+        [Min(0.5f)] public float firstBeatTime = 1.5f;
+        [Range(0.04f, 0.25f)] public float hitWindow = 0.16f;
+        [Range(0.01f, 0.5f)] public float enemyTimeScale = 0.15f;
+        [Range(0.25f, 0.95f)] public float finalZoomRatio = 0.5f;
+        [Min(0)] public float beatZoomKick = 0.25f;
+        [Min(0.1f)] public float cameraReturnSpeed = 7;
+        [Min(0.1f)] public float cooldown = 12;
+        [Min(1)] public float damage = 100;
+        [Min(1)] public float radius = 14;
+        [Min(1)] public float waveSpeed = 20;
+        public Color shockwaveColor = new Color(1, 0.78f, 0.3f, 0.85f);
+        [Header("이미지 / 비워 두면 기본 도형 사용")]
+        public Sprite[] danceFrames;
+        public Sprite shockwaveSprite;
+        public Sprite leftArrow;
+        public Sprite rightArrow;
+        public Sprite panelSprite;
+        [Header("오디오 / 비워 두면 임시 박자음 사용")]
+        public AudioClip music;
+        public AudioClip beatSound;
+        public AudioClip hitSound;
+        public AudioClip successSound;
+        public AudioClip failureSound;
+        [Range(0, 1)] public float volume = 0.6f;
+        public bool playMetronome = true;
+        [Tooltip("이 값만큼 입력 판정 시간을 보정합니다. 양수는 늦게 누른 입력을 보정.")]
+        [Range(-0.3f, 0.3f)] public float inputLatencyOffset;
+    }
 
     [Serializable]
     public sealed class AugmentDefinition

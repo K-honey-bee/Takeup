@@ -51,6 +51,13 @@ namespace TakeUp.Prototype.Editor
                 };
                 AssetDatabase.CreateAsset(settings, Folder + "/Data/PrehistoricSettings.asset");
             }
+            var augments = new System.Collections.Generic.List<AugmentDefinition>(settings.augments ?? Array.Empty<AugmentDefinition>());
+            if (!augments.Exists(a => a != null && a.kind == AugmentKind.StompDance))
+            {
+                augments.Add(Augment("[전설] 발구르기 댄스", "Q: 제자리 리듬 의식\n전부 성공하면 거대한 충격파!", AugmentKind.StompDance, 1, 1));
+                settings.augments = augments.ToArray();
+                EditorUtility.SetDirty(settings);
+            }
             if (!File.Exists(ScenePath))
             {
                 var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
@@ -74,6 +81,7 @@ namespace TakeUp.Prototype.Editor
 
         public static void BuildSmokePlayer()
         {
+            RhythmValidation.Validate();
             Create();
             // The project already uses URP; all generated sprites use its supported default sprite material.
             string output = Path.GetFullPath("Builds/Prototype/TakeUpPrototype.exe");
