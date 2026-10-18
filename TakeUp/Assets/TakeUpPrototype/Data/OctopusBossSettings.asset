@@ -12,20 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86102045258135a46852d2f22ba2445a, type: 3}
   m_Name: OctopusBossSettings
   m_EditorClassIdentifier: Assembly-CSharp::TakeUp.Prototype.OctopusBossSettings
-  health: 1400
+  health: 50000
   bodyRadius: 1.6
-  warningTime: 1.5
-  sweepDuration: 1.6
-  sweepLength: 9
+  warningTime: 0.8
+  sweepDuration: 5
+  sweepLength: 16
   sweepWidth: 0.8
-  sweepStartAngle: -160
-  sweepEndAngle: -20
-  tentacleDamage: 22
-  recoveryTime: 2
-  colorFlashTime: 0.8
-  hideTime: 3.5
-  memoryDamage: 35
+  sweepStartAngle: -180
+  sweepEndAngle: 0
+  tentacleDamage: 20
+  recoveryTime: 1
+  colorFlashTime: 0.5
+  hideTime: 1.5
+  memoryDamage: 20
   inkRadius: 1.8
-  inkLifetime: 8
+  inkLifetime: 20
   inkMoveMultiplier: 0.45
   inkWarningTime: 0.9
