@@ -8,6 +8,8 @@ namespace TakeUp.Prototype
     {
         [Header("보스 씬 전용 / 생존 씬에서는 비움")]
         public OctopusBossEncounter bossEncounter;
+        public BullBossEncounter bullEncounter;
+        public IBossEncounter ActiveBoss => bullEncounter != null ? (IBossEncounter)bullEncounter : bossEncounter;
         sealed class BossEntry
         {
             public int level, kills, stones;
@@ -19,7 +21,7 @@ namespace TakeUp.Prototype
 
         void InitializeBossMode()
         {
-            if (bossEncounter == null) { bossEntry = null; return; }
+            if (ActiveBoss == null) { bossEntry = null; return; }
             if (bossEntry != null)
             {
                 Level = bossEntry.level; Kills = bossEntry.kills; stoneCount = bossEntry.stones;
@@ -28,14 +30,16 @@ namespace TakeUp.Prototype
                 pickupRadius = bossEntry.pickup; regeneration = bossEntry.regeneration; HasSpear = bossEntry.spear;
                 stacks.Clear(); foreach (var pair in bossEntry.stacks) stacks[pair.Key] = pair.Value;
             }
-            bossEncounter.Initialize();
+            ActiveBoss.Initialize();
+            if (bullEncounter != null && System.Array.IndexOf(System.Environment.GetCommandLineArgs(), "--takeup-bull-smoke") >= 0)
+                gameObject.AddComponent<BullSmokeTest>().game = this;
             if (System.Array.IndexOf(System.Environment.GetCommandLineArgs(), "--takeup-boss-smoke") >= 0)
                 gameObject.AddComponent<BossSmokeTest>().game = this;
         }
 
         public void EnterBossScene()
         {
-            if (bossEncounter != null || State != RunState.BossReady) return;
+            if (ActiveBoss != null || State != RunState.BossReady) return;
             bossEntry = new BossEntry { level = Level, kills = Kills, stones = stoneCount, hp = Health, maxHp = MaximumHealth,
                 speed = moveSpeed, damage = damageMultiplier, attackSpeed = attackSpeed, pickup = pickupRadius,
                 regeneration = regeneration, spear = HasSpear, stacks = new Dictionary<AugmentKind, int>(stacks) };
@@ -46,7 +50,7 @@ namespace TakeUp.Prototype
 
         public void CompleteBossFight()
         {
-            if (bossEncounter == null || State == RunState.Dead) return;
+            if (ActiveBoss == null || State == RunState.Dead) return;
             if (musicSource != null) musicSource.Stop();
             RestorePlayerArt(); Kills++;
             State = RunState.BossReady; hud.ShowEnd(true);

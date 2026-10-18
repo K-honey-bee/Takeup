@@ -71,7 +71,7 @@ namespace TakeUp.Prototype
             xpLabel.text = $"경험치  {game.Experience} / {game.RequiredExperience}";
             Fill(healthFill, game.Health / game.MaximumHealth);
             Fill(xpFill, (float)game.Experience / game.RequiredExperience);
-            Fill(stageFill, game.bossEncounter != null ? 1 - game.bossEncounter.Health / game.bossEncounter.settings.health : game.Elapsed / game.settings.stageDuration);
+            Fill(stageFill, game.ActiveBoss != null ? 1 - game.ActiveBoss.Health / game.ActiveBoss.MaximumHealth : game.Elapsed / game.settings.stageDuration);
             equipment.text = $"돌 던지기  ·  {(game.HasSpear ? "관통 창 장착" : "창 미해금")}     |     생존 목표 {game.settings.stageDuration:0}초";
             RefreshSkillHud();
         }
@@ -113,8 +113,8 @@ namespace TakeUp.Prototype
         public void ShowEnd(bool success)
         {
             ClearContent(success ? victoryContent : defeatContent);
-            bool bossFight = game.bossEncounter != null;
-            Label(content, success ? (bossFight ? "고대 문어 처치 완료!" : "생존 완료  ·  보스 진입 준비") : "이번 생존은 여기까지", 36, gold,
+            bool bossFight = game.ActiveBoss != null;
+            Label(content, success ? (bossFight ? game.ActiveBoss.DisplayName + " 처치 완료!" : "생존 완료  ·  보스 진입 준비") : "이번 생존은 여기까지", 36, gold,
                 new Vector2(0, -45), new Vector2(1060, 70), TextAnchor.MiddleCenter);
             Label(content, $"레벨 {game.Level}    ·    처치 {game.Kills}    ·    생존 {game.Elapsed:0}초", 24, Color.white,
                 new Vector2(0, -130), new Vector2(1060, 50), TextAnchor.MiddleCenter);

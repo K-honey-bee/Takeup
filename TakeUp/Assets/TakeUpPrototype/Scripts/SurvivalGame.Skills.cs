@@ -102,7 +102,7 @@ namespace TakeUp.Prototype
             // Slow only world simulation. Music, input judgement and camera use real time.
             float worldDt = Mathf.Min(dt, 0.05f) * Mathf.Clamp(settings.dance.enemyTimeScale, 0.01f, 0.5f);
             Elapsed += worldDt;
-            if (bossEncounter != null) bossEncounter.Tick(worldDt); else TickSpawner(worldDt);
+            if (ActiveBoss != null) ActiveBoss.Tick(worldDt); else TickSpawner(worldDt);
             TickBurns(worldDt); TickEnemies(worldDt); TickShots(worldDt);
             TickShockwaves(Mathf.Min(dt, 0.05f));
             if (State != RunState.Dancing) return;
@@ -182,7 +182,7 @@ namespace TakeUp.Prototype
             State = RunState.Playing;
             invulnerability = settings.hurtInvulnerability;
             if (PendingChoices > 0) OfferAugments();
-            else if (bossEncounter == null && Elapsed >= settings.stageDuration) FinishStage();
+            else if (ActiveBoss == null && Elapsed >= settings.stageDuration) FinishStage();
         }
 
         void RestorePlayerArt()
@@ -209,8 +209,8 @@ namespace TakeUp.Prototype
                 Color color = wave.burning ? FlameColor : settings.dance.shockwaveColor;
                 color.a *= 1 - wave.radius / Mathf.Max(1, settings.dance.radius);
                 wave.visual.color = color;
-                if (!wave.hitBoss && bossEncounter != null && Vector2.Distance(bossEncounter.Position, wave.origin) <= wave.radius + bossEncounter.Radius)
-                { wave.hitBoss = true; bossEncounter.Damage(settings.dance.damage * damageMultiplier); if (wave.burning) IgniteBoss(); }
+                if (!wave.hitBoss && ActiveBoss != null && Vector2.Distance(ActiveBoss.Position, wave.origin) <= wave.radius + ActiveBoss.Radius)
+                { wave.hitBoss = true; ActiveBoss.Damage(settings.dance.damage * damageMultiplier); if (wave.burning) IgniteBoss(); }
                 for (int j = enemies.Count - 1; j >= 0; j--)
                 {
                     Enemy enemy = enemies[j];

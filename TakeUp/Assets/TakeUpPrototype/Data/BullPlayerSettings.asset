@@ -1,0 +1,240 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a8267b01a885e845a79d15139df9ba4, type: 3}
+  m_Name: BullPlayerSettings
+  m_EditorClassIdentifier: Assembly-CSharp::TakeUp.Prototype.SurvivalSettings
+  playerSprite: {fileID: 0}
+  playerTint: {r: 1, g: 1, b: 1, a: 1}
+  playerSize: 0.8
+  maxHealth: 100
+  moveSpeed: 5
+  hurtInvulnerability: 0.6
+  stoneSprite: {fileID: 0}
+  stoneTint: {r: 1, g: 1, b: 1, a: 1}
+  stoneDamage: 18
+  stoneInterval: 0.65
+  stoneSpeed: 12
+  attackRange: 30
+  stoneSize: 0.4
+  spearSprite: {fileID: 0}
+  spearTint: {r: 1, g: 1, b: 1, a: 1}
+  spearDamage: 32
+  spearInterval: 1.5
+  spearSpeed: 16
+  spearSize: {x: 0.8, y: 0.18}
+  experienceSprite: {fileID: 0}
+  experienceTint: {r: 0.3, g: 1, b: 0.7, a: 1}
+  firstLevelExperience: 6
+  experienceGrowth: 4
+  pickupRadius: 2
+  pickupSpeed: 10
+  groundSprite: {fileID: 21300000, guid: 2a62b3105cbee5d49b50384ab0aa24e0, type: 3}
+  groundTint: {r: 1, g: 1, b: 1, a: 1}
+  arenaHalfSize: {x: 12, y: 8}
+  cameraSize: 14
+  maxAliveEnemies: 100
+  waveDuration: 30
+  stageDuration: 180
+  initialSpawnInterval: 0.9
+  minimumSpawnInterval: 0.18
+  spawnIntervalMultiplierPerWave: 0.78
+  healthGrowthPerWave: 0.25
+  damageGrowthPerWave: 0.12
+  enemies:
+  - prefab: {fileID: 4322050038169260442, guid: 8bc4692131eae20469fa667e1a771d1e, type: 3}
+    displayName: "\uC791\uC740 \uC57C\uC218"
+    sprite: {fileID: 876486182, guid: 2730458e073955d489a5a5511c4fac87, type: 3}
+    tint: {r: 1, g: 1, b: 1, a: 1}
+    size: 0.75
+    health: 28
+    speed: 1.65
+    damage: 8
+    experience: 1
+    firstWave: 1
+    spawnWeight: 1
+  - prefab: {fileID: 7332539394433539582, guid: 3fe0e8561c0816543a38e615f654272f, type: 3}
+    displayName: "\uB0A0\uC318 \uC57C\uC218"
+    sprite: {fileID: 1345396793, guid: 2730458e073955d489a5a5511c4fac87, type: 3}
+    tint: {r: 1, g: 1, b: 1, a: 1}
+    size: 0.55
+    health: 20
+    speed: 2.8
+    damage: 6
+    experience: 2
+    firstWave: 2
+    spawnWeight: 0.5
+  - prefab: {fileID: 2111426484862797062, guid: a463acc4c26eac9488d573170e4d6ca9, type: 3}
+    displayName: "\uD070 \uC57C\uC218"
+    sprite: {fileID: -407179706, guid: 2730458e073955d489a5a5511c4fac87, type: 3}
+    tint: {r: 1, g: 1, b: 1, a: 1}
+    size: 1.3
+    health: 85
+    speed: 1.1
+    damage: 16
+    experience: 4
+    firstWave: 3
+    spawnWeight: 0.3
+  augments:
+  - title: "\uB0A0\uCE74\uB85C\uC6B4 \uB3CC"
+    description: "\uB3CC\uACFC \uCC3D\uC758 \uD53C\uD574\uB7C9 +25%"
+    icon: {fileID: 1229297514, guid: c928026d7f14ad9468785a200069b767, type: 3}
+    kind: 0
+    amount: 0.25
+    maxStacks: 8
+  - title: "\uC7AC\uBE60\uB978 \uC190"
+    description: "\uB3CC\uACFC \uCC3D\uC758 \uACF5\uACA9 \uC18D\uB3C4 +20%"
+    icon: {fileID: 199287593, guid: c928026d7f14ad9468785a200069b767, type: 3}
+    kind: 1
+    amount: 0.2
+    maxStacks: 6
+  - title: "\uC0AC\uB0E5\uAFBC\uC758 \uBC1C"
+    description: "\uC774\uB3D9 \uC18D\uB3C4 +15%"
+    icon: {fileID: -623423789, guid: c928026d7f14ad9468785a200069b767, type: 3}
+    kind: 2
+    amount: 0.15
+    maxStacks: 4
+  - title: "\uAC15\uC778\uD55C \uBAB8"
+    description: "\uCD5C\uB300 \uCCB4\uB825 +25\n\uCCB4\uB825 25 \uD68C\uBCF5"
+    icon: {fileID: 831235533, guid: c928026d7f14ad9468785a200069b767, type: 3}
+    kind: 3
+    amount: 25
+    maxStacks: 6
+  - title: "\uCC44\uC9D1 \uBCF8\uB2A5"
+    description: "\uACBD\uD5D8\uCE58 \uD68D\uB4DD \uBC18\uACBD +1.2"
+    icon: {fileID: 1312703325, guid: c928026d7f14ad9468785a200069b767, type: 3}
+    kind: 4
+    amount: 1.2
+    maxStacks: 5
+  - title: "\uD55C \uC90C\uC758 \uB3CC"
+    description: "\uB3D9\uC2DC\uC5D0 \uB358\uC9C0\uB294 \uB3CC +1"
+    icon: {fileID: -899211520, guid: c928026d7f14ad9468785a200069b767, type: 3}
+    kind: 5
+    amount: 1
+    maxStacks: 3
+  - title: "\uCCAB \uBC88\uC9F8 \uCC3D"
+    description: "\uC790\uB3D9 \uCC3D \uB358\uC9C0\uAE30 \uD574\uAE08\n\uD55C \uBC88\uC5D0
+      \uC801 3\uB9C8\uB9AC \uAD00\uD1B5"
+    icon: {fileID: 1207388847, guid: c928026d7f14ad9468785a200069b767, type: 3}
+    kind: 6
+    amount: 1
+    maxStacks: 1
+  - title: "\uC790\uC5F0 \uD68C\uBCF5"
+    description: "\uB9E4\uCD08 \uCCB4\uB825 1 \uD68C\uBCF5"
+    icon: {fileID: 1653308287, guid: c928026d7f14ad9468785a200069b767, type: 3}
+    kind: 7
+    amount: 1
+    maxStacks: 4
+  - title: "[\uC804\uC124] \uBC1C\uAD6C\uB974\uAE30 \uB304\uC2A4"
+    description: "Q: \uC81C\uC790\uB9AC \uB9AC\uB4EC \uC758\uC2DD\n\uC804\uBD80 \uC131\uACF5\uD558\uBA74
+      \uAC70\uB300\uD55C \uCDA9\uACA9\uD30C!"
+    icon: {fileID: 354705522, guid: c928026d7f14ad9468785a200069b767, type: 3}
+    kind: 8
+    amount: 1
+    maxStacks: 1
+  - title: "\uBD88\uC758 \uBC1C\uACAC"
+    description: "\uB3CC\xB7\uCC3D \uC801\uC911 \uC2DC \uD654\uC0C1 \uBD80\uC5EC\n\uAE30\uBCF8
+      \uCD08\uB2F9 6 \uD53C\uD574, 3\uCD08 \uC9C0\uC18D \xB7 \uC7AC\uC801\uC911 \uC2DC
+      \uC2DC\uAC04 \uAC31\uC2E0"
+    icon: {fileID: 0}
+    kind: 9
+    amount: 1
+    maxStacks: 1
+  - title: "\uB728\uAC70\uC6B4 \uBD88\uC528"
+    description: "[\uBD88\uC758 \uBC1C\uACAC \uD544\uC694] \uD654\uC0C1 \uCD08\uB2F9
+      \uD53C\uD574 +3"
+    icon: {fileID: 0}
+    kind: 10
+    amount: 3
+    maxStacks: 4
+  - title: "\uC624\uB798 \uD0C0\uB294 \uBD88"
+    description: "[\uBD88\uC758 \uBC1C\uACAC \uD544\uC694] \uD654\uC0C1 \uC9C0\uC18D
+      \uC2DC\uAC04 +1.5\uCD08"
+    icon: {fileID: 0}
+    kind: 11
+    amount: 1.5
+    maxStacks: 3
+  - title: "\uBD88\uC528 \uD655\uC0B0"
+    description: "[\uBD88\uC758 \uBC1C\uACAC \uD544\uC694] \uBD88\uD0C0\uB294 \uC801
+      \uCC98\uCE58 \uC2DC\n\uC8FC\uBCC0 3m \uC801\uC5D0\uAC8C \uD654\uC0C1 \uC804\uD30C"
+    icon: {fileID: 0}
+    kind: 12
+    amount: 1
+    maxStacks: 1
+  - title: "\uBD88\uC758 \uCDA4"
+    description: "[\uBD88\uC758 \uBC1C\uACAC + \uBC1C\uAD6C\uB974\uAE30 \uD544\uC694]\n\uBC1C\uAD6C\uB974\uAE30
+      \uC131\uACF5 \uCDA9\uACA9\uD30C\uC5D0 \uD654\uC0C1 \uCD94\uAC00"
+    icon: {fileID: 0}
+    kind: 13
+    amount: 1
+    maxStacks: 1
+  - title: "\uD295\uAE30\uB294 \uB3CC"
+    description: "\uB3CC\uC774 \uADFC\uCC98 \uB2E4\uB978 \uC801\uC5D0\uAC8C 1\uD68C
+      \uB3C4\uC57D\n\uAC19\uC740 \uC801 \uC7AC\uC801\uC911 \uBD88\uAC00 \xB7 \uBD88
+      \uD6A8\uACFC \uC720\uC9C0"
+    icon: {fileID: 0}
+    kind: 14
+    amount: 1
+    maxStacks: 1
+  - title: "\uAC00\uC2DC \uAC00\uC8FD"
+    description: "\uD53C\uD574\uB97C \uBC1B\uACE0 \uC0DD\uC874\uD558\uBA74 8\uBC29\uD5A5
+      \uAC00\uC2DC \uBC1C\uC0AC\n\uAE30\uBCF8 \uD53C\uD574 18 \xB7 \uC0AC\uAC70\uB9AC
+      5m"
+    icon: {fileID: 0}
+    kind: 15
+    amount: 1
+    maxStacks: 1
+  dashDistance: 3.5
+  dashDuration: 0.18
+  dashCooldown: 2
+  dashSound: {fileID: 0}
+  dance:
+    startUnlocked: 1
+    sequence: 00000000010000000000000001000000000000000000000001000000
+    bpm: 110
+    firstBeatTime: 1.5
+    hitWindow: 0.16
+    enemyTimeScale: 0.15
+    finalZoomRatio: 0.5
+    beatZoomKick: 0.25
+    cameraReturnSpeed: 7
+    cooldown: 12
+    damage: 100
+    radius: 14
+    waveSpeed: 20
+    shockwaveColor: {r: 1, g: 0.78, b: 0.3, a: 0.85}
+    danceFrames: []
+    shockwaveSprite: {fileID: 0}
+    leftArrow: {fileID: 0}
+    rightArrow: {fileID: 0}
+    panelSprite: {fileID: 0}
+    music: {fileID: 0}
+    beatSound: {fileID: 0}
+    hitSound: {fileID: 0}
+    successSound: {fileID: 0}
+    failureSound: {fileID: 0}
+    volume: 0.6
+    playMetronome: 1
+    inputLatencyOffset: 0
+  fire:
+    damagePerSecond: 6
+    duration: 3
+    spreadRadius: 3
+    tint: {r: 1, g: 0.3, b: 0.04, a: 1}
+    emberSprite: {fileID: 0}
+  primitive:
+    bounceRange: 5
+    thornDamage: 18
+    thornCount: 8
+    thornRange: 5
+    thornSpeed: 10
+    thornSprite: {fileID: 0}
+    thornTint: {r: 0.85, g: 0.72, b: 0.45, a: 1}

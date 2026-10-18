@@ -145,7 +145,7 @@ namespace TakeUp.Prototype
             if (keyboard != null && (keyboard.leftShiftKey.wasPressedThisFrame || keyboard.rightShiftKey.wasPressedThisFrame)) StartDash();
             if (dashRemaining > 0) TickDash(dt); else MovePlayer(input, dt);
             playerRenderer.color = invulnerability > 0 ? Color.Lerp(playerColor, Color.white, 0.65f) : playerColor;
-            if (bossEncounter != null) bossEncounter.Tick(dt);
+            if (ActiveBoss != null) ActiveBoss.Tick(dt);
             else TickSpawner(dt);
             TickBurns(dt);
             TickEnemies(dt);
@@ -153,7 +153,7 @@ namespace TakeUp.Prototype
             TickWeapons(dt);
             TickShots(dt);
             TickGems(dt);
-            if (bossEncounter == null && State == RunState.Playing && Elapsed >= settings.stageDuration) FinishStage();
+            if (ActiveBoss == null && State == RunState.Playing && Elapsed >= settings.stageDuration) FinishStage();
         }
 
         void LateUpdate()
@@ -167,7 +167,7 @@ namespace TakeUp.Prototype
         public void MovePlayer(Vector2 input, float dt)
         {
             if (State != RunState.Playing) return;
-            float slow = bossEncounter != null ? bossEncounter.MovementMultiplier(player.position) : 1;
+            float slow = ActiveBoss != null ? ActiveBoss.MovementMultiplier(player.position) : 1;
             Vector2 position = (Vector2)player.position + Vector2.ClampMagnitude(input, 1) * moveSpeed * slow * dt;
             player.position = ClampToArena(position);
             if (Mathf.Abs(input.x) > 0.01f) playerRenderer.flipX = input.x < 0;
@@ -253,8 +253,8 @@ namespace TakeUp.Prototype
         {
             stoneTimer -= dt; spearTimer -= dt;
             Enemy target = NearestEnemy();
-            if (target == null && (bossEncounter == null || bossEncounter.IsDefeated || Vector2.Distance(player.position, bossEncounter.Position) > settings.attackRange)) return;
-            Vector2 direction = target != null ? (Vector2)(target.body.position - player.position).normalized : (bossEncounter.Position - (Vector2)player.position).normalized;
+            if (target == null && (ActiveBoss == null || ActiveBoss.IsDefeated || Vector2.Distance(player.position, ActiveBoss.Position) > settings.attackRange)) return;
+            Vector2 direction = target != null ? (Vector2)(target.body.position - player.position).normalized : (ActiveBoss.Position - (Vector2)player.position).normalized;
             if (direction.sqrMagnitude < 0.01f) direction = Vector2.right;
             if (stoneTimer <= 0)
             {
@@ -291,9 +291,9 @@ namespace TakeUp.Prototype
                 Vector2 to = from + shot.direction * shot.speed * Mathf.Min(dt, Mathf.Max(0, shot.life));
                 shot.body.position = to;
                 shot.life -= dt;
-                if (!shot.hitBoss && bossEncounter != null && bossEncounter.HitBySegment(from, to, shot.radius))
+                if (!shot.hitBoss && ActiveBoss != null && ActiveBoss.HitBySegment(from, to, shot.radius))
                 {
-                    shot.hitBoss = true; bossEncounter.Damage(shot.damage); if (shot.burning) IgniteBoss(); shot.pierce = 0;
+                    shot.hitBoss = true; ActiveBoss.Damage(shot.damage); if (shot.burning) IgniteBoss(); shot.pierce = 0;
                     if (TryRicochet(shot, to)) continue;
                 }
                 for (int j = enemies.Count - 1; j >= 0 && shot.pierce > 0; j--)

@@ -77,9 +77,9 @@ namespace TakeUp.Prototype
         }
         void IgniteBoss()
         {
-            if (bossEncounter == null || bossEncounter.IsFinale || bossEncounter.IsDefeated) { ClearBossBurn(); return; }
+            if (ActiveBoss == null || ActiveBoss.IsFinale || ActiveBoss.IsDefeated) { ClearBossBurn(); return; }
             bossBurnRemaining = BurnDuration;
-            if (bossBurnVisual == null) bossBurnVisual = CreateEmber(bossEncounter.bossBody, bossEncounter.Radius + .3f);
+            if (bossBurnVisual == null) bossBurnVisual = CreateEmber(ActiveBoss.Body, ActiveBoss.Radius + .3f);
             bossBurnVisual.gameObject.SetActive(true);
         }
         void ClearBossBurn()
@@ -114,13 +114,13 @@ namespace TakeUp.Prototype
                 if (enemy.health <= 0) enemy.burnRemaining = Mathf.Max(.001f, enemy.burnRemaining);
             }
             for (int i = enemies.Count - 1; i >= 0; i--) if (enemies[i].health <= 0) KillEnemy(i);
-            if (bossEncounter == null || bossEncounter.IsFinale || bossEncounter.IsDefeated) { ClearBossBurn(); return; }
+            if (ActiveBoss == null || ActiveBoss.IsFinale || ActiveBoss.IsDefeated) { ClearBossBurn(); return; }
             if (bossBurnRemaining > 0)
             {
                 float step = Mathf.Min(dt, bossBurnRemaining);
                 bossBurnRemaining = Mathf.Max(0, bossBurnRemaining - dt);
-                bossEncounter.Damage(BurnDamagePerSecond * step);
-                if (bossEncounter.IsFinale || bossBurnRemaining <= 0) ClearBossBurn();
+                ActiveBoss.Damage(BurnDamagePerSecond * step);
+                if (ActiveBoss.IsFinale || bossBurnRemaining <= 0) ClearBossBurn();
             }
         }
         void KillEnemy(int index)
@@ -135,7 +135,7 @@ namespace TakeUp.Prototype
             float radius = Mathf.Max(.1f, settings.fire.spreadRadius);
             foreach (var other in enemies)
                 if (other.health > 0 && Vector2.Distance(position, other.body.position) <= radius) Ignite(other);
-            if (bossEncounter != null && Vector2.Distance(position, bossEncounter.Position) <= radius + bossEncounter.Radius) IgniteBoss();
+            if (ActiveBoss != null && Vector2.Distance(position, ActiveBoss.Position) <= radius + ActiveBoss.Radius) IgniteBoss();
             var visual = Visual("Spreading Ember", null, ring, FlameColor, Vector2.one * .1f, position, 13);
             firePulses.Add(new FirePulse { visual = visual });
         }

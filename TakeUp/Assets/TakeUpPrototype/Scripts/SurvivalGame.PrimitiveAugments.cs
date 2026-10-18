@@ -43,9 +43,9 @@ namespace TakeUp.Prototype
                 if (distance > nearest) continue;
                 nearest = distance; target = enemy.body.position; found = true;
             }
-            if (!shot.hitBoss && bossEncounter != null && !bossEncounter.IsDefeated && !bossEncounter.IsFinale
-                && Vector2.Distance(origin, bossEncounter.Position) <= nearest)
-            { target = bossEncounter.Position; found = true; }
+            if (!shot.hitBoss && ActiveBoss != null && !ActiveBoss.IsDefeated && !ActiveBoss.IsFinale
+                && Vector2.Distance(origin, ActiveBoss.Position) <= nearest)
+            { target = ActiveBoss.Position; found = true; }
             if (!found) return false;
             shot.bounces--; shot.pierce = 1; shot.life = 2;
             shot.body.position = origin;

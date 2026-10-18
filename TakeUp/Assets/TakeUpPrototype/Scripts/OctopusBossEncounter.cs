@@ -6,8 +6,11 @@ namespace TakeUp.Prototype
 {
     public enum OctopusPhase { Intro, SweepWarning, Sweep, SlamWarning, SlamImpact, InkWarning, MemoryShow, MemoryHide, MemoryBlast, Recovery, Defeated, RageWarning, RageImpact, FinaleShow, FinaleChoose, FinaleImpact }
 
-    public sealed partial class OctopusBossEncounter : MonoBehaviour
+    public sealed partial class OctopusBossEncounter : MonoBehaviour, IBossEncounter
     {
+        public string DisplayName => "고대 문어";
+        public float MaximumHealth => settings.health;
+        public Transform Body => bossBody;
         public OctopusBossSettings settings;
         public SurvivalGame game;
         [Header("Hierarchy에서 위치와 이미지를 편집")]
