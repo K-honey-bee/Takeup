@@ -140,6 +140,58 @@ MonoBehaviour:
     kind: 8
     amount: 1
     maxStacks: 1
+  - title: "\uBD88\uC758 \uBC1C\uACAC"
+    description: "\uB3CC\xB7\uCC3D \uC801\uC911 \uC2DC \uD654\uC0C1 \uBD80\uC5EC\n\uAE30\uBCF8
+      \uCD08\uB2F9 6 \uD53C\uD574, 3\uCD08 \uC9C0\uC18D \xB7 \uC7AC\uC801\uC911 \uC2DC
+      \uC2DC\uAC04 \uAC31\uC2E0"
+    icon: {fileID: 0}
+    kind: 9
+    amount: 1
+    maxStacks: 1
+  - title: "\uB728\uAC70\uC6B4 \uBD88\uC528"
+    description: "[\uBD88\uC758 \uBC1C\uACAC \uD544\uC694] \uD654\uC0C1 \uCD08\uB2F9
+      \uD53C\uD574 +3"
+    icon: {fileID: 0}
+    kind: 10
+    amount: 3
+    maxStacks: 4
+  - title: "\uC624\uB798 \uD0C0\uB294 \uBD88"
+    description: "[\uBD88\uC758 \uBC1C\uACAC \uD544\uC694] \uD654\uC0C1 \uC9C0\uC18D
+      \uC2DC\uAC04 +1.5\uCD08"
+    icon: {fileID: 0}
+    kind: 11
+    amount: 1.5
+    maxStacks: 3
+  - title: "\uBD88\uC528 \uD655\uC0B0"
+    description: "[\uBD88\uC758 \uBC1C\uACAC \uD544\uC694] \uBD88\uD0C0\uB294 \uC801
+      \uCC98\uCE58 \uC2DC\n\uC8FC\uBCC0 3m \uC801\uC5D0\uAC8C \uD654\uC0C1 \uC804\uD30C"
+    icon: {fileID: 0}
+    kind: 12
+    amount: 1
+    maxStacks: 1
+  - title: "\uBD88\uC758 \uCDA4"
+    description: "[\uBD88\uC758 \uBC1C\uACAC + \uBC1C\uAD6C\uB974\uAE30 \uD544\uC694]\n\uBC1C\uAD6C\uB974\uAE30
+      \uC131\uACF5 \uCDA9\uACA9\uD30C\uC5D0 \uD654\uC0C1 \uCD94\uAC00"
+    icon: {fileID: 0}
+    kind: 13
+    amount: 1
+    maxStacks: 1
+  - title: "\uD295\uAE30\uB294 \uB3CC"
+    description: "\uB3CC\uC774 \uADFC\uCC98 \uB2E4\uB978 \uC801\uC5D0\uAC8C 1\uD68C
+      \uB3C4\uC57D\n\uAC19\uC740 \uC801 \uC7AC\uC801\uC911 \uBD88\uAC00 \xB7 \uBD88
+      \uD6A8\uACFC \uC720\uC9C0"
+    icon: {fileID: 0}
+    kind: 14
+    amount: 1
+    maxStacks: 1
+  - title: "\uAC00\uC2DC \uAC00\uC8FD"
+    description: "\uD53C\uD574\uB97C \uBC1B\uACE0 \uC0DD\uC874\uD558\uBA74 8\uBC29\uD5A5
+      \uAC00\uC2DC \uBC1C\uC0AC\n\uAE30\uBCF8 \uD53C\uD574 18 \xB7 \uC0AC\uAC70\uB9AC
+      5m"
+    icon: {fileID: 0}
+    kind: 15
+    amount: 1
+    maxStacks: 1
   dashDistance: 3.5
   dashDuration: 0.18
   dashCooldown: 2
@@ -172,3 +224,17 @@ MonoBehaviour:
     volume: 0.6
     playMetronome: 1
     inputLatencyOffset: 0
+  fire:
+    damagePerSecond: 6
+    duration: 3
+    spreadRadius: 3
+    tint: {r: 1, g: 0.3, b: 0.04, a: 1}
+    emberSprite: {fileID: 0}
+  primitive:
+    bounceRange: 5
+    thornDamage: 18
+    thornCount: 8
+    thornRange: 5
+    thornSpeed: 10
+    thornSprite: {fileID: 0}
+    thornTint: {r: 0.85, g: 0.72, b: 0.45, a: 1}

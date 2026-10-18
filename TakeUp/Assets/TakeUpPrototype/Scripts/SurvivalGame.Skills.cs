@@ -32,7 +32,7 @@ namespace TakeUp.Prototype
             public SpriteRenderer visual;
             public Vector2 origin;
             public float radius;
-            public bool hitBoss;
+            public bool hitBoss, burning;
             public readonly HashSet<Enemy> hit = new HashSet<Enemy>();
         }
         readonly List<WaveEffect> shockwaves = new List<WaveEffect>();
@@ -103,7 +103,7 @@ namespace TakeUp.Prototype
             float worldDt = Mathf.Min(dt, 0.05f) * Mathf.Clamp(settings.dance.enemyTimeScale, 0.01f, 0.5f);
             Elapsed += worldDt;
             if (bossEncounter != null) bossEncounter.Tick(worldDt); else TickSpawner(worldDt);
-            TickEnemies(worldDt); TickShots(worldDt);
+            TickBurns(worldDt); TickEnemies(worldDt); TickShots(worldDt);
             TickShockwaves(Mathf.Min(dt, 0.05f));
             if (State != RunState.Dancing) return;
             beatKick = Mathf.MoveTowards(beatKick, 0, dt * 1.8f);
@@ -171,7 +171,7 @@ namespace TakeUp.Prototype
             {
                 var visual = Visual("Stomp shockwave", settings.dance.shockwaveSprite, ring, settings.dance.shockwaveColor,
                     Vector2.one * 0.1f, player.position, 15);
-                shockwaves.Add(new WaveEffect { visual = visual, origin = player.position });
+                shockwaves.Add(new WaveEffect { visual = visual, origin = player.position, burning = HasFire && StackCount(AugmentKind.FireDance) > 0 });
             }
             RestorePlayerArt();
         }
@@ -206,21 +206,21 @@ namespace TakeUp.Prototype
                 var wave = shockwaves[i];
                 wave.radius = Mathf.Min(settings.dance.radius, wave.radius + settings.dance.waveSpeed * dt);
                 wave.visual.transform.localScale = Vector3.one * (wave.radius * 2 / Mathf.Max(wave.visual.sprite.bounds.size.x, 0.001f));
-                Color color = settings.dance.shockwaveColor;
+                Color color = wave.burning ? FlameColor : settings.dance.shockwaveColor;
                 color.a *= 1 - wave.radius / Mathf.Max(1, settings.dance.radius);
                 wave.visual.color = color;
                 if (!wave.hitBoss && bossEncounter != null && Vector2.Distance(bossEncounter.Position, wave.origin) <= wave.radius + bossEncounter.Radius)
-                { wave.hitBoss = true; bossEncounter.Damage(settings.dance.damage * damageMultiplier); }
+                { wave.hitBoss = true; bossEncounter.Damage(settings.dance.damage * damageMultiplier); if (wave.burning) IgniteBoss(); }
                 for (int j = enemies.Count - 1; j >= 0; j--)
                 {
                     Enemy enemy = enemies[j];
                     if (wave.hit.Contains(enemy) || Vector2.Distance(enemy.body.position, wave.origin) > wave.radius + enemy.radius) continue;
                     wave.hit.Add(enemy);
+                    if (wave.burning) Ignite(enemy);
                     enemy.health -= settings.dance.damage * damageMultiplier; enemy.flash = 0.15f;
                     if (enemy.health <= 0)
                     {
-                        DropExperience(enemy.body.position, enemy.experience);
-                        Destroy(enemy.body.gameObject); enemies.RemoveAt(j); Kills++;
+                        KillEnemy(j);
                     }
                 }
                 if (wave.radius >= settings.dance.radius)

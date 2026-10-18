@@ -58,6 +58,7 @@ namespace TakeUp.Prototype.Editor
                 settings.augments = augments.ToArray();
                 EditorUtility.SetDirty(settings);
             }
+            FireAugments.Ensure(settings); PrimitiveAugments.Ensure(settings); EditorUtility.SetDirty(settings);
             if (!File.Exists(ScenePath))
             {
                 var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);

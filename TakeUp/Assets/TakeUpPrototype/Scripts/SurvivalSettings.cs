@@ -59,6 +59,10 @@ namespace TakeUp.Prototype
         public AudioClip dashSound;
         [Header("전설 스킬 / 발구르기 댄스")]
         public StompDanceSettings dance = new StompDanceSettings();
+        [Header("불 증강 / 화상") ]
+        public FireSettings fire = new FireSettings();
+        [Header("선사시대 증강 / 돌과 가시")]
+        public PrimitiveAugmentSettings primitive = new PrimitiveAugmentSettings();
     }
 
     [Serializable]
@@ -78,7 +82,7 @@ namespace TakeUp.Prototype
         [Min(0.01f)] public float spawnWeight = 1;
     }
 
-    public enum AugmentKind { Damage, AttackSpeed, MoveSpeed, MaxHealth, PickupRadius, ExtraStone, Spear, Regeneration, StompDance }
+    public enum AugmentKind { Damage, AttackSpeed, MoveSpeed, MaxHealth, PickupRadius, ExtraStone, Spear, Regeneration, StompDance, FireDiscovery, FireDamage, FireDuration, FireSpread, FireDance, RicochetStone, ThornSkin }
 
     public enum BeatDirection { Left, Right }
 

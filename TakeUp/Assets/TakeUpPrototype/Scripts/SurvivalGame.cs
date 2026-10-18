@@ -34,6 +34,8 @@ namespace TakeUp.Prototype
             public SpriteRenderer renderer;
             public float health, speed, damage, radius, flash;
             public Color color;
+            public float burnRemaining;
+            public SpriteRenderer burnVisual;
             public int experience;
         }
         sealed class Shot
@@ -42,6 +44,8 @@ namespace TakeUp.Prototype
             public Vector2 direction;
             public float speed, damage, radius, life;
             public int pierce;
+            public bool burning, hitBoss;
+            public int bounces;
             public readonly HashSet<Enemy> hit = new HashSet<Enemy>();
         }
         sealed class Gem { public Transform body; public int value; }
@@ -92,12 +96,18 @@ namespace TakeUp.Prototype
             if (hud == null) hud = gameObject.AddComponent<SurvivalHud>();
             hud.Initialize(this);
             State = RunState.Playing;
+            if (settings.fire == null) settings.fire = new FireSettings();
+            if (settings.primitive == null) settings.primitive = new PrimitiveAugmentSettings();
             InitializeSkills();
             InitializeBossMode();
             if (System.Array.IndexOf(System.Environment.GetCommandLineArgs(), "--takeup-boss-transition") >= 0)
                 gameObject.AddComponent<BossTransitionSmokeTest>().game = this;
             smokeMode = System.Array.IndexOf(System.Environment.GetCommandLineArgs(), "--takeup-smoke") >= 0;
             if (smokeMode) gameObject.AddComponent<SurvivalSmokeTest>().game = this;
+            if (System.Array.IndexOf(System.Environment.GetCommandLineArgs(), "--takeup-primitive-smoke") >= 0)
+                gameObject.AddComponent<PrimitiveAugmentSmokeTest>().game = this;
+            if (System.Array.IndexOf(System.Environment.GetCommandLineArgs(), "--takeup-fire-smoke") >= 0)
+                gameObject.AddComponent<FireSmokeTest>().game = this;
             if (System.Array.IndexOf(System.Environment.GetCommandLineArgs(), "--takeup-dance-smoke") >= 0)
                 gameObject.AddComponent<DanceSmokeTest>().game = this;
         }
@@ -137,6 +147,7 @@ namespace TakeUp.Prototype
             playerRenderer.color = invulnerability > 0 ? Color.Lerp(playerColor, Color.white, 0.65f) : playerColor;
             if (bossEncounter != null) bossEncounter.Tick(dt);
             else TickSpawner(dt);
+            TickBurns(dt);
             TickEnemies(dt);
             if (State != RunState.Playing) return;
             TickWeapons(dt);
@@ -220,7 +231,7 @@ namespace TakeUp.Prototype
                 enemy.body.position += (Vector3)(Vector2.ClampMagnitude(delta.normalized + separation * 2, 1) * enemy.speed * dt);
                 enemy.renderer.flipX = delta.x < 0;
                 enemy.flash = Mathf.Max(0, enemy.flash - dt);
-                enemy.renderer.color = enemy.flash > 0 ? Color.white : enemy.color;
+                enemy.renderer.color = enemy.flash > 0 ? Color.white : enemy.burnRemaining > 0 ? Color.Lerp(enemy.color, FlameColor, .35f + .2f * Mathf.Sin(enemy.burnRemaining * 14)) : enemy.color;
                 if (delta.magnitude < enemy.radius + VisualRadius(playerRenderer)) DamagePlayer(enemy.damage);
                 if (State == RunState.Dead) return;
             }
@@ -264,7 +275,8 @@ namespace TakeUp.Prototype
                 spear ? square : circle, spear ? settings.spearTint : settings.stoneTint,
                 spear ? settings.spearSize : Vector2.one * settings.stoneSize, player.position, 12);
             renderer.transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg) * renderer.transform.rotation;
-            shots.Add(new Shot { body = renderer.transform, direction = direction,
+            if (HasFire) renderer.color = FlameColor;
+            shots.Add(new Shot { body = renderer.transform, direction = direction, burning = HasFire, bounces = spear ? 0 : StackCount(AugmentKind.RicochetStone),
                 speed = spear ? settings.spearSpeed : settings.stoneSpeed,
                 damage = (spear ? settings.spearDamage : settings.stoneDamage) * damageMultiplier,
                 radius = prefab != null ? VisualRadius(renderer) : spear ? 0.22f : settings.stoneSize * 0.5f, pierce = spear ? 3 : 1, life = 2 });
@@ -276,11 +288,14 @@ namespace TakeUp.Prototype
             {
                 Shot shot = shots[i];
                 Vector2 from = shot.body.position;
-                Vector2 to = from + shot.direction * shot.speed * dt;
+                Vector2 to = from + shot.direction * shot.speed * Mathf.Min(dt, Mathf.Max(0, shot.life));
                 shot.body.position = to;
                 shot.life -= dt;
-                if (bossEncounter != null && bossEncounter.HitBySegment(from, to, shot.radius))
-                { bossEncounter.Damage(shot.damage); shot.pierce = 0; }
+                if (!shot.hitBoss && bossEncounter != null && bossEncounter.HitBySegment(from, to, shot.radius))
+                {
+                    shot.hitBoss = true; bossEncounter.Damage(shot.damage); if (shot.burning) IgniteBoss(); shot.pierce = 0;
+                    if (TryRicochet(shot, to)) continue;
+                }
                 for (int j = enemies.Count - 1; j >= 0 && shot.pierce > 0; j--)
                 {
                     Enemy enemy = enemies[j];
@@ -289,13 +304,14 @@ namespace TakeUp.Prototype
                     float fraction = segment.sqrMagnitude > 0 ? Mathf.Clamp01(Vector2.Dot((Vector2)enemy.body.position - from, segment) / segment.sqrMagnitude) : 0;
                     if (Vector2.Distance(from + segment * fraction, enemy.body.position) > enemy.radius + shot.radius) continue;
                     shot.hit.Add(enemy); shot.pierce--;
+                    if (shot.burning) Ignite(enemy);
                     enemy.health -= shot.damage; enemy.flash = 0.1f;
                     enemy.body.position += (Vector3)(shot.direction * 0.12f);
                     if (enemy.health <= 0)
                     {
-                        DropExperience(enemy.body.position, enemy.experience);
-                        Destroy(enemy.body.gameObject); enemies.RemoveAt(j); Kills++;
+                        KillEnemy(j);
                     }
+                    if (shot.pierce <= 0 && TryRicochet(shot, from + segment * fraction)) break;
                 }
                 if (shot.life <= 0 || shot.pierce <= 0) { Destroy(shot.body.gameObject); shots.RemoveAt(i); }
             }
@@ -348,7 +364,7 @@ namespace TakeUp.Prototype
             var available = new List<AugmentDefinition>();
             if (settings.augments != null)
                 foreach (var augment in settings.augments)
-                    if (augment != null && StackCount(augment.kind) < augment.maxStacks) available.Add(augment);
+                    if (augment != null && CanOfferAugment(augment)) available.Add(augment);
             while (Choices.Count < 3 && available.Count > 0)
             {
                 int index = Random.Range(0, available.Count);
@@ -392,6 +408,7 @@ namespace TakeUp.Prototype
         {
             if (State != RunState.Playing || invulnerability > 0 || dashRemaining > 0 || amount <= 0) return;
             Health = Mathf.Max(0, Health - amount); invulnerability = settings.hurtInvulnerability;
+            if (Health > 0 && StackCount(AugmentKind.ThornSkin) > 0) ReleaseThorns();
             if (Health <= 0) { State = RunState.Dead; hud.ShowEnd(false); }
         }
 
