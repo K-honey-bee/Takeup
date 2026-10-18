@@ -16,11 +16,22 @@ namespace TakeUp.Prototype
         public float sweepEndAngle = -20;
         [Min(1)] public float tentacleDamage = 22;
         [Min(0.2f)] public float recoveryTime = 2;
-        [Header("색상 기억: 빨강 → 파랑 → 노랑 → 흰색")]
+        [Header("랜덤 색상 기억")]
         [Min(0.2f)] public float colorFlashTime = 0.8f;
         [Min(1)] public float hideTime = 3.5f;
         [Min(1)] public float memoryDamage = 35;
+        [Header("50% 미만: 촉수 연속 공격 (각도 0=가로, 90=세로)")]
+        public float[] rageAngles = { 0, 90, 45, -45, 0, 90, -45, 45 };
+        [Min(.2f)] public float rageWarningTime = .65f;
+        [Min(.05f)] public float rageImpactTime = .18f;
+        [Min(.05f)] public float rageInterval = .16f;
+        [Min(.2f)] public float rageWidth = 1.4f;
+        [Header("체력 0: 5색 발악")]
+        [Min(.2f)] public float finaleFlashTime = .8f;
+        [Min(.5f)] public float finaleMoveTime = 3.5f;
+        [Min(.1f)] public float finaleImpactTime = .35f;
         [Header("잉크")]
+
         [Min(0.1f)] public float inkRadius = 1.8f;
         [Min(1)] public float inkLifetime = 8;
         [Range(0.1f, 1)] public float inkMoveMultiplier = 0.45f;

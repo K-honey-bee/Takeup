@@ -4,9 +4,9 @@ using UnityEngine.UI;
 
 namespace TakeUp.Prototype
 {
-    public enum OctopusPhase { Intro, SweepWarning, Sweep, SlamWarning, SlamImpact, InkWarning, MemoryShow, MemoryHide, MemoryBlast, Recovery, Defeated }
+    public enum OctopusPhase { Intro, SweepWarning, Sweep, SlamWarning, SlamImpact, InkWarning, MemoryShow, MemoryHide, MemoryBlast, Recovery, Defeated, RageWarning, RageImpact, FinaleShow, FinaleChoose, FinaleImpact }
 
-    public sealed class OctopusBossEncounter : MonoBehaviour
+    public sealed partial class OctopusBossEncounter : MonoBehaviour
     {
         public OctopusBossSettings settings;
         public SurvivalGame game;
@@ -34,7 +34,7 @@ namespace TakeUp.Prototype
         public static readonly string[] Names = { "빨강", "파랑", "노랑", "흰색" };
         readonly List<Ink> puddles = new List<Ink>();
         sealed class Ink { public SpriteRenderer visual; public float life; }
-        int pattern = 3;
+        int pattern = 2;
         bool sweepHit;
         Color baseColor;
         Font runtimeFont;
@@ -46,7 +46,7 @@ namespace TakeUp.Prototype
             Health = settings.health; baseColor = bodyArtwork.color;
             runtimeFont = Font.CreateDynamicFontFromOSFont(new[] { "Malgun Gothic", "Arial" }, 22);
             healthText.font = instructionText.font = phaseText.font = runtimeFont;
-            BuildSweepFan(); HideAttackVisuals();
+            BuildSweepFan(); InitializeNewVisuals(); HideAttackVisuals();
             SetPhase(OctopusPhase.Intro, 2.5f, "문어가 깨어납니다 · 돌은 자동으로 던집니다");
             RefreshHud();
         }
@@ -68,10 +68,11 @@ namespace TakeUp.Prototype
                 if (!sweepHit && SegmentDistance(game.PlayerPosition, Position, Position + direction * settings.sweepLength) < settings.sweepWidth * .5f + .3f)
                 { game.DamagePlayer(settings.tentacleDamage); sweepHit = true; }
             }
+            TickNewVisuals();
             if (Phase == OctopusPhase.MemoryShow)
             {
-                SetLights(Remaining > settings.colorFlashTime * .25f ? MemoryStep : -1);
-                bodyArtwork.color = Remaining > settings.colorFlashTime * .25f ? Colors[MemoryStep] : baseColor;
+                SetLights(Remaining > settings.colorFlashTime * .25f ? memorySequence[MemoryStep] : -1);
+                bodyArtwork.color = Remaining > settings.colorFlashTime * .25f ? Colors[memorySequence[MemoryStep]] : baseColor;
             }
             if (Remaining <= 0) Advance();
             RefreshHud();
@@ -79,6 +80,7 @@ namespace TakeUp.Prototype
 
         void Advance()
         {
+            if (AdvanceNewPatterns()) return;
             switch (Phase)
             {
                 case OctopusPhase.Intro: case OctopusPhase.Recovery: BeginNextPattern(); break;
@@ -100,9 +102,9 @@ namespace TakeUp.Prototype
                     else { MemoryStep = 0; BeginHide(); }
                     break;
                 case OctopusPhase.MemoryHide:
-                    bool safe = IsCovered(game.PlayerPosition, MemoryStep);
+                    bool safe = IsCovered(game.PlayerPosition, memorySequence[MemoryStep]);
                     if (!safe) game.DamagePlayer(settings.memoryDamage);
-                    bodyArtwork.color = Colors[MemoryStep];
+                    bodyArtwork.color = Colors[memorySequence[MemoryStep]];
                     SetPhase(OctopusPhase.MemoryBlast, .45f, safe ? "방어 성공!" : "파동에 맞았습니다! 바위의 반대편으로 숨으세요"); break;
                 case OctopusPhase.MemoryBlast:
                     MemoryStep++;
@@ -114,35 +116,36 @@ namespace TakeUp.Prototype
         void BeginNextPattern()
         {
             HideAttackVisuals();
-            int next = pattern; pattern = (pattern + 1) % 4;
+            if (IsEnraged) { BeginRage(); return; }
+            int next = pattern; pattern = (pattern + 1) % 3;
             switch (next)
             {
                 case 0:
                     sweepWarning.transform.position = bossBody.position; sweepWarning.gameObject.SetActive(true);
-                    SetPhase(OctopusPhase.SweepWarning, settings.warningTime, "촉수 휘두르기 예고 · 주황 부채꼴 밖으로!"); break;
+                    SetPhase(OctopusPhase.SweepWarning, settings.warningTime, "촉수 휘두르기 예고 · 빨간 부채꼴 밖으로!"); break;
                 case 1:
-                    foreach (var zone in slamZones) { zone.color = new Color(1, .55f, .12f, .45f); zone.gameObject.SetActive(true); }
+                    foreach (var zone in slamZones) { zone.color = new Color(1, .05f, .08f, .45f); zone.gameObject.SetActive(true); }
                     SetPhase(OctopusPhase.SlamWarning, settings.warningTime, "양쪽 내려치기 예고 · 두 영역 사이로!"); break;
-                case 2:
+                case 99:
                     inkTarget = game.PlayerPosition;
                     ShowInkWarning(inkTarget);
                     SetPhase(OctopusPhase.InkWarning, settings.inkWarningTime, "잉크가 떨어집니다 · 표시된 자리에서 벗어나세요"); break;
                 default:
-                    MemoryStep = 0;
-                    SetPhase(OctopusPhase.MemoryShow, settings.colorFlashTime, "색상 순서를 기억하세요! 빨강 → 파랑 → 노랑 → 흰색"); break;
+                    MemoryStep = 0; RandomizeSequence(4);
+                    SetPhase(OctopusPhase.MemoryShow, settings.colorFlashTime, "랜덤 색상 4개를 기억하세요!"); break;
             }
         }
 
         void BeginHide()
         {
-            bodyArtwork.color = baseColor; SetLights(MemoryStep);
+            bodyArtwork.color = baseColor; SetLights(memorySequence[MemoryStep]);
             foreach (var rock in rocks) if (rock.safeMarker != null)
             {
                 Vector2 away = ((Vector2)rock.transform.position - Position).normalized;
                 rock.safeMarker.transform.position = (Vector2)rock.transform.position + away * (rock.WorldRadius + .65f);
-                rock.safeMarker.gameObject.SetActive(rock.colorIndex == MemoryStep);
+                rock.safeMarker.gameObject.SetActive(rock.colorIndex == memorySequence[MemoryStep]);
             }
-            SetPhase(OctopusPhase.MemoryHide, settings.hideTime, $"{MemoryStep + 1}/4  {Names[MemoryStep]} 바위 뒤! 문어 → 바위 → 나 순서로");
+            SetPhase(OctopusPhase.MemoryHide, settings.hideTime, $"{MemoryStep + 1}/4  {Names[memorySequence[MemoryStep]]} 바위 뒤! 문어 → 바위 → 나 순서로");
         }
 
         public bool IsCovered(Vector2 playerPosition, int colorIndex)
@@ -169,7 +172,7 @@ namespace TakeUp.Prototype
             {
                 result += step;
                 result = OutsideCircle(result, Position, Radius + radius);
-                foreach (var rock in rocks) result = OutsideCircle(result, rock.transform.position, rock.WorldRadius + radius);
+                if (!IsFinale) foreach (var rock in rocks) result = OutsideCircle(result, rock.transform.position, rock.WorldRadius + radius);
             }
             return result;
         }
@@ -189,15 +192,13 @@ namespace TakeUp.Prototype
         public bool HitBySegment(Vector2 from, Vector2 to, float radius) => !IsDefeated && SegmentDistance(Position, from, to) <= Radius + radius;
         public void Damage(float amount)
         {
-            if (IsDefeated || amount <= 0) return;
+            if (IsDefeated || IsFinale || amount <= 0) return;
+            bool wasEnraged = IsEnraged;
             Health = Mathf.Max(0, Health - amount);
-            if (Health <= 0)
+            if (Health <= 0) BeginFinale();
+            else if (!wasEnraged && IsEnraged)
             {
-                HideAttackVisuals();
-                foreach (var p in puddles) Destroy(p.visual.gameObject); puddles.Clear();
-                bodyArtwork.color = new Color(.3f, .3f, .35f);
-                SetPhase(OctopusPhase.Defeated, 0, "문어를 물리쳤습니다!");
-                game.CompleteBossFight();
+                ClearInk(); HideAttackVisuals(); BeginRage();
             }
             RefreshHud();
         }
@@ -223,6 +224,7 @@ namespace TakeUp.Prototype
         void Recover() { HideAttackVisuals(); SetPhase(OctopusPhase.Recovery, settings.recoveryTime, "공격 기회! 다음 패턴을 준비하세요"); }
         void HideAttackVisuals()
         {
+            HideNewVisuals();
             sweepArm.gameObject.SetActive(false); sweepWarning.gameObject.SetActive(false);
             foreach (var zone in slamZones) zone.gameObject.SetActive(false);
             foreach (var rock in rocks) if (rock.safeMarker != null) rock.safeMarker.gameObject.SetActive(false);
@@ -273,6 +275,6 @@ namespace TakeUp.Prototype
             fan = new Mesh { name = "Sweep telegraph" }; fan.vertices = vertices; fan.triangles = triangles; fan.RecalculateBounds();
             sweepWarning.sharedMesh = fan;
         }
-        void OnDestroy() { if (runtimeFont != null) Destroy(runtimeFont); if (fan != null) Destroy(fan); }
+        void OnDestroy() { if (runtimeFont != null) Destroy(runtimeFont); if (fan != null) Destroy(fan); DestroyNewVisuals(); }
     }
 }
