@@ -23,6 +23,7 @@ namespace TakeUp.Prototype
         int cueIndex;
         Sprite idleSprite;
         Vector3 idleScale;
+        Quaternion idleRotation;
         AudioSource musicSource, skillAudio;
         AudioClip defaultMusic, defaultHit, defaultWin, defaultFail;
         readonly List<AudioClip> generatedAudio = new List<AudioClip>();
@@ -41,6 +42,7 @@ namespace TakeUp.Prototype
             if (settings.dance == null) settings.dance = new StompDanceSettings();
             if (settings.dance.startUnlocked) stacks[AugmentKind.StompDance] = 1;
             idleSprite = playerRenderer.sprite; idleScale = player.localScale;
+            idleRotation = player.rotation;
             musicSource = gameObject.AddComponent<AudioSource>();
             skillAudio = gameObject.AddComponent<AudioSource>();
             musicSource.playOnAwake = skillAudio.playOnAwake = false;
@@ -66,10 +68,7 @@ namespace TakeUp.Prototype
             float step = Mathf.Min(dt, dashRemaining);
             float speed = Mathf.Max(0.1f, settings.dashDistance) / Mathf.Max(0.05f, settings.dashDuration);
             Vector2 position = (Vector2)player.position + dashDirection * speed * step;
-            float margin = settings.playerSize * 0.5f;
-            position.x = Mathf.Clamp(position.x, -settings.arenaHalfSize.x + margin, settings.arenaHalfSize.x - margin);
-            position.y = Mathf.Clamp(position.y, -settings.arenaHalfSize.y + margin, settings.arenaHalfSize.y - margin);
-            player.position = position;
+            player.position = ClampToArena(position);
             dashRemaining = Mathf.Max(0, dashRemaining - dt);
         }
 
@@ -187,7 +186,7 @@ namespace TakeUp.Prototype
         {
             playerRenderer.sprite = idleSprite;
             player.localScale = idleScale;
-            player.rotation = Quaternion.identity;
+            player.rotation = idleRotation;
         }
 
         void TickSkills(float dt)
@@ -229,7 +228,7 @@ namespace TakeUp.Prototype
         void UpdateSkillCamera()
         {
             if (State == RunState.Paused || State == RunState.Codex || State == RunState.ChoosingAugment) return;
-            float size = settings.cameraSize;
+            float size = baseCameraSize;
             if (State == RunState.Dancing && !DanceResolved)
             {
                 float progress = DanceJudge == null ? 0 : (float)DanceJudge.Hits / DanceJudge.Count;

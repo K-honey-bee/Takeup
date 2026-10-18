@@ -50,7 +50,8 @@ MonoBehaviour:
   healthGrowthPerWave: 0.25
   damageGrowthPerWave: 0.12
   enemies:
-  - displayName: "\uC791\uC740 \uC57C\uC218"
+  - prefab: {fileID: 4322050038169260442, guid: 8bc4692131eae20469fa667e1a771d1e, type: 3}
+    displayName: "\uC791\uC740 \uC57C\uC218"
     sprite: {fileID: 0}
     tint: {r: 0.8, g: 0.36, b: 0.3, a: 1}
     size: 0.75
@@ -60,7 +61,8 @@ MonoBehaviour:
     experience: 1
     firstWave: 1
     spawnWeight: 1
-  - displayName: "\uB0A0\uC318 \uC57C\uC218"
+  - prefab: {fileID: 7332539394433539582, guid: 3fe0e8561c0816543a38e615f654272f, type: 3}
+    displayName: "\uB0A0\uC318 \uC57C\uC218"
     sprite: {fileID: 0}
     tint: {r: 0.8, g: 0.65, b: 0.28, a: 1}
     size: 0.55
@@ -70,7 +72,8 @@ MonoBehaviour:
     experience: 2
     firstWave: 2
     spawnWeight: 0.5
-  - displayName: "\uD070 \uC57C\uC218"
+  - prefab: {fileID: 2111426484862797062, guid: a463acc4c26eac9488d573170e4d6ca9, type: 3}
+    displayName: "\uD070 \uC57C\uC218"
     sprite: {fileID: 0}
     tint: {r: 0.53, g: 0.4, b: 0.75, a: 1}
     size: 1.3

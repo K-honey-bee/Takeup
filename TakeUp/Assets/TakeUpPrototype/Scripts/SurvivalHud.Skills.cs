@@ -5,9 +5,9 @@ namespace TakeUp.Prototype
 {
     public sealed partial class SurvivalHud
     {
-        RectTransform dancePanel, noteRow;
-        Text danceTitle, danceHint;
-        Image timingCursor, timingWindow;
+        [SerializeField] RectTransform dancePanel, noteRow;
+        [SerializeField] Text danceTitle, danceHint;
+        [SerializeField] Image timingCursor, timingWindow;
         RhythmJudge displayedJudge;
         readonly System.Collections.Generic.List<Image> noteImages = new System.Collections.Generic.List<Image>();
         readonly System.Collections.Generic.List<Text> noteLabels = new System.Collections.Generic.List<Text>();
@@ -26,7 +26,7 @@ namespace TakeUp.Prototype
             Panel(timingBar, "Beat center", Color.white, new Vector2(0.5f, 0), new Vector2(0.5f, 1), new Vector2(-1, -4), new Vector2(1, 4));
             timingCursor = Panel(timingBar, "Cursor", gold, Vector2.zero, Vector2.up, new Vector2(-3, -3), new Vector2(3, 3)).GetComponent<Image>();
             danceHint = Label(dancePanel, "", 17, Color.white, new Vector2(20, -155), new Vector2(860, 42), TextAnchor.MiddleCenter);
-            dancePanel.SetSiblingIndex(overlay.GetSiblingIndex());
+            if (!Application.isPlaying) dancePanel.SetSiblingIndex(overlay.GetSiblingIndex());
             dancePanel.gameObject.SetActive(false);
         }
 
@@ -42,18 +42,8 @@ namespace TakeUp.Prototype
             if (displayedJudge != judge)
             {
                 displayedJudge = judge;
-                foreach (Transform child in noteRow) { child.gameObject.SetActive(false); Destroy(child.gameObject); }
-                noteImages.Clear(); noteLabels.Clear();
                 // Scroll the visible note window for custom sequences longer than twelve notes.
-                int count = Mathf.Min(12, judge.Count);
-                float width = Mathf.Min(90, 860f / count);
-                for (int i = 0; i < count; i++)
-                {
-                    var cell = Fixed(noteRow, "Note", new Vector2((860 - width * count) * 0.5f + i * width, 0), new Vector2(width - 8, 48), new Color(0.16f, 0.24f, 0.25f));
-                    var icon = Fixed(cell, "Arrow", new Vector2(8, -5), new Vector2(width - 24, 38), Color.clear).GetComponent<Image>();
-                    icon.preserveAspect = true; noteImages.Add(icon);
-                    noteLabels.Add(Label(cell, "", 28, Color.white, Vector2.zero, new Vector2(width - 8, 48), TextAnchor.MiddleCenter));
-                }
+                BuildNoteSlots(Mathf.Min(12, judge.Count));
             }
             int first = Mathf.Clamp(judge.Hits - 5, 0, Mathf.Max(0, judge.Count - noteImages.Count));
             for (int i = 0; i < noteImages.Count; i++)
@@ -80,26 +70,44 @@ namespace TakeUp.Prototype
 
         public void ShowCodex() { codexPage = 0; DrawCodex(); }
 
+        void BuildNoteSlots(int count)
+        {
+            ResetElements(noteRow);
+            noteImages.Clear(); noteLabels.Clear();
+            float width = Mathf.Min(90, 860f / Mathf.Max(1, count));
+            for (int i = 0; i < count; i++)
+            {
+                var cell = Fixed(noteRow, "Note " + (i + 1), new Vector2((860 - width * count) * 0.5f + i * width, 0), new Vector2(width - 8, 48), new Color(0.16f, 0.24f, 0.25f));
+                var icon = Fixed(cell, "Arrow", new Vector2(8, -5), new Vector2(width - 24, 38), Color.clear).GetComponent<Image>();
+                icon.preserveAspect = true; noteImages.Add(icon);
+                noteLabels.Add(Label(cell, "← / →", 28, Color.white, Vector2.zero, new Vector2(width - 8, 48), TextAnchor.MiddleCenter));
+            }
+        }
+
         void DrawCodex()
         {
-            ClearContent();
+            ClearContent(codexContent);
             Label(content, "증강 도감  /  이번 플레이의 획득 현황", 28, gold, new Vector2(0, 12), new Vector2(850, 46));
             Button(content, "닫기 [Tab]", new Vector2(875, 12), new Vector2(185, 42), game.ToggleCodex);
             var entries = game.settings.augments ?? System.Array.Empty<AugmentDefinition>();
             int pages = Mathf.Max(1, Mathf.CeilToInt(entries.Length / 6f));
             codexPage = Mathf.Clamp(codexPage, 0, pages - 1);
-            for (int i = 0; i < 6 && codexPage * 6 + i < entries.Length; i++)
+            for (int i = 0; i < 6; i++)
             {
-                var augment = entries[codexPage * 6 + i];
-                if (augment == null) continue;
+                int entryIndex = codexPage * 6 + i;
+                bool hasEntry = entryIndex < entries.Length && entries[entryIndex] != null;
+                var augment = hasEntry ? entries[entryIndex] : new AugmentDefinition { title = "", description = "" };
                 int count = game.StackCount(augment.kind);
                 bool owned = count > 0;
                 var card = Fixed(content, "Codex card", new Vector2(i % 2 * 540, -50 - i / 2 * 112), new Vector2(520, 102),
                     owned ? new Color(0.13f, 0.28f, 0.23f) : new Color(0.1f, 0.13f, 0.14f));
+                card.GetComponent<Image>().color = owned ? new Color(0.13f, 0.28f, 0.23f) : new Color(0.1f, 0.13f, 0.14f);
                 var icon = Fixed(card, "Augment icon", new Vector2(12, -22), new Vector2(54, 54), owned ? gold : Color.gray).GetComponent<Image>();
-                if (augment.icon != null) { icon.sprite = augment.icon; icon.preserveAspect = true; icon.color = owned ? Color.white : new Color(0.3f, 0.3f, 0.3f); }
-                Label(card, $"{augment.title}  {(owned ? $"×{count}" : "[미획득]")}", 20, owned ? gold : Color.gray, new Vector2(80, -5), new Vector2(430, 32));
-                Label(card, augment.description, 16, owned ? Color.white : new Color(0.5f, 0.55f, 0.55f), new Vector2(80, -40), new Vector2(430, 56));
+                icon.sprite = augment.icon; icon.preserveAspect = true;
+                icon.color = augment.icon == null ? (owned ? gold : Color.gray) : owned ? Color.white : new Color(0.3f, 0.3f, 0.3f);
+                Label(card, $"{augment.title}  {(owned ? $"×{count}" : "[미획득]")}", 20, owned ? gold : Color.gray, new Vector2(80, -5), new Vector2(430, 32)).color = owned ? gold : Color.gray;
+                Label(card, augment.description, 16, owned ? Color.white : new Color(0.5f, 0.55f, 0.55f), new Vector2(80, -40), new Vector2(430, 56)).color = owned ? Color.white : new Color(0.5f, 0.55f, 0.55f);
+                card.gameObject.SetActive(hasEntry);
             }
             Button(content, "이전", new Vector2(0, -404), new Vector2(150, 44), () => { codexPage--; DrawCodex(); });
             Label(content, $"{codexPage + 1} / {pages}   ·   도감이 열린 동안 전투 정지", 18, Color.white, new Vector2(180, -404), new Vector2(650, 44), TextAnchor.MiddleCenter);

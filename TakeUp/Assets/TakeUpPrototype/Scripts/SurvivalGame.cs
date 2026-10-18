@@ -9,7 +9,7 @@ namespace TakeUp.Prototype
 
     public sealed partial class SurvivalGame : MonoBehaviour
     {
-        [Tooltip("모든 이미지와 수치를 이 설정 에셋에서 교체합니다.")]
+        [Tooltip("전투 수치와 증강 설정. 씬 모드에서는 외형과 배치를 Hierarchy / Prefab에서 편집합니다.")]
         public SurvivalSettings settings;
         public Camera worldCamera;
         public SurvivalHud hud;
@@ -67,21 +67,27 @@ namespace TakeUp.Prototype
                 return;
             }
             circle = MakeSprite(0); diamond = MakeSprite(1); square = MakeSprite(2);
-            world = new GameObject("Runtime World").transform;
-            world.SetParent(transform);
+            world = runtimeRoot;
+            if (world == null) { world = new GameObject("Runtime World").transform; world.SetParent(transform); }
             MaximumHealth = Health = settings.maxHealth;
             moveSpeed = settings.moveSpeed;
             pickupRadius = settings.pickupRadius;
-            BuildArena();
-            playerRenderer = Visual("Player - image in SurvivalSettings", settings.playerSprite, circle,
+            if (scenePlayer == null) BuildArena();
+            playerRenderer = scenePlayer != null ? scenePlayer : Visual("Player", settings.playerSprite, circle,
                 settings.playerTint, Vector2.one * settings.playerSize, Vector2.zero, 10);
             player = playerRenderer.transform;
+            playerColor = playerRenderer.color;
             if (worldCamera == null) worldCamera = Camera.main;
             worldCamera.orthographic = true;
-            worldCamera.orthographicSize = settings.cameraSize;
-            worldCamera.transform.SetPositionAndRotation(new Vector3(0, 0, -10), Quaternion.identity);
-            worldCamera.clearFlags = CameraClearFlags.SolidColor;
-            worldCamera.backgroundColor = new Color(0.035f, 0.06f, 0.055f);
+            if (scenePlayer == null)
+            {
+                worldCamera.orthographicSize = settings.cameraSize;
+                worldCamera.transform.SetPositionAndRotation(new Vector3(0, 0, -10), Quaternion.identity);
+                worldCamera.clearFlags = CameraClearFlags.SolidColor;
+                worldCamera.backgroundColor = new Color(0.035f, 0.06f, 0.055f);
+            }
+            baseCameraSize = worldCamera.orthographicSize;
+            cameraOffset = worldCamera.transform.position - player.position;
             if (settings.dance == null) settings.dance = new StompDanceSettings();
             if (hud == null) hud = gameObject.AddComponent<SurvivalHud>();
             hud.Initialize(this);
@@ -125,7 +131,7 @@ namespace TakeUp.Prototype
             if (input.sqrMagnitude > 0.01f) lastDirection = input.normalized;
             if (keyboard != null && (keyboard.leftShiftKey.wasPressedThisFrame || keyboard.rightShiftKey.wasPressedThisFrame)) StartDash();
             if (dashRemaining > 0) TickDash(dt); else MovePlayer(input, dt);
-            playerRenderer.color = invulnerability > 0 ? Color.Lerp(settings.playerTint, Color.white, 0.65f) : settings.playerTint;
+            playerRenderer.color = invulnerability > 0 ? Color.Lerp(playerColor, Color.white, 0.65f) : playerColor;
             TickSpawner(dt);
             TickEnemies(dt);
             if (State != RunState.Playing) return;
@@ -138,8 +144,8 @@ namespace TakeUp.Prototype
         void LateUpdate()
         {
             if (player == null || worldCamera == null) return;
-            Vector3 target = player.position + Vector3.back * 10;
-            worldCamera.transform.position = Vector3.Lerp(worldCamera.transform.position, target, 1 - Mathf.Exp(-10 * Time.unscaledDeltaTime));
+            Vector3 target = player.position + cameraOffset;
+            if (followPlayer) worldCamera.transform.position = Vector3.Lerp(worldCamera.transform.position, target, 1 - Mathf.Exp(-10 * Time.unscaledDeltaTime));
             UpdateSkillCamera();
         }
 
@@ -147,10 +153,7 @@ namespace TakeUp.Prototype
         {
             if (State != RunState.Playing) return;
             Vector2 position = (Vector2)player.position + Vector2.ClampMagnitude(input, 1) * moveSpeed * dt;
-            float margin = settings.playerSize * 0.5f;
-            position.x = Mathf.Clamp(position.x, -settings.arenaHalfSize.x + margin, settings.arenaHalfSize.x - margin);
-            position.y = Mathf.Clamp(position.y, -settings.arenaHalfSize.y + margin, settings.arenaHalfSize.y - margin);
-            player.position = position;
+            player.position = ClampToArena(position);
             if (Mathf.Abs(input.x) > 0.01f) playerRenderer.flipX = input.x < 0;
         }
 
@@ -185,12 +188,12 @@ namespace TakeUp.Prototype
 
         void SpawnEnemy(EnemyDefinition type, Vector2 position)
         {
-            var renderer = Visual(type.displayName, type.sprite, diamond, type.tint,
+            var renderer = type.prefab != null ? SpawnVisual(type.prefab, position) : Visual(type.displayName, type.sprite, diamond, type.tint,
                 Vector2.one * type.size, position, 9);
-            enemies.Add(new Enemy { body = renderer.transform, renderer = renderer, color = type.tint,
+            enemies.Add(new Enemy { body = renderer.transform, renderer = renderer, color = renderer.color,
                 health = type.health * (1 + (Wave - 1) * settings.healthGrowthPerWave),
                 speed = type.speed, damage = type.damage * (1 + (Wave - 1) * settings.damageGrowthPerWave),
-                radius = type.size * 0.42f, experience = type.experience });
+                radius = type.prefab != null ? VisualRadius(renderer) : type.size * 0.42f, experience = type.experience });
         }
 
         void TickEnemies(float dt)
@@ -213,7 +216,7 @@ namespace TakeUp.Prototype
                 enemy.renderer.flipX = delta.x < 0;
                 enemy.flash = Mathf.Max(0, enemy.flash - dt);
                 enemy.renderer.color = enemy.flash > 0 ? Color.white : enemy.color;
-                if (delta.magnitude < enemy.radius + settings.playerSize * 0.4f) DamagePlayer(enemy.damage);
+                if (delta.magnitude < enemy.radius + VisualRadius(playerRenderer)) DamagePlayer(enemy.damage);
                 if (State == RunState.Dead) return;
             }
         }
@@ -251,14 +254,15 @@ namespace TakeUp.Prototype
 
         void Fire(Vector2 direction, bool spear)
         {
-            var renderer = Visual(spear ? "Spear" : "Stone", spear ? settings.spearSprite : settings.stoneSprite,
+            var prefab = spear ? spearPrefab : stonePrefab;
+            var renderer = prefab != null ? SpawnVisual(prefab, player.position) : Visual(spear ? "Spear" : "Stone", spear ? settings.spearSprite : settings.stoneSprite,
                 spear ? square : circle, spear ? settings.spearTint : settings.stoneTint,
                 spear ? settings.spearSize : Vector2.one * settings.stoneSize, player.position, 12);
-            renderer.transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
+            renderer.transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg) * renderer.transform.rotation;
             shots.Add(new Shot { body = renderer.transform, direction = direction,
                 speed = spear ? settings.spearSpeed : settings.stoneSpeed,
                 damage = (spear ? settings.spearDamage : settings.stoneDamage) * damageMultiplier,
-                radius = spear ? 0.22f : settings.stoneSize * 0.5f, pierce = spear ? 3 : 1, life = 2 });
+                radius = prefab != null ? VisualRadius(renderer) : spear ? 0.22f : settings.stoneSize * 0.5f, pierce = spear ? 3 : 1, life = 2 });
         }
 
         void TickShots(float dt)
@@ -300,7 +304,7 @@ namespace TakeUp.Prototype
                 nearest.value += value;
                 return;
             }
-            var renderer = Visual("Experience", settings.experienceSprite, diamond, settings.experienceTint,
+            var renderer = experiencePrefab != null ? SpawnVisual(experiencePrefab, position) : Visual("Experience", settings.experienceSprite, diamond, settings.experienceTint,
                 Vector2.one * 0.25f, position, 5);
             gems.Add(new Gem { body = renderer.transform, value = value });
         }

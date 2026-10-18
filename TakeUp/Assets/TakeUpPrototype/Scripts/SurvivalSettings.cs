@@ -64,6 +64,8 @@ namespace TakeUp.Prototype
     [Serializable]
     public sealed class EnemyDefinition
     {
+        [Tooltip("연결하면 프리팹의 이미지, 색상, 크기를 사용합니다.")]
+        public SpriteRenderer prefab;
         public string displayName = "야생 생물";
         public Sprite sprite;
         public Color tint = new Color(0.8f, 0.34f, 0.3f);
