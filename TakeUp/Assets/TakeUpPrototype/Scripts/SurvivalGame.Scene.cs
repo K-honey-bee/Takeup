@@ -30,6 +30,9 @@ namespace TakeUp.Prototype
             Vector2 margin = playerRenderer.bounds.extents;
             position.x = right - left <= margin.x * 2 ? (left + right) * 0.5f : Mathf.Clamp(position.x, left + margin.x, right - margin.x);
             position.y = top - bottom <= margin.y * 2 ? (top + bottom) * 0.5f : Mathf.Clamp(position.y, bottom + margin.y, top - margin.y);
+            if (bossEncounter != null) position = bossEncounter.ConstrainMovement(player.position, position, Mathf.Max(margin.x, margin.y));
+            position.x = Mathf.Clamp(position.x, Mathf.Min(left + margin.x, right - margin.x), Mathf.Max(left + margin.x, right - margin.x));
+            position.y = Mathf.Clamp(position.y, Mathf.Min(bottom + margin.y, top - margin.y), Mathf.Max(bottom + margin.y, top - margin.y));
             return position;
         }
 

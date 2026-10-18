@@ -86,9 +86,12 @@ namespace TakeUp.Prototype.Editor
             // The project already uses URP; all generated sprites use its supported default sprite material.
             string output = Path.GetFullPath("Builds/Prototype/TakeUpPrototype.exe");
             Directory.CreateDirectory(Path.GetDirectoryName(output));
+            var buildScenes = new System.Collections.Generic.List<string> { ScenePath };
+            const string bossScene = Folder + "/Scenes/OctopusBossPrototype.unity";
+            if (File.Exists(bossScene)) buildScenes.Add(bossScene);
             var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
             {
-                scenes = new[] { ScenePath }, locationPathName = output,
+                scenes = buildScenes.ToArray(), locationPathName = output,
                 target = BuildTarget.StandaloneWindows64, options = BuildOptions.Development
             });
             if (report.summary.result != BuildResult.Succeeded) throw new Exception("Prototype build failed: " + report.summary.result);

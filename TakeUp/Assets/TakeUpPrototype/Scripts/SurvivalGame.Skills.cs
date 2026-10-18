@@ -32,6 +32,7 @@ namespace TakeUp.Prototype
             public SpriteRenderer visual;
             public Vector2 origin;
             public float radius;
+            public bool hitBoss;
             public readonly HashSet<Enemy> hit = new HashSet<Enemy>();
         }
         readonly List<WaveEffect> shockwaves = new List<WaveEffect>();
@@ -101,8 +102,10 @@ namespace TakeUp.Prototype
             // Slow only world simulation. Music, input judgement and camera use real time.
             float worldDt = Mathf.Min(dt, 0.05f) * Mathf.Clamp(settings.dance.enemyTimeScale, 0.01f, 0.5f);
             Elapsed += worldDt;
-            TickSpawner(worldDt); TickEnemies(worldDt); TickShots(worldDt);
+            if (bossEncounter != null) bossEncounter.Tick(worldDt); else TickSpawner(worldDt);
+            TickEnemies(worldDt); TickShots(worldDt);
             TickShockwaves(Mathf.Min(dt, 0.05f));
+            if (State != RunState.Dancing) return;
             beatKick = Mathf.MoveTowards(beatKick, 0, dt * 1.8f);
             if (DanceResolved)
             {
@@ -179,7 +182,7 @@ namespace TakeUp.Prototype
             State = RunState.Playing;
             invulnerability = settings.hurtInvulnerability;
             if (PendingChoices > 0) OfferAugments();
-            else if (Elapsed >= settings.stageDuration) FinishStage();
+            else if (bossEncounter == null && Elapsed >= settings.stageDuration) FinishStage();
         }
 
         void RestorePlayerArt()
@@ -206,6 +209,8 @@ namespace TakeUp.Prototype
                 Color color = settings.dance.shockwaveColor;
                 color.a *= 1 - wave.radius / Mathf.Max(1, settings.dance.radius);
                 wave.visual.color = color;
+                if (!wave.hitBoss && bossEncounter != null && Vector2.Distance(bossEncounter.Position, wave.origin) <= wave.radius + bossEncounter.Radius)
+                { wave.hitBoss = true; bossEncounter.Damage(settings.dance.damage * damageMultiplier); }
                 for (int j = enemies.Count - 1; j >= 0; j--)
                 {
                     Enemy enemy = enemies[j];

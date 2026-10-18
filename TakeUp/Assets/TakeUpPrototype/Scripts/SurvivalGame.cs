@@ -93,6 +93,9 @@ namespace TakeUp.Prototype
             hud.Initialize(this);
             State = RunState.Playing;
             InitializeSkills();
+            InitializeBossMode();
+            if (System.Array.IndexOf(System.Environment.GetCommandLineArgs(), "--takeup-boss-transition") >= 0)
+                gameObject.AddComponent<BossTransitionSmokeTest>().game = this;
             smokeMode = System.Array.IndexOf(System.Environment.GetCommandLineArgs(), "--takeup-smoke") >= 0;
             if (smokeMode) gameObject.AddComponent<SurvivalSmokeTest>().game = this;
             if (System.Array.IndexOf(System.Environment.GetCommandLineArgs(), "--takeup-dance-smoke") >= 0)
@@ -132,13 +135,14 @@ namespace TakeUp.Prototype
             if (keyboard != null && (keyboard.leftShiftKey.wasPressedThisFrame || keyboard.rightShiftKey.wasPressedThisFrame)) StartDash();
             if (dashRemaining > 0) TickDash(dt); else MovePlayer(input, dt);
             playerRenderer.color = invulnerability > 0 ? Color.Lerp(playerColor, Color.white, 0.65f) : playerColor;
-            TickSpawner(dt);
+            if (bossEncounter != null) bossEncounter.Tick(dt);
+            else TickSpawner(dt);
             TickEnemies(dt);
             if (State != RunState.Playing) return;
             TickWeapons(dt);
             TickShots(dt);
             TickGems(dt);
-            if (State == RunState.Playing && Elapsed >= settings.stageDuration) FinishStage();
+            if (bossEncounter == null && State == RunState.Playing && Elapsed >= settings.stageDuration) FinishStage();
         }
 
         void LateUpdate()
@@ -152,7 +156,8 @@ namespace TakeUp.Prototype
         public void MovePlayer(Vector2 input, float dt)
         {
             if (State != RunState.Playing) return;
-            Vector2 position = (Vector2)player.position + Vector2.ClampMagnitude(input, 1) * moveSpeed * dt;
+            float slow = bossEncounter != null ? bossEncounter.MovementMultiplier(player.position) : 1;
+            Vector2 position = (Vector2)player.position + Vector2.ClampMagnitude(input, 1) * moveSpeed * slow * dt;
             player.position = ClampToArena(position);
             if (Mathf.Abs(input.x) > 0.01f) playerRenderer.flipX = input.x < 0;
         }
@@ -237,8 +242,8 @@ namespace TakeUp.Prototype
         {
             stoneTimer -= dt; spearTimer -= dt;
             Enemy target = NearestEnemy();
-            if (target == null) return;
-            Vector2 direction = (target.body.position - player.position).normalized;
+            if (target == null && (bossEncounter == null || bossEncounter.IsDefeated || Vector2.Distance(player.position, bossEncounter.Position) > settings.attackRange)) return;
+            Vector2 direction = target != null ? (Vector2)(target.body.position - player.position).normalized : (bossEncounter.Position - (Vector2)player.position).normalized;
             if (direction.sqrMagnitude < 0.01f) direction = Vector2.right;
             if (stoneTimer <= 0)
             {
@@ -274,6 +279,8 @@ namespace TakeUp.Prototype
                 Vector2 to = from + shot.direction * shot.speed * dt;
                 shot.body.position = to;
                 shot.life -= dt;
+                if (bossEncounter != null && bossEncounter.HitBySegment(from, to, shot.radius))
+                { bossEncounter.Damage(shot.damage); shot.pierce = 0; }
                 for (int j = enemies.Count - 1; j >= 0 && shot.pierce > 0; j--)
                 {
                     Enemy enemy = enemies[j];

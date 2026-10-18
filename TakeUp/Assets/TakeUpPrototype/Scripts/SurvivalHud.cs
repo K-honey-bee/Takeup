@@ -71,7 +71,7 @@ namespace TakeUp.Prototype
             xpLabel.text = $"경험치  {game.Experience} / {game.RequiredExperience}";
             Fill(healthFill, game.Health / game.MaximumHealth);
             Fill(xpFill, (float)game.Experience / game.RequiredExperience);
-            Fill(stageFill, game.Elapsed / game.settings.stageDuration);
+            Fill(stageFill, game.bossEncounter != null ? 1 - game.bossEncounter.Health / game.bossEncounter.settings.health : game.Elapsed / game.settings.stageDuration);
             equipment.text = $"돌 던지기  ·  {(game.HasSpear ? "관통 창 장착" : "창 미해금")}     |     생존 목표 {game.settings.stageDuration:0}초";
             RefreshSkillHud();
         }
@@ -113,13 +113,16 @@ namespace TakeUp.Prototype
         public void ShowEnd(bool success)
         {
             ClearContent(success ? victoryContent : defeatContent);
-            Label(content, success ? "생존 완료  ·  보스 진입 준비" : "이번 생존은 여기까지", 36, gold,
+            bool bossFight = game.bossEncounter != null;
+            Label(content, success ? (bossFight ? "고대 문어 처치 완료!" : "생존 완료  ·  보스 진입 준비") : "이번 생존은 여기까지", 36, gold,
                 new Vector2(0, -45), new Vector2(1060, 70), TextAnchor.MiddleCenter);
             Label(content, $"레벨 {game.Level}    ·    처치 {game.Kills}    ·    생존 {game.Elapsed:0}초", 24, Color.white,
                 new Vector2(0, -130), new Vector2(1060, 50), TextAnchor.MiddleCenter);
-            Label(content, success ? "다음 제작 단계: 문어 보스\n색상 순서 바위 숨기 · 촉수 공격 · 잉크 장판\n이 프로토타입에는 아직 보스 전투가 포함되지 않습니다." : "경험치를 모으고 증강을 조합해 다시 도전하세요.", 20,
+            Label(content, success ? (bossFight ? "첫 번째 보스를 물리쳤습니다.\n다시 도전하거나 생존 스테이지로 돌아갈 수 있습니다." : "다음 상대: 고대 문어\n색상 순서 바위 숨기 · 촉수 공격 · 잉크 장판\n획득한 증강과 현재 체력을 가지고 진입합니다.") : "패턴을 살피고 다시 도전하세요.", 20,
                 new Color(0.74f, 0.83f, 0.79f), new Vector2(0, -195), new Vector2(1060, 100), TextAnchor.MiddleCenter);
-            Button(content, "다시 도전", new Vector2(350, -330), new Vector2(360, 60), game.Restart);
+            Button(content, success && !bossFight ? "문어 보스 진입" : "다시 도전", new Vector2(350, -330), new Vector2(360, 60),
+                success && !bossFight ? game.EnterBossScene : game.Restart);
+            Button(content, bossFight ? "생존 스테이지로 돌아가기" : "생존 다시 시작", new Vector2(350, -400), new Vector2(360, 48), game.ReturnToSurvival);
         }
 
         public void HideOverlay() { if (overlay != null) overlay.gameObject.SetActive(false); }
