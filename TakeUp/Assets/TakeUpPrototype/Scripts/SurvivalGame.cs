@@ -224,6 +224,7 @@ namespace TakeUp.Prototype
             for (int i = 0; i < enemies.Count; i++)
             {
                 Enemy enemy = enemies[i];
+                Vector2 beforeMovement = enemy.body.position;
                 Vector2 delta = (Vector2)player.position - (Vector2)enemy.body.position;
                 Vector2 separation = Vector2.zero;
                 // Bounded enemy count keeps this simple local separation inexpensive in the prototype.
@@ -237,6 +238,7 @@ namespace TakeUp.Prototype
                 }
                 if (enemy.knockbackRemaining > 0) TickEnemyKnockback(enemy, dt);
                 else enemy.body.position += (Vector3)(Vector2.ClampMagnitude(delta.normalized + separation * 2, 1) * enemy.speed * dt);
+                enemy.body.position = MapWall.Constrain(beforeMovement, enemy.body.position, enemy.radius);
                 enemy.renderer.flipX = delta.x < 0;
                 enemy.flash = Mathf.Max(0, enemy.flash - dt);
                 enemy.renderer.color = enemy.flash > 0 ? Color.white : enemy.burnRemaining > 0 ? Color.Lerp(enemy.color, FlameColor, .35f + .2f * Mathf.Sin(enemy.burnRemaining * 14)) : enemy.color;
@@ -309,9 +311,11 @@ namespace TakeUp.Prototype
                 Shot shot = shots[i];
                 Vector2 from = shot.body.position;
                 Vector2 to = from + shot.direction * shot.speed * Mathf.Min(dt, Mathf.Max(0, shot.life));
+                bool hitWall = MapWall.Cast(from, to, shot.radius, out Vector2 wallPoint, out _);
+                if (hitWall) to = wallPoint;
                 shot.body.position = to;
                 shot.life -= dt;
-                if (!shot.hitBoss && ActiveBoss != null && ActiveBoss.HitBySegment(from, to, shot.radius))
+                if (!shot.hitBoss && ActiveBoss != null && !MapWall.Blocks(from, ActiveBoss.Position) && ActiveBoss.HitBySegment(from, to, shot.radius))
                 {
                     shot.hitBoss = true; ActiveBoss.Damage(shot.damage); if (shot.burning) IgniteBoss(); shot.pierce = 0;
                     if (TryRicochet(shot, to)) continue;
@@ -320,6 +324,7 @@ namespace TakeUp.Prototype
                 {
                     Enemy enemy = enemies[j];
                     if (shot.hit.Contains(enemy)) continue;
+                    if (MapWall.Blocks(from, enemy.body.position)) continue;
                     Vector2 segment = to - from;
                     float fraction = segment.sqrMagnitude > 0 ? Mathf.Clamp01(Vector2.Dot((Vector2)enemy.body.position - from, segment) / segment.sqrMagnitude) : 0;
                     if (Vector2.Distance(from + segment * fraction, enemy.body.position) > enemy.radius + shot.radius) continue;
@@ -333,7 +338,7 @@ namespace TakeUp.Prototype
                     }
                     if (shot.pierce <= 0 && TryRicochet(shot, from + segment * fraction)) break;
                 }
-                if (shot.life <= 0 || shot.pierce <= 0) { Destroy(shot.body.gameObject); shots.RemoveAt(i); }
+                if (hitWall || shot.life <= 0 || shot.pierce <= 0) { Destroy(shot.body.gameObject); shots.RemoveAt(i); }
             }
         }
 

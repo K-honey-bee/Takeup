@@ -145,6 +145,7 @@ namespace TakeUp.Prototype
 
         bool ClearGlidePath(Vector2 from, Vector2 to)
         {
+            if (MapWall.Cast(from, to, Radius, out _, out _)) return false;
             if (SegmentDistance(game.PlayerPosition, from, to) < Radius + 1) return false;
             foreach (var rock in rocks)
                 if (SegmentDistance(rock.transform.position, from, to) < Radius + rock.WorldRadius + .3f) return false;
@@ -245,10 +246,12 @@ namespace TakeUp.Prototype
             for (int i = inkShots.Count - 1; i >= 0; i--)
             {
                 var shot = inkShots[i]; Vector2 from = shot.visual.transform.position, to = from + shot.velocity * dt;
+                bool hitWall = MapWall.Cast(from, to, .225f, out Vector2 wallPoint, out _);
+                if (hitWall) to = wallPoint;
                 shot.visual.transform.position = to; shot.life -= dt;
-                bool hit = SegmentDistance(game.PlayerPosition, from, to) <= .5f;
+                bool hit = !MapWall.Blocks(from, game.PlayerPosition) && SegmentDistance(game.PlayerPosition, from, to) <= .5f;
                 if (hit) { game.DamagePlayer(settings.inkDamage); SplashScreenInk(); }
-                if (hit || shot.life <= 0 || !arena.Contains(to)) { Destroy(shot.visual.gameObject); inkShots.RemoveAt(i); }
+                if (hitWall || hit || shot.life <= 0 || !arena.Contains(to)) { Destroy(shot.visual.gameObject); inkShots.RemoveAt(i); }
             }
         }
 

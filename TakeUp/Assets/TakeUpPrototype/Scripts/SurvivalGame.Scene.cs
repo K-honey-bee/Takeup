@@ -33,7 +33,7 @@ namespace TakeUp.Prototype
             if (ActiveBoss != null) position = ActiveBoss.ConstrainMovement(player.position, position, Mathf.Max(margin.x, margin.y));
             position.x = Mathf.Clamp(position.x, Mathf.Min(left + margin.x, right - margin.x), Mathf.Max(left + margin.x, right - margin.x));
             position.y = Mathf.Clamp(position.y, Mathf.Min(bottom + margin.y, top - margin.y), Mathf.Max(bottom + margin.y, top - margin.y));
-            return position;
+            return MapWall.Constrain(player.position, position, Mathf.Max(margin.x, margin.y));
         }
 
         SpriteRenderer SpawnVisual(SpriteRenderer prefab, Vector2 position)

@@ -44,14 +44,6 @@ namespace TakeUp.Prototype
         void InitializeOrbitBone()
         {
             if (settings.orbitBone == null) settings.orbitBone = new OrbitBoneSettings();
-            var entries = new List<AugmentDefinition>(settings.augments ?? Array.Empty<AugmentDefinition>());
-            if (!entries.Exists(a => a != null && a.kind == AugmentKind.OrbitFire))
-                entries.Add(new AugmentDefinition { kind = AugmentKind.OrbitFire, title = "회전 불꽃",
-                    description = "플레이어 주위를 도는 불꽃 2개 생성\n추가 획득마다 불꽃 +1개", amount = 1, maxStacks = 6 });
-            if (!entries.Exists(a => a != null && a.kind == AugmentKind.BoneBoomerang))
-                entries.Add(new AugmentDefinition { kind = AugmentKind.BoneBoomerang, title = "뼈 부메랑",
-                    description = "좌클릭을 누르면 조준 방향으로 뼈 투척\n돌아오면서도 적을 관통 공격", amount = 1, maxStacks = 1 });
-            settings.augments = entries.ToArray();
         }
 
         void ThrowBone(Vector2 direction)
@@ -79,16 +71,20 @@ namespace TakeUp.Prototype
                 float angle = (orbitAngle + i * 360f / orbitFires.Count) * Mathf.Deg2Rad;
                 Vector2 position = PlayerPosition + new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * Mathf.Max(.1f, config.orbitRadius);
                 orbitFires[i].transform.position = position;
+                bool occluded = MapWall.Blocks(PlayerPosition, position);
+                orbitFires[i].enabled = !occluded;
+                if (occluded) continue;
                 for (int j = enemies.Count - 1; j >= 0; j--)
                 {
                     var enemy = enemies[j];
+                    if (MapWall.Blocks(position, enemy.body.position)) continue;
                     if (enemy.nextOrbitHit > orbitClock || Vector2.Distance(position, enemy.body.position) > hitRadius + enemy.radius) continue;
                     enemy.nextOrbitHit = orbitClock + Mathf.Max(.05f, config.orbitHitInterval);
                     enemy.health -= config.orbitDamage * damageMultiplier; enemy.flash = .1f;
                     if (enemy.health <= 0) KillEnemy(j);
                 }
                 if (ActiveBoss != null && !ActiveBoss.IsFinale && !ActiveBoss.IsDefeated && nextOrbitBossHit <= orbitClock
-                    && Vector2.Distance(position, ActiveBoss.Position) <= hitRadius + ActiveBoss.Radius)
+                    && !MapWall.Blocks(position, ActiveBoss.Position) && Vector2.Distance(position, ActiveBoss.Position) <= hitRadius + ActiveBoss.Radius)
                 {
                     nextOrbitBossHit = orbitClock + Mathf.Max(.05f, config.orbitHitInterval);
                     ActiveBoss.Damage(config.orbitDamage * damageMultiplier);
@@ -108,26 +104,29 @@ namespace TakeUp.Prototype
                     float step = Mathf.Min(Mathf.Max(.1f, config.boneSpeed) * dt, Mathf.Max(0, config.boneDistance - bone.travelled));
                     to = from + bone.direction * step; bone.travelled += step;
                 }
+                float radius = Mathf.Max(.05f, Mathf.Min(config.boneSize.x, config.boneSize.y) * .5f);
+                bool hitWall = MapWall.Cast(from, to, radius, out Vector2 wallPoint, out Vector2 wallNormal);
+                if (hitWall) to = wallPoint + wallNormal * .003f;
                 bone.visual.transform.position = to;
                 bone.visual.transform.Rotate(0, 0, config.boneSpinDegreesPerSecond * dt);
-                float radius = Mathf.Max(.05f, Mathf.Min(config.boneSize.x, config.boneSize.y) * .5f);
                 for (int j = enemies.Count - 1; j >= 0; j--)
                 {
                     var enemy = enemies[j];
+                    if (MapWall.Blocks(from, enemy.body.position)) continue;
                     if (bone.hit.Contains(enemy) || OctopusBossEncounter.SegmentDistance(enemy.body.position, from, to) > enemy.radius + radius) continue;
                     bone.hit.Add(enemy); enemy.health -= config.boneDamage * damageMultiplier; enemy.flash = .1f;
                     KnockBackEnemy(enemy, to - from);
                     if (enemy.health <= 0) KillEnemy(j);
                 }
-                if (!bone.hitBoss && ActiveBoss != null && !ActiveBoss.IsFinale && !ActiveBoss.IsDefeated && ActiveBoss.HitBySegment(from, to, radius))
+                if (!bone.hitBoss && ActiveBoss != null && !ActiveBoss.IsFinale && !ActiveBoss.IsDefeated && !MapWall.Blocks(from, ActiveBoss.Position) && ActiveBoss.HitBySegment(from, to, radius))
                 {
                     bone.hitBoss = true; ActiveBoss.Damage(config.boneDamage * damageMultiplier);
                 }
-                if (!returningAtStart && bone.travelled >= config.boneDistance)
+                if (!returningAtStart && (hitWall || bone.travelled >= config.boneDistance))
                 {
                     bone.returning = true; bone.hit.Clear(); bone.hitBoss = false;
                 }
-                if ((returningAtStart && Vector2.Distance(to, PlayerPosition) < .25f) || bone.age >= 10)
+                if ((returningAtStart && (hitWall || Vector2.Distance(to, PlayerPosition) < .25f)) || bone.age >= 10)
                 {
                     Destroy(bone.visual.gameObject); bones.RemoveAt(i);
                 }

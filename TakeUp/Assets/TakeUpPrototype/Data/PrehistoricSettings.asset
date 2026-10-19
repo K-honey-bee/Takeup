@@ -192,6 +192,18 @@ MonoBehaviour:
     kind: 15
     amount: 1
     maxStacks: 1
+  - title: 회전 불꽃
+    description: "플레이어 주위를 도는 불꽃 2개 생성\n추가 획득마다 불꽃 +1개"
+    icon: {fileID: 0}
+    kind: 16
+    amount: 1
+    maxStacks: 6
+  - title: 뼈 부메랑
+    description: "좌클릭을 누르면 조준 방향으로 뼈 투척\n돌아오면서도 적을 관통 공격"
+    icon: {fileID: 0}
+    kind: 17
+    amount: 1
+    maxStacks: 1
   dashDistance: 3.5
   dashDuration: 0.18
   dashCooldown: 2
