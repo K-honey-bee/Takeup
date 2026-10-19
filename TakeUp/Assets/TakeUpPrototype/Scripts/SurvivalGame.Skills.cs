@@ -218,6 +218,7 @@ namespace TakeUp.Prototype
                     wave.hit.Add(enemy);
                     if (wave.burning) Ignite(enemy);
                     enemy.health -= settings.dance.damage * damageMultiplier; enemy.flash = 0.15f;
+                    KnockBackEnemy(enemy, (Vector2)enemy.body.position - wave.origin);
                     if (enemy.health <= 0)
                     {
                         KillEnemy(j);

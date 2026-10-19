@@ -130,6 +130,7 @@ namespace TakeUp.Prototype
             bool spread = enemy.burnRemaining > 0 && StackCount(AugmentKind.FireSpread) > 0;
             enemies.RemoveAt(index);
             DropExperience(position, enemy.experience); Kills++;
+            BeginEnemyDeath(enemy);
             Destroy(enemy.body.gameObject);
             if (!spread) return;
             float radius = Mathf.Max(.1f, settings.fire.spreadRadius);

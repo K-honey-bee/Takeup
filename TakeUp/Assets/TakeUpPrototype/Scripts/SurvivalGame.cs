@@ -30,6 +30,9 @@ namespace TakeUp.Prototype
 
         sealed class Enemy
         {
+            public EnemyDefinition definition;
+            public Vector2 knockbackDirection;
+            public float knockbackRemaining;
             public Transform body;
             public SpriteRenderer renderer;
             public float health, speed, damage, radius, flash;
@@ -126,6 +129,7 @@ namespace TakeUp.Prototype
             if (State == RunState.Dancing) { TickDance(Time.unscaledDeltaTime); return; }
             if (State != RunState.Playing) return;
             float dt = Mathf.Min(Time.deltaTime, 0.05f);
+            TickEnemyDeaths(dt);
             TickSkills(dt);
             if (keyboard != null && keyboard.qKey.wasPressedThisFrame && StartDance()) return;
             Elapsed += dt;
@@ -206,7 +210,7 @@ namespace TakeUp.Prototype
         {
             var renderer = type.prefab != null ? SpawnVisual(type.prefab, position) : Visual(type.displayName, type.sprite, diamond, type.tint,
                 Vector2.one * type.size, position, 9);
-            enemies.Add(new Enemy { body = renderer.transform, renderer = renderer, color = renderer.color,
+            enemies.Add(new Enemy { definition = type, body = renderer.transform, renderer = renderer, color = renderer.color,
                 health = type.health * (1 + (Wave - 1) * settings.healthGrowthPerWave),
                 speed = type.speed, damage = type.damage * (1 + (Wave - 1) * settings.damageGrowthPerWave),
                 radius = type.prefab != null ? VisualRadius(renderer) : type.size * 0.42f, experience = type.experience });
@@ -228,11 +232,12 @@ namespace TakeUp.Prototype
                     float desired = enemy.radius + enemies[j].radius;
                     if (distance < desired && distance > 0.001f) separation += apart / distance * (desired - distance);
                 }
-                enemy.body.position += (Vector3)(Vector2.ClampMagnitude(delta.normalized + separation * 2, 1) * enemy.speed * dt);
+                if (enemy.knockbackRemaining > 0) TickEnemyKnockback(enemy, dt);
+                else enemy.body.position += (Vector3)(Vector2.ClampMagnitude(delta.normalized + separation * 2, 1) * enemy.speed * dt);
                 enemy.renderer.flipX = delta.x < 0;
                 enemy.flash = Mathf.Max(0, enemy.flash - dt);
                 enemy.renderer.color = enemy.flash > 0 ? Color.white : enemy.burnRemaining > 0 ? Color.Lerp(enemy.color, FlameColor, .35f + .2f * Mathf.Sin(enemy.burnRemaining * 14)) : enemy.color;
-                if (delta.magnitude < enemy.radius + VisualRadius(playerRenderer)) DamagePlayer(enemy.damage);
+                if (Vector2.Distance(player.position, enemy.body.position) < enemy.radius + VisualRadius(playerRenderer)) DamagePlayer(enemy.damage);
                 if (State == RunState.Dead) return;
             }
         }
@@ -312,7 +317,7 @@ namespace TakeUp.Prototype
                     shot.hit.Add(enemy); shot.pierce--;
                     if (shot.burning) Ignite(enemy);
                     enemy.health -= shot.damage; enemy.flash = 0.1f;
-                    enemy.body.position += (Vector3)(shot.direction * 0.12f);
+                    KnockBackEnemy(enemy, shot.direction);
                     if (enemy.health <= 0)
                     {
                         KillEnemy(j);

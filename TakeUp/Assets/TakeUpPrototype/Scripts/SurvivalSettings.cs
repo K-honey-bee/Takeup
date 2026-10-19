@@ -80,6 +80,18 @@ namespace TakeUp.Prototype
         [Min(1)] public int experience = 1;
         [Min(1)] public int firstWave = 1;
         [Min(0.01f)] public float spawnWeight = 1;
+        [Header("피격 밀림")]
+        [Min(0)] public float knockbackDistance = .65f;
+        [Min(.01f)] public float knockbackDuration = .16f;
+        [Header("처치 애니메이션 / 시체")]
+        [Tooltip("처치 스프라이트를 재생 순서대로 넣습니다. 비워두면 바로 시체로 전환합니다.")]
+        public Sprite[] deathFrames;
+        [Min(1)] public float deathFramesPerSecond = 12;
+        [Tooltip("애니메이션 후 남는 시체 이미지. 비워두면 마지막 처치 프레임 또는 기존 이미지를 사용합니다.")]
+        public Sprite corpseSprite;
+        [Min(0)] public float corpseHoldTime = .5f;
+        [Min(0)] public int corpseBlinkCount = 3;
+        [Min(.02f)] public float corpseBlinkInterval = .1f;
     }
 
     public enum AugmentKind { Damage, AttackSpeed, MoveSpeed, MaxHealth, PickupRadius, ExtraStone, Spear, Regeneration, StompDance, FireDiscovery, FireDamage, FireDuration, FireSpread, FireDance, RicochetStone, ThornSkin }
