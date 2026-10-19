@@ -63,6 +63,8 @@ namespace TakeUp.Prototype
         public FireSettings fire = new FireSettings();
         [Header("선사시대 증강 / 돌과 가시")]
         public PrimitiveAugmentSettings primitive = new PrimitiveAugmentSettings();
+        [Header("회전 불꽃 / 뼈 부메랑 이미지와 수치")]
+        public OrbitBoneSettings orbitBone = new OrbitBoneSettings();
     }
 
     [Serializable]
@@ -94,7 +96,7 @@ namespace TakeUp.Prototype
         [Min(.02f)] public float corpseBlinkInterval = .1f;
     }
 
-    public enum AugmentKind { Damage, AttackSpeed, MoveSpeed, MaxHealth, PickupRadius, ExtraStone, Spear, Regeneration, StompDance, FireDiscovery, FireDamage, FireDuration, FireSpread, FireDance, RicochetStone, ThornSkin }
+    public enum AugmentKind { Damage, AttackSpeed, MoveSpeed, MaxHealth, PickupRadius, ExtraStone, Spear, Regeneration, StompDance, FireDiscovery, FireDamage, FireDuration, FireSpread, FireDance, RicochetStone, ThornSkin, OrbitFire, BoneBoomerang }
 
     public enum BeatDirection { Left, Right }
 

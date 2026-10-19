@@ -33,6 +33,7 @@ namespace TakeUp.Prototype
             public EnemyDefinition definition;
             public Vector2 knockbackDirection;
             public float knockbackRemaining;
+            public float nextOrbitHit;
             public Transform body;
             public SpriteRenderer renderer;
             public float health, speed, damage, radius, flash;
@@ -102,6 +103,7 @@ namespace TakeUp.Prototype
             if (settings.fire == null) settings.fire = new FireSettings();
             if (settings.primitive == null) settings.primitive = new PrimitiveAugmentSettings();
             InitializeSkills();
+            InitializeOrbitBone();
             InitializeBossMode();
             if (System.Array.IndexOf(System.Environment.GetCommandLineArgs(), "--takeup-boss-transition") >= 0)
                 gameObject.AddComponent<BossTransitionSmokeTest>().game = this;
@@ -155,6 +157,7 @@ namespace TakeUp.Prototype
             TickEnemies(dt);
             if (State != RunState.Playing) return;
             TickWeapons(dt);
+            TickOrbitBone(dt);
             TickShots(dt);
             TickGems(dt);
             if (ActiveBoss == null && State == RunState.Playing && Elapsed >= settings.stageDuration) FinishStage();
@@ -257,6 +260,7 @@ namespace TakeUp.Prototype
         void TickWeapons(float dt)
         {
             stoneTimer -= dt; spearTimer -= dt;
+            boneTimer -= dt;
             var mouse = Mouse.current;
             if (mouse == null || worldCamera == null) return;
             Ray aimRay = worldCamera.ScreenPointToRay(mouse.position.ReadValue());
@@ -267,6 +271,11 @@ namespace TakeUp.Prototype
             direction.Normalize();
             if (Mathf.Abs(direction.x) > 0.01f) playerRenderer.flipX = direction.x < 0;
             if (!mouse.leftButton.isPressed) return;
+            if (StackCount(AugmentKind.BoneBoomerang) > 0 && boneTimer <= 0)
+            {
+                ThrowBone(direction);
+                boneTimer = Mathf.Max(.1f, settings.orbitBone.boneInterval) / Mathf.Max(.1f, attackSpeed);
+            }
             if (stoneTimer <= 0)
             {
                 stoneTimer = settings.stoneInterval / attackSpeed;

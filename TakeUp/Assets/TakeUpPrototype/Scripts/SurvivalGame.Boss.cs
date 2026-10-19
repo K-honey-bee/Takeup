@@ -15,6 +15,7 @@ namespace TakeUp.Prototype
             public int level, kills, stones;
             public float hp, maxHp, speed, damage, attackSpeed, pickup, regeneration;
             public bool spear;
+            public OrbitBoneSettings orbitBone;
             public Dictionary<AugmentKind, int> stacks;
         }
         static BossEntry bossEntry;
@@ -29,6 +30,7 @@ namespace TakeUp.Prototype
                 damageMultiplier = bossEntry.damage; attackSpeed = bossEntry.attackSpeed;
                 pickupRadius = bossEntry.pickup; regeneration = bossEntry.regeneration; HasSpear = bossEntry.spear;
                 stacks.Clear(); foreach (var pair in bossEntry.stacks) stacks[pair.Key] = pair.Value;
+                if (bossEntry.orbitBone != null) settings.orbitBone = bossEntry.orbitBone;
             }
             ActiveBoss.Initialize();
             if (bullEncounter != null && System.Array.IndexOf(System.Environment.GetCommandLineArgs(), "--takeup-bull-smoke") >= 0)
@@ -42,7 +44,7 @@ namespace TakeUp.Prototype
             if (ActiveBoss != null || State != RunState.BossReady) return;
             bossEntry = new BossEntry { level = Level, kills = Kills, stones = stoneCount, hp = Health, maxHp = MaximumHealth,
                 speed = moveSpeed, damage = damageMultiplier, attackSpeed = attackSpeed, pickup = pickupRadius,
-                regeneration = regeneration, spear = HasSpear, stacks = new Dictionary<AugmentKind, int>(stacks) };
+                regeneration = regeneration, spear = HasSpear, orbitBone = settings.orbitBone, stacks = new Dictionary<AugmentKind, int>(stacks) };
             SceneManager.LoadScene("OctopusBossPrototype");
         }
 
