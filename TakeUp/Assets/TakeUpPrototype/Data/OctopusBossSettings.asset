@@ -22,10 +22,41 @@ MonoBehaviour:
   sweepEndAngle: 0
   tentacleDamage: 20
   recoveryTime: 1
-  colorFlashTime: 0.5
-  hideTime: 1.5
+  colorFlashTime: 2
+  hideTime: 2
   memoryDamage: 20
+  rageAngles:
+  - 0
+  - 90
+  - 45
+  - -45
+  - 0
+  - 90
+  - -45
+  - 45
+  rageWarningTime: 0.65
+  rageImpactTime: 0.18
+  rageInterval: 0.16
+  rageWidth: 1.4
+  finaleFlashTime: 0.8
+  finaleMoveTime: 3.5
+  finaleImpactTime: 0.35
   inkRadius: 1.8
   inkLifetime: 20
   inkMoveMultiplier: 0.45
   inkWarningTime: 0.9
+  mobilePatterns: 1
+  glideDuration: 0.85
+  glidePause: 0.8
+  glideDistance: 4
+  trackingWarning: 0.7
+  trackingInterval: 0.38
+  trackingRadius: 1.1
+  waveWarning: 0.9
+  waveInterval: 0.22
+  pressureInterval: 2.6
+  bombFuse: 1.1
+  bombInterval: 4.2
+  inkShotSpeed: 4.5
+  inkDamage: 12
+  screenInkDuration: 1.35
