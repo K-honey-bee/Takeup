@@ -216,17 +216,6 @@ MonoBehaviour:
     kind: 15
     amount: 1
     maxStacks: 1
-<<<<<<< HEAD
-  - title: 회전 불꽃
-    description: "플레이어 주위를 도는 불꽃 2개 생성\n추가 획득마다 불꽃 +1개"
-    icon: {fileID: 0}
-    kind: 16
-    amount: 1
-    maxStacks: 6
-  - title: 뼈 부메랑
-    description: "좌클릭을 누르면 조준 방향으로 뼈 투척\n돌아오면서도 적을 관통 공격"
-    icon: {fileID: 0}
-=======
   - title: "\uD68C\uC804 \uBD88\uAF43"
     description: "\uD50C\uB808\uC774\uC5B4 \uC8FC\uC704\uB97C \uB3C4\uB294 \uBD88\uAF43
       2\uAC1C \uC0DD\uC131\n\uCD94\uAC00 \uD68D\uB4DD\uB9C8\uB2E4 \uBD88\uAF43 +1\uAC1C"
@@ -239,7 +228,6 @@ MonoBehaviour:
       \uBF08 \uD22C\uCC99\n\uB3CC\uC544\uC624\uBA74\uC11C\uB3C4 \uC801\uC744 \uAD00\uD1B5
       \uACF5\uACA9"
     icon: {fileID: -1192711238, guid: b29d52d19564c8a49a6e9a25d238acdd, type: 3}
->>>>>>> ec15ab95224d3cb15a5e1842dd1b0f54eb1dcdf2
     kind: 17
     amount: 1
     maxStacks: 1

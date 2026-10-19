@@ -1,20 +1,12 @@
 fileFormatVersion: 2
-<<<<<<< HEAD
-guid: b2d68e3becdc71241a94dfcdd3244240
-=======
 guid: b29d52d19564c8a49a6e9a25d238acdd
->>>>>>> ec15ab95224d3cb15a5e1842dd1b0f54eb1dcdf2
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
     mipMapMode: 0
-<<<<<<< HEAD
-    enableMipMap: 1
-=======
     enableMipMap: 0
->>>>>>> ec15ab95224d3cb15a5e1842dd1b0f54eb1dcdf2
     sRGBTexture: 1
     linearTexture: 0
     fadeOut: 0
@@ -42,18 +34,6 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-<<<<<<< HEAD
-    filterMode: 1
-    aniso: 1
-    mipBias: 0
-    wrapU: 0
-    wrapV: 0
-    wrapW: 0
-  nPOTScale: 1
-  lightmap: 0
-  compressionQuality: 50
-  spriteMode: 0
-=======
     filterMode: 0
     aniso: 1
     mipBias: 0
@@ -64,7 +44,6 @@ TextureImporter:
   lightmap: 0
   compressionQuality: 50
   spriteMode: 2
->>>>>>> ec15ab95224d3cb15a5e1842dd1b0f54eb1dcdf2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -73,15 +52,9 @@ TextureImporter:
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
-<<<<<<< HEAD
-  alphaIsTransparency: 0
-  spriteTessellationDetail: -1
-  textureType: 0
-=======
   alphaIsTransparency: 1
   spriteTessellationDetail: -1
   textureType: 8
->>>>>>> ec15ab95224d3cb15a5e1842dd1b0f54eb1dcdf2
   textureShape: 1
   singleChannelComponent: 0
   flipbookRows: 1
@@ -121,11 +94,7 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 4
-<<<<<<< HEAD
-    buildTarget: Android
-=======
     buildTarget: WebGL
->>>>>>> ec15ab95224d3cb15a5e1842dd1b0f54eb1dcdf2
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -139,9 +108,6 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-<<<<<<< HEAD
-    sprites: []
-=======
     sprites:
     - serializedVersion: 2
       name: "\uC99D\uAC15 \uC544\uC774\uCF58_0"
@@ -341,16 +307,11 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
->>>>>>> ec15ab95224d3cb15a5e1842dd1b0f54eb1dcdf2
     outline: []
     customData: 
     physicsShape: []
     bones: []
-<<<<<<< HEAD
-    spriteID: 
-=======
     spriteID: b9d38914d79a61d45874a89b4c289014
->>>>>>> ec15ab95224d3cb15a5e1842dd1b0f54eb1dcdf2
     internalID: 0
     vertices: []
     indices: 
@@ -359,9 +320,6 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-<<<<<<< HEAD
-    nameFileIdTable: {}
-=======
     nameFileIdTable:
       "\uC99D\uAC15 \uC544\uC774\uCF58_0": -817478072
       "\uC99D\uAC15 \uC544\uC774\uCF58_1": -420883787
@@ -372,7 +330,6 @@ TextureImporter:
       "\uC99D\uAC15 \uC544\uC774\uCF58_6": -475837754
       "\uC99D\uAC15 \uC544\uC774\uCF58_7": 1924013442
       "\uC99D\uAC15 \uC544\uC774\uCF58_8": -1192711238
->>>>>>> ec15ab95224d3cb15a5e1842dd1b0f54eb1dcdf2
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
