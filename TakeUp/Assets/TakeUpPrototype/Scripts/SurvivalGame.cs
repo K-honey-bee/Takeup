@@ -252,10 +252,16 @@ namespace TakeUp.Prototype
         void TickWeapons(float dt)
         {
             stoneTimer -= dt; spearTimer -= dt;
-            Enemy target = NearestEnemy();
-            if (target == null && (ActiveBoss == null || ActiveBoss.IsDefeated || Vector2.Distance(player.position, ActiveBoss.Position) > settings.attackRange)) return;
-            Vector2 direction = target != null ? (Vector2)(target.body.position - player.position).normalized : (ActiveBoss.Position - (Vector2)player.position).normalized;
-            if (direction.sqrMagnitude < 0.01f) direction = Vector2.right;
+            var mouse = Mouse.current;
+            if (mouse == null || worldCamera == null) return;
+            Ray aimRay = worldCamera.ScreenPointToRay(mouse.position.ReadValue());
+            Plane playerPlane = new Plane(Vector3.forward, player.position);
+            if (!playerPlane.Raycast(aimRay, out float aimDistance)) return;
+            Vector2 direction = (Vector2)(aimRay.GetPoint(aimDistance) - player.position);
+            if (direction.sqrMagnitude < 0.0001f) return;
+            direction.Normalize();
+            if (Mathf.Abs(direction.x) > 0.01f) playerRenderer.flipX = direction.x < 0;
+            if (!mouse.leftButton.isPressed) return;
             if (stoneTimer <= 0)
             {
                 stoneTimer = settings.stoneInterval / attackSpeed;
