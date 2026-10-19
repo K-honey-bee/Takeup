@@ -33,8 +33,8 @@ MonoBehaviour:
   spearSize: {x: 0.8, y: 0.18}
   experienceSprite: {fileID: 0}
   experienceTint: {r: 0.3, g: 1, b: 0.7, a: 1}
-  firstLevelExperience: 6
-  experienceGrowth: 4
+  firstLevelExperience: 3
+  experienceGrowth: 20
   pickupRadius: 2
   pickupSpeed: 10
   groundSprite: {fileID: 21300000, guid: 2a62b3105cbee5d49b50384ab0aa24e0, type: 3}
@@ -61,6 +61,14 @@ MonoBehaviour:
     experience: 1
     firstWave: 1
     spawnWeight: 1
+    knockbackDistance: 0.65
+    knockbackDuration: 0.16
+    deathFrames: []
+    deathFramesPerSecond: 12
+    corpseSprite: {fileID: 0}
+    corpseHoldTime: 0.5
+    corpseBlinkCount: 1
+    corpseBlinkInterval: 0.1
   - prefab: {fileID: 7332539394433539582, guid: 3fe0e8561c0816543a38e615f654272f, type: 3}
     displayName: "\uB0A0\uC318 \uC57C\uC218"
     sprite: {fileID: 1345396793, guid: 2730458e073955d489a5a5511c4fac87, type: 3}
@@ -72,6 +80,14 @@ MonoBehaviour:
     experience: 2
     firstWave: 2
     spawnWeight: 0.5
+    knockbackDistance: 0.65
+    knockbackDuration: 0.16
+    deathFrames: []
+    deathFramesPerSecond: 12
+    corpseSprite: {fileID: 0}
+    corpseHoldTime: 0.5
+    corpseBlinkCount: 1
+    corpseBlinkInterval: 0.1
   - prefab: {fileID: 2111426484862797062, guid: a463acc4c26eac9488d573170e4d6ca9, type: 3}
     displayName: "\uD070 \uC57C\uC218"
     sprite: {fileID: -407179706, guid: 2730458e073955d489a5a5511c4fac87, type: 3}
@@ -83,6 +99,14 @@ MonoBehaviour:
     experience: 4
     firstWave: 3
     spawnWeight: 0.3
+    knockbackDistance: 0.65
+    knockbackDuration: 0.16
+    deathFrames: []
+    deathFramesPerSecond: 12
+    corpseSprite: {fileID: 0}
+    corpseHoldTime: 0.5
+    corpseBlinkCount: 1
+    corpseBlinkInterval: 0.1
   augments:
   - title: "\uB0A0\uCE74\uB85C\uC6B4 \uB3CC"
     description: "\uB3CC\uACFC \uCC3D\uC758 \uD53C\uD574\uB7C9 +25%"
@@ -144,35 +168,35 @@ MonoBehaviour:
     description: "\uB3CC\xB7\uCC3D \uC801\uC911 \uC2DC \uD654\uC0C1 \uBD80\uC5EC\n\uAE30\uBCF8
       \uCD08\uB2F9 6 \uD53C\uD574, 3\uCD08 \uC9C0\uC18D \xB7 \uC7AC\uC801\uC911 \uC2DC
       \uC2DC\uAC04 \uAC31\uC2E0"
-    icon: {fileID: 0}
+    icon: {fileID: -817478072, guid: b29d52d19564c8a49a6e9a25d238acdd, type: 3}
     kind: 9
     amount: 1
     maxStacks: 1
   - title: "\uB728\uAC70\uC6B4 \uBD88\uC528"
     description: "[\uBD88\uC758 \uBC1C\uACAC \uD544\uC694] \uD654\uC0C1 \uCD08\uB2F9
       \uD53C\uD574 +3"
-    icon: {fileID: 0}
+    icon: {fileID: -420883787, guid: b29d52d19564c8a49a6e9a25d238acdd, type: 3}
     kind: 10
     amount: 3
     maxStacks: 4
   - title: "\uC624\uB798 \uD0C0\uB294 \uBD88"
     description: "[\uBD88\uC758 \uBC1C\uACAC \uD544\uC694] \uD654\uC0C1 \uC9C0\uC18D
       \uC2DC\uAC04 +1.5\uCD08"
-    icon: {fileID: 0}
+    icon: {fileID: 2090373105, guid: b29d52d19564c8a49a6e9a25d238acdd, type: 3}
     kind: 11
     amount: 1.5
     maxStacks: 3
   - title: "\uBD88\uC528 \uD655\uC0B0"
     description: "[\uBD88\uC758 \uBC1C\uACAC \uD544\uC694] \uBD88\uD0C0\uB294 \uC801
       \uCC98\uCE58 \uC2DC\n\uC8FC\uBCC0 3m \uC801\uC5D0\uAC8C \uD654\uC0C1 \uC804\uD30C"
-    icon: {fileID: 0}
+    icon: {fileID: 146590320, guid: b29d52d19564c8a49a6e9a25d238acdd, type: 3}
     kind: 12
     amount: 1
     maxStacks: 1
   - title: "\uBD88\uC758 \uCDA4"
     description: "[\uBD88\uC758 \uBC1C\uACAC + \uBC1C\uAD6C\uB974\uAE30 \uD544\uC694]\n\uBC1C\uAD6C\uB974\uAE30
       \uC131\uACF5 \uCDA9\uACA9\uD30C\uC5D0 \uD654\uC0C1 \uCD94\uAC00"
-    icon: {fileID: 0}
+    icon: {fileID: -327470151, guid: b29d52d19564c8a49a6e9a25d238acdd, type: 3}
     kind: 13
     amount: 1
     maxStacks: 1
@@ -180,7 +204,7 @@ MonoBehaviour:
     description: "\uB3CC\uC774 \uADFC\uCC98 \uB2E4\uB978 \uC801\uC5D0\uAC8C 1\uD68C
       \uB3C4\uC57D\n\uAC19\uC740 \uC801 \uC7AC\uC801\uC911 \uBD88\uAC00 \xB7 \uBD88
       \uD6A8\uACFC \uC720\uC9C0"
-    icon: {fileID: 0}
+    icon: {fileID: -893753794, guid: b29d52d19564c8a49a6e9a25d238acdd, type: 3}
     kind: 14
     amount: 1
     maxStacks: 1
@@ -188,10 +212,11 @@ MonoBehaviour:
     description: "\uD53C\uD574\uB97C \uBC1B\uACE0 \uC0DD\uC874\uD558\uBA74 8\uBC29\uD5A5
       \uAC00\uC2DC \uBC1C\uC0AC\n\uAE30\uBCF8 \uD53C\uD574 18 \xB7 \uC0AC\uAC70\uB9AC
       5m"
-    icon: {fileID: 0}
+    icon: {fileID: -475837754, guid: b29d52d19564c8a49a6e9a25d238acdd, type: 3}
     kind: 15
     amount: 1
     maxStacks: 1
+<<<<<<< HEAD
   - title: 회전 불꽃
     description: "플레이어 주위를 도는 불꽃 2개 생성\n추가 획득마다 불꽃 +1개"
     icon: {fileID: 0}
@@ -201,13 +226,27 @@ MonoBehaviour:
   - title: 뼈 부메랑
     description: "좌클릭을 누르면 조준 방향으로 뼈 투척\n돌아오면서도 적을 관통 공격"
     icon: {fileID: 0}
+=======
+  - title: "\uD68C\uC804 \uBD88\uAF43"
+    description: "\uD50C\uB808\uC774\uC5B4 \uC8FC\uC704\uB97C \uB3C4\uB294 \uBD88\uAF43
+      2\uAC1C \uC0DD\uC131\n\uCD94\uAC00 \uD68D\uB4DD\uB9C8\uB2E4 \uBD88\uAF43 +1\uAC1C"
+    icon: {fileID: 1924013442, guid: b29d52d19564c8a49a6e9a25d238acdd, type: 3}
+    kind: 16
+    amount: 1
+    maxStacks: 6
+  - title: "\uBF08 \uBD80\uBA54\uB791"
+    description: "\uC88C\uD074\uB9AD\uC744 \uB204\uB974\uBA74 \uC870\uC900 \uBC29\uD5A5\uC73C\uB85C
+      \uBF08 \uD22C\uCC99\n\uB3CC\uC544\uC624\uBA74\uC11C\uB3C4 \uC801\uC744 \uAD00\uD1B5
+      \uACF5\uACA9"
+    icon: {fileID: -1192711238, guid: b29d52d19564c8a49a6e9a25d238acdd, type: 3}
+>>>>>>> ec15ab95224d3cb15a5e1842dd1b0f54eb1dcdf2
     kind: 17
     amount: 1
     maxStacks: 1
   dashDistance: 3.5
   dashDuration: 0.18
   dashCooldown: 2
-  dashSound: {fileID: 0}
+  dashSound: {fileID: 8300000, guid: 155e6f7c71ae84d41a23d9bc501237c0, type: 3}
   dance:
     startUnlocked: 1
     sequence: 00000000010000000000000001000000000000000000000001000000
@@ -228,11 +267,11 @@ MonoBehaviour:
     leftArrow: {fileID: 0}
     rightArrow: {fileID: 0}
     panelSprite: {fileID: 0}
-    music: {fileID: 0}
-    beatSound: {fileID: 0}
-    hitSound: {fileID: 0}
-    successSound: {fileID: 0}
-    failureSound: {fileID: 0}
+    music: {fileID: 8300000, guid: 7b27bb5a9545d2f4bbbf60366c892106, type: 3}
+    beatSound: {fileID: 8300000, guid: 0660fb6d02ade934ebcd65a0b560733b, type: 3}
+    hitSound: {fileID: 8300000, guid: be450934764ed5e498cd5b5176653f10, type: 3}
+    successSound: {fileID: 8300000, guid: ae8321d9c3cdd934790b903e8dac2550, type: 3}
+    failureSound: {fileID: 8300000, guid: 8d3ccfacadcd3bb4ba58dba0832309e1, type: 3}
     volume: 0.6
     playMetronome: 1
     inputLatencyOffset: 0
@@ -240,7 +279,7 @@ MonoBehaviour:
     damagePerSecond: 6
     duration: 3
     spreadRadius: 3
-    tint: {r: 1, g: 0.3, b: 0.04, a: 1}
+    tint: {r: 0.5754717, g: 0.15502502, b: 0, a: 1}
     emberSprite: {fileID: 0}
   primitive:
     bounceRange: 5
@@ -250,3 +289,20 @@ MonoBehaviour:
     thornSpeed: 10
     thornSprite: {fileID: 0}
     thornTint: {r: 0.85, g: 0.72, b: 0.45, a: 1}
+  orbitBone:
+    orbitFireSprite: {fileID: 1924013442, guid: b29d52d19564c8a49a6e9a25d238acdd, type: 3}
+    orbitFireTint: {r: 1, g: 1, b: 1, a: 1}
+    orbitFireSize: 0.7
+    orbitRadius: 2
+    orbitDegreesPerSecond: 150
+    orbitDamage: 12
+    orbitHitInterval: 0.3
+    boneSprite: {fileID: -1192711238, guid: b29d52d19564c8a49a6e9a25d238acdd, type: 3}
+    boneTint: {r: 1, g: 1, b: 1, a: 1}
+    boneSize: {x: 0.8, y: 0.3}
+    boneDamage: 22
+    boneInterval: 1.4
+    boneDistance: 6
+    boneSpeed: 10
+    boneReturnSpeed: 14
+    boneSpinDegreesPerSecond: 720
