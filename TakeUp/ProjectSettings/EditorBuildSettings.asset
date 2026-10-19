@@ -14,13 +14,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/TakeUpPrototype/Scenes/PrehistoricPrototype.unity
     guid: 5ad9763914e33ae4ca2117441e6a87f9
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
     path: Assets/TakeUpPrototype/Scenes/OctopusBossPrototype.unity
     guid: 76b4f3931484f434a94bee0f882265a8
-  - enabled: 1
+  - enabled: 0
     path: Assets/TakeUpPrototype/Scenes/BullBossPrototype.unity
     guid: b21dbee6b53cd07499c4f59ef1a6c677
   m_configObjects:

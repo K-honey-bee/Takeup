@@ -255,11 +255,11 @@ MonoBehaviour:
     leftArrow: {fileID: 0}
     rightArrow: {fileID: 0}
     panelSprite: {fileID: 0}
-    music: {fileID: 0}
-    beatSound: {fileID: 0}
-    hitSound: {fileID: 0}
-    successSound: {fileID: 0}
-    failureSound: {fileID: 0}
+    music: {fileID: 8300000, guid: 7b27bb5a9545d2f4bbbf60366c892106, type: 3}
+    beatSound: {fileID: 8300000, guid: 0660fb6d02ade934ebcd65a0b560733b, type: 3}
+    hitSound: {fileID: 8300000, guid: be450934764ed5e498cd5b5176653f10, type: 3}
+    successSound: {fileID: 8300000, guid: ae8321d9c3cdd934790b903e8dac2550, type: 3}
+    failureSound: {fileID: 8300000, guid: 8d3ccfacadcd3bb4ba58dba0832309e1, type: 3}
     volume: 0.6
     playMetronome: 1
     inputLatencyOffset: 0
