@@ -36,5 +36,21 @@ namespace TakeUp.Prototype
         [Min(1)] public float inkLifetime = 8;
         [Range(0.1f, 1)] public float inkMoveMultiplier = 0.45f;
         [Min(0.1f)] public float inkWarningTime = 0.9f;
+        [Header("이동 / 추가 촉수와 먹물")]
+        public bool mobilePatterns = true;
+        [Min(.2f)] public float glideDuration = .85f;
+        [Min(.1f)] public float glidePause = .8f;
+        [Min(.5f)] public float glideDistance = 4;
+        [Min(.2f)] public float trackingWarning = .7f;
+        [Min(.15f)] public float trackingInterval = .38f;
+        [Min(.3f)] public float trackingRadius = 1.1f;
+        [Min(.2f)] public float waveWarning = .9f;
+        [Min(.1f)] public float waveInterval = .22f;
+        [Min(.5f)] public float pressureInterval = 2.6f;
+        [Min(.2f)] public float bombFuse = 1.1f;
+        [Min(1)] public float bombInterval = 4.2f;
+        [Min(.1f)] public float inkShotSpeed = 4.5f;
+        [Min(1)] public float inkDamage = 12;
+        [Min(.2f)] public float screenInkDuration = 1.35f;
     }
 }

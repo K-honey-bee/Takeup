@@ -16,6 +16,9 @@ namespace TakeUp.Prototype
             {
                 var boss = game.bossEncounter; game.enabled = false;
                 Require(boss != null && boss.Health > 0, "boss initialized");
+                // Exercise the original color/finale rules independently of the additional hazards.
+                boss.settings = Instantiate(boss.settings);
+                boss.settings.mobilePatterns = false;
                 for (int i = 0; i < 4; i++)
                 {
                     var rock = boss.rocks[i]; Vector2 away = ((Vector2)rock.transform.position - boss.Position).normalized;
@@ -60,6 +63,7 @@ namespace TakeUp.Prototype
                 hp = boss.Health; Invoke(game, "ResolveDance", true);
                 for (int i = 0; i < 100; i++) Invoke(game, "TickShockwaves", .02f);
                 Require(Mathf.Approximately(hp - boss.Health, game.settings.dance.damage), "dance wave hits boss once");
+                Invoke(game, "EndDance");
                 boss.Damage(boss.Health - boss.settings.health * .5f);
                 Require(!boss.IsEnraged, "exactly 50 percent remains normal");
                 boss.Damage(1);
@@ -74,6 +78,7 @@ namespace TakeUp.Prototype
                     Next(boss); Require(boss.Phase == OctopusPhase.RageImpact, "rage impact");
                     Next(boss); Next(boss); Require(boss.Phase == OctopusPhase.RageWarning, "rage only repeats tentacles");
                 }
+                ValidateMobilePatterns(boss);
                 boss.Damage(100000);
                 Require(boss.IsFinale && !boss.IsDefeated && boss.Health == 0, "zero HP starts finale, not victory");
                 boss.Damage(100000); Require(boss.Phase == OctopusPhase.FinaleShow, "finale ignores further damage");
@@ -96,11 +101,80 @@ namespace TakeUp.Prototype
                 Require(boss.IsDefeated && game.State == RunState.BossReady, "five correct hits clear boss");
                 Require(!boss.sweepArm.gameObject.activeSelf && !boss.slamZones[0].gameObject.activeSelf, "victory clears hazards");
                 Capture("boss-victory.png");
-                Write("PASS: random color cover, projectiles, sweep/slam, pause/dance, exact 50% boundary, rage repetition, five finale flashes, damage immunity, wrong color revives 30%, retry, five correct contacts win.");
+                Write("PASS: mobile glide, tracking lock, side wave gap, eight-way ink bomb, projectile hit/splatter/fade, color hazard cleanup; random color cover, projectiles, sweep/slam, pause/dance, exact 50% boundary, rage repetition, five finale flashes, damage immunity, wrong color revives 30%, retry, five correct contacts win.");
                 Application.Quit(0);
             }
             catch (Exception exception) { Write("FAIL: " + exception); Debug.LogException(exception); Application.Quit(1); }
         }
+        void ValidateMobilePatterns(OctopusBossEncounter boss)
+        {
+            var flags = BindingFlags.Instance | BindingFlags.NonPublic;
+            Func<string, System.Collections.IList> list = name => (System.Collections.IList)boss.GetType().GetField(name, flags).GetValue(boss);
+            boss.settings.mobilePatterns = true;
+            Invoke(boss, "ClearMobileHazards");
+            Vector2 origin = boss.Position;
+            for (int i = 0; i < 80; i++) Invoke(boss, "TickGlide", .02f);
+            Require(Vector2.Distance(origin, boss.Position) > .1f, "boss glides");
+            Require(boss.HitBySegment(boss.Position + Vector2.left * 4, boss.Position + Vector2.right * 4, .1f), "moving boss remains hittable");
+
+            Vector2 target = game.PlayerPosition;
+            Invoke(boss, "AddStrike", target, Vector2.one * 2, .7f, true);
+            var strike = list("mobileStrikes")[0];
+            game.scenePlayer.transform.position += Vector3.right * 3;
+            Require((Vector2)strike.GetType().GetField("center").GetValue(strike) == target, "tracking telegraph locks target");
+            Invoke(boss, "TickStrikes", .75f);
+            Require((bool)strike.GetType().GetField("hit").GetValue(strike), "tracking strike impacts after warning");
+            Invoke(boss, "TickStrikes", .3f); Require(list("mobileStrikes").Count == 0, "tracking visual expires");
+
+            game.scenePlayer.transform.position = new Vector3(0, 0);
+            Invoke(boss, "BeginSideWave");
+            Require(list("mobileStrikes").Count >= 7, "many side tentacles appear together");
+            foreach (var item in list("mobileStrikes"))
+            {
+                var center = (Vector2)item.GetType().GetField("center").GetValue(item);
+                var size = (Vector2)item.GetType().GetField("size").GetValue(item);
+                Require(Mathf.Abs(center.y) > size.y * .5f + .3f, "side wave leaves continuous escape lane");
+            }
+            Invoke(boss, "ClearMobileHazards");
+            Invoke(boss, "SpawnInkBomb"); Invoke(boss, "TickInkBombs", boss.settings.bombFuse + .01f);
+            Require(list("inkShots").Count == 8, "bomb fires eight projectiles");
+            Vector2 firstDirection = Vector2.zero;
+            for (int i = 0; i < 8; i++)
+            {
+                var shot = list("inkShots")[i];
+                var velocity = (Vector2)shot.GetType().GetField("velocity").GetValue(shot);
+                Require(Mathf.Approximately(velocity.magnitude, boss.settings.inkShotSpeed), "ink shot speed");
+                if (i == 0) firstDirection = velocity;
+                if (i == 1) Require(Mathf.Abs(Vector2.Angle(firstDirection, velocity) - 45) < .01f, "eight-way angular spacing");
+            }
+            var first = list("inkShots")[0];
+            var visual = (SpriteRenderer)first.GetType().GetField("visual").GetValue(first);
+            game.scenePlayer.transform.position = visual.transform.position;
+            ClearInvulnerability(); float hp = game.Health;
+            Invoke(boss, "TickInkShots", .01f);
+            Require(game.Health < hp, "ink projectile damages player");
+            Require((float)boss.GetType().GetField("blotRemaining", flags).GetValue(boss) > 0, "ink contact splashes screen");
+            Invoke(boss, "TickScreenInk", boss.settings.screenInkDuration + .1f);
+            Require((float)boss.GetType().GetField("blotRemaining", flags).GetValue(boss) == 0, "screen ink fades");
+            Invoke(boss, "SetPhase", OctopusPhase.MemoryShow, 1f, "validation");
+            Require(list("inkShots").Count == 0 && list("mobileStrikes").Count == 0 && list("puddles").Count == 0, "color phase clears additional hazards");
+            origin = boss.Position; boss.Tick(.02f); Require(boss.Position == origin, "color phase freezes boss source");
+            boss.settings.mobilePatterns = false;
+            Invoke(boss, "BeginRage");
+        }
+
+#if UNITY_EDITOR
+        public static void BuildValidationPlayer()
+        {
+            var report = UnityEditor.BuildPipeline.BuildPlayer(new UnityEditor.BuildPlayerOptions {
+                scenes = new[] { "Assets/TakeUpPrototype/Scenes/OctopusBossPrototype.unity", "Assets/TakeUpPrototype/Scenes/PrehistoricPrototype.unity" },
+                locationPathName = "Builds/OctopusValidation/TakeUpBoss.exe",
+                target = UnityEditor.BuildTarget.StandaloneWindows64,
+                options = UnityEditor.BuildOptions.Development
+            });
+            if (report.summary.result != UnityEditor.Build.Reporting.BuildResult.Succeeded) throw new Exception("Octopus validation build failed");
+        }
+#endif
         void MoveToFinalColor(OctopusBossEncounter boss, int color)
         {
             for (int i = 0; i < 8; i++)

@@ -50,13 +50,15 @@ namespace TakeUp.Prototype
             runtimeFont = Font.CreateDynamicFontFromOSFont(new[] { "Malgun Gothic", "Arial" }, 22);
             healthText.font = instructionText.font = phaseText.font = runtimeFont;
             BuildSweepFan(); InitializeNewVisuals(); HideAttackVisuals();
-            SetPhase(OctopusPhase.Intro, 2.5f, "문어가 깨어납니다 · 돌은 자동으로 던집니다");
+            InitializeMobilePatterns();
+            SetPhase(OctopusPhase.Intro, 2.5f, "문어가 깨어납니다 · 마우스 조준 / 좌클릭을 누르고 공격");
             RefreshHud();
         }
 
         public void Tick(float dt)
         {
             if (IsDefeated || dt <= 0) return;
+            TickMobilePatterns(dt);
             for (int i = puddles.Count - 1; i >= 0; i--)
             {
                 var p = puddles[i]; p.life -= dt;
@@ -188,6 +190,7 @@ namespace TakeUp.Prototype
 
         public float MovementMultiplier(Vector2 point)
         {
+            if (settings.mobilePatterns) return 1;
             foreach (var p in puddles) if (Vector2.Distance(point, p.visual.transform.position) <= settings.inkRadius) return settings.inkMoveMultiplier;
             return 1;
         }
@@ -224,7 +227,7 @@ namespace TakeUp.Prototype
                 visual.color = new Color(.7f, .35f, 1, .35f); inkWarnings.Add(visual);
             }
         }
-        void Recover() { HideAttackVisuals(); SetPhase(OctopusPhase.Recovery, settings.recoveryTime, "공격 기회! 다음 패턴을 준비하세요"); }
+        void Recover() { HideAttackVisuals(); SetPhase(OctopusPhase.Recovery, settings.mobilePatterns ? .2f : settings.recoveryTime, "움직이며 공격하세요! 다음 패턴 준비 중"); }
         void HideAttackVisuals()
         {
             HideNewVisuals();
@@ -235,7 +238,11 @@ namespace TakeUp.Prototype
             bodyArtwork.color = baseColor; SetLights(-1);
         }
         void SetLights(int index) { for (int i = 0; i < colorLights.Length; i++) colorLights[i].color = i == index ? Colors[i] : Colors[i] * new Color(.25f, .25f, .25f, 1); }
-        void SetPhase(OctopusPhase phase, float duration, string instruction) { Phase = phase; Remaining = duration; Instruction = instruction; }
+        void SetPhase(OctopusPhase phase, float duration, string instruction)
+        {
+            Phase = phase; Remaining = duration; Instruction = instruction;
+            if (ProtectedColorPhase || phase == OctopusPhase.Defeated) ClearMobileHazards();
+        }
         void RefreshHud()
         {
             healthFill.rectTransform.anchorMax = new Vector2(Mathf.Clamp01(Health / settings.health), 1);
@@ -278,6 +285,6 @@ namespace TakeUp.Prototype
             fan = new Mesh { name = "Sweep telegraph" }; fan.vertices = vertices; fan.triangles = triangles; fan.RecalculateBounds();
             sweepWarning.sharedMesh = fan;
         }
-        void OnDestroy() { if (runtimeFont != null) Destroy(runtimeFont); if (fan != null) Destroy(fan); DestroyNewVisuals(); }
+        void OnDestroy() { if (runtimeFont != null) Destroy(runtimeFont); if (fan != null) Destroy(fan); DestroyNewVisuals(); DestroyMobilePatterns(); }
     }
 }
