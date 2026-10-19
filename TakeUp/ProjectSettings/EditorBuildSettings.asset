@@ -6,6 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/TakeUpPrototype/Scenes/Main.unity
+    guid: f9ea17ac0c435384d9141a0e8e219a8e
+  - enabled: 1
+    path: Assets/TakeUpPrototype/Scenes/Charater_Select.unity
+    guid: 50aa3ad29d549b047954434dcb2d3af9
+  - enabled: 1
     path: Assets/TakeUpPrototype/Scenes/PrehistoricPrototype.unity
     guid: 5ad9763914e33ae4ca2117441e6a87f9
   - enabled: 1

@@ -1002,6 +1002,7 @@ GameObject:
   - component: {fileID: 1510777076}
   - component: {fileID: 1510777075}
   - component: {fileID: 1510777074}
+  - component: {fileID: 900000001}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -1072,7 +1073,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1510777075}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 900000001}
+        m_TargetAssemblyTypeName: TakeUp.Prototype.MenuSceneLink, Assembly-CSharp
+        m_MethodName: OpenScene
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument:
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1510777075
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1533,3 +1546,16 @@ SceneRoots:
   - {fileID: 1715471168}
   - {fileID: 1645585719}
   - {fileID: 749193181}
+--- !u!114 &900000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1510777072}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e53fa42f17e141ed9127568dbcbf60e3, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::TakeUp.Prototype.MenuSceneLink
+  sceneName: Charater_Select
