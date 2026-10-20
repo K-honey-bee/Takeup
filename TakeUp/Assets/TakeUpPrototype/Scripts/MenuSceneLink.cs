@@ -16,9 +16,7 @@ namespace TakeUp.Prototype
                 Debug.LogError($"Menu scene is not enabled in Build Settings: {sceneName}", this);
                 return;
             }
-            loading = true;
-            Time.timeScale = 1;
-            SceneManager.LoadSceneAsync(sceneName);
+            loading = SceneLoader.Load(sceneName);
         }
     }
 }

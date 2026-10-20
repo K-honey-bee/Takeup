@@ -478,7 +478,7 @@ namespace TakeUp.Prototype
             State = RunState.BossReady; hud.ShowEnd(true);
         }
 
-        public void Restart() => SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        public void Restart() => SceneLoader.Load(SceneManager.GetActiveScene().path);
 
         SpriteRenderer Visual(string label, Sprite sprite, Sprite fallback, Color tint, Vector2 size, Vector2 position, int order)
         {

@@ -45,10 +45,10 @@ namespace TakeUp.Prototype
             bossEntry = new BossEntry { level = Level, kills = Kills, stones = stoneCount, hp = Health, maxHp = MaximumHealth,
                 speed = moveSpeed, damage = damageMultiplier, attackSpeed = attackSpeed, pickup = pickupRadius,
                 regeneration = regeneration, spear = HasSpear, orbitBone = settings.orbitBone, stacks = new Dictionary<AugmentKind, int>(stacks) };
-            SceneManager.LoadScene("OctopusBossPrototype");
+            SceneLoader.Load("OctopusBossPrototype");
         }
 
-        public void ReturnToSurvival() { bossEntry = null; SceneManager.LoadScene("PrehistoricPrototype"); }
+        public void ReturnToSurvival() { bossEntry = null; SceneLoader.Load("PrehistoricPrototype"); }
 
         public void CompleteBossFight()
         {
