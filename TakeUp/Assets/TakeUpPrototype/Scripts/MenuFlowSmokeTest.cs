@@ -21,6 +21,12 @@ namespace TakeUp.Prototype
         IEnumerator Start()
         {
             yield return null;
+            var ghosts = FindFirstObjectByType<MainMenuGhosts>();
+            if (ghosts != null)
+            {
+                try { ghosts.ValidateForSmokeTest(); }
+                catch (Exception error) { Debug.LogException(error); Application.Quit(1); yield break; }
+            }
             if (!Click("Main", "Button")) yield break;
             float deadline = Time.realtimeSinceStartup + 20;
             while (SceneManager.GetActiveScene().name != "Charater_Select" && Time.realtimeSinceStartup < deadline) yield return null;
