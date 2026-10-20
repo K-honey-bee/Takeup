@@ -21,7 +21,8 @@ namespace TakeUp.Prototype
         [Min(0)] public float stagger = .65f;
         [Range(.2f, .65f)] public float sizeRatio = .48f;
         [Range(.35f, .85f)] public float visibleFraction = .65f;
-        [Min(0)] public float floatAmount = 5;
+        [Min(0)] public float stayDuration = 1.5f;
+        [Min(0)] public float hiddenDuration = 0.5f;
 
         [Header("마우스를 따라가는 눈")]
         [Range(0, 16)] public float pupilTravel = 9;
@@ -96,22 +97,90 @@ namespace TakeUp.Prototype
 
         void LayoutGhosts(float time)
         {
-            float diameter = Mathf.Clamp(Mathf.Min(area.rect.width, area.rect.height) * sizeRatio, 120, 520);
+            float duration = Mathf.Max(.1f, popDuration);
+
+            // 등장 → 대기 → 퇴장 → 숨기
+            float cycleDuration =
+                duration + stayDuration + duration + hiddenDuration;
+
+            float elapsed = time - firstDelay;
+
+            // 처음에는 모두 숨긴다.
+            if (elapsed < 0)
+            {
+                foreach (var ghost in ghosts)
+                    ghost.root.gameObject.SetActive(false);
+
+                return;
+            }
+
+            int cycle = Mathf.FloorToInt(elapsed / cycleDuration);
+            float phaseTime = elapsed - cycle * cycleDuration;
+
+            // 아래(2) → 오른쪽(1) → 위(0) 순서로 반복.
+            int activeIndex = 2 - cycle % 3;
+
+            float progress;
+
+            if (phaseTime < duration)
+            {
+                // 등장: 목표 위치를 살짝 넘었다가 돌아오는 '또잉'.
+                float t = phaseTime / duration;
+                float x = t - 1f;
+
+                progress =
+                    1f + 2.70158f * x * x * x
+                       + 1.70158f * x * x;
+            }
+            else if (phaseTime < duration + stayDuration)
+            {
+                // 나와서 마우스를 바라본다.
+                progress = 1f;
+            }
+            else if (phaseTime < duration * 2f + stayDuration)
+            {
+                // 퇴장: 점점 빠르게 쏙 들어간다.
+                float t =
+                    (phaseTime - duration - stayDuration) / duration;
+
+                progress = 1f - t * t;
+            }
+            else
+            {
+                progress = 0f;
+            }
+
+            float diameter = Mathf.Clamp(
+                Mathf.Min(area.rect.width, area.rect.height) * sizeRatio,
+                120f,
+                520f
+            );
+
             for (int i = 0; i < ghosts.Length; i++)
             {
-                var root = ghosts[i].root;
-                float elapsed = time - firstDelay - stagger * i;
-                float t = Mathf.Clamp01(elapsed / Mathf.Max(.1f, popDuration));
-                float x = t - 1;
-                float pop = 1 + 2.70158f * x * x * x + 1.70158f * x * x;
-                float peek = diameter * visibleFraction * pop;
-                if (t >= 1) peek += Mathf.Sin((elapsed - popDuration) * 1.7f + i) * floatAmount;
-                Vector2 anchor = i == 0 ? new Vector2(.68f, 1) : i == 1 ? new Vector2(1, .53f) : new Vector2(.66f, 0);
+                RectTransform root = ghosts[i].root;
+
+                bool visible = i == activeIndex && progress > 0f;
+                root.gameObject.SetActive(visible);
+
+                if (!visible)
+                    continue;
+
+                Vector2 anchor =
+                    i == 0 ? new Vector2(.68f, 1f) :
+                    i == 1 ? new Vector2(1f, .53f) :
+                             new Vector2(.66f, 0f);
+
                 root.anchorMin = root.anchorMax = anchor;
-                root.localScale = Vector3.one * (diameter / 300);
-                root.anchoredPosition = i == 0 ? new Vector2(0, diameter * .5f + 2 - peek)
-                    : i == 1 ? new Vector2(diameter * .5f + 2 - peek, 0)
-                    : new Vector2(0, -diameter * .5f - 2 + peek);
+                root.localScale = Vector3.one * (diameter / 300f);
+
+                float peek = diameter * visibleFraction * progress;
+                float outside = diameter * .5f + 2f;
+
+                root.anchoredPosition =
+                    i == 0 ? new Vector2(0f, outside - peek) :
+                    i == 1 ? new Vector2(outside - peek, 0f) :
+                             new Vector2(0f, -outside + peek);
             }
         }
 
