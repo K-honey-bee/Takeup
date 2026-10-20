@@ -51,7 +51,7 @@ MonoBehaviour:
   damageGrowthPerWave: 0.12
   enemies:
   - prefab: {fileID: 4322050038169260442, guid: 8bc4692131eae20469fa667e1a771d1e, type: 3}
-    displayName: "\uC791\uC740 \uC57C\uC218"
+    displayName: "\uADE0\uC5F4 \uB4E4\uC9D0\uC2B9"
     sprite: {fileID: 876486182, guid: 2730458e073955d489a5a5511c4fac87, type: 3}
     tint: {r: 1, g: 1, b: 1, a: 1}
     size: 0.75
@@ -70,7 +70,7 @@ MonoBehaviour:
     corpseBlinkCount: 1
     corpseBlinkInterval: 0.1
   - prefab: {fileID: 7332539394433539582, guid: 3fe0e8561c0816543a38e615f654272f, type: 3}
-    displayName: "\uB0A0\uC318 \uC57C\uC218"
+    displayName: "\uB0A0\uC318 \uADE0\uC5F4 \uC9D0\uC2B9"
     sprite: {fileID: 1345396793, guid: 2730458e073955d489a5a5511c4fac87, type: 3}
     tint: {r: 1, g: 1, b: 1, a: 1}
     size: 0.55
@@ -89,7 +89,7 @@ MonoBehaviour:
     corpseBlinkCount: 1
     corpseBlinkInterval: 0.1
   - prefab: {fileID: 2111426484862797062, guid: a463acc4c26eac9488d573170e4d6ca9, type: 3}
-    displayName: "\uD070 \uC57C\uC218"
+    displayName: "\uAC70\uB300 \uADE0\uC5F4 \uC9D0\uC2B9"
     sprite: {fileID: -407179706, guid: 2730458e073955d489a5a5511c4fac87, type: 3}
     tint: {r: 1, g: 1, b: 1, a: 1}
     size: 1.3
@@ -108,7 +108,7 @@ MonoBehaviour:
     corpseBlinkCount: 1
     corpseBlinkInterval: 0.1
   augments:
-  - title: "\uB0A0\uCE74\uB85C\uC6B4 \uB3CC"
+  - title: "\uB0A0 \uC120 \uB3CC\uD314\uB9E4"
     description: "\uB3CC\uACFC \uCC3D\uC758 \uD53C\uD574\uB7C9 +25%"
     icon: {fileID: 1229297514, guid: c928026d7f14ad9468785a200069b767, type: 3}
     kind: 0
@@ -120,7 +120,7 @@ MonoBehaviour:
     kind: 1
     amount: 0.2
     maxStacks: 6
-  - title: "\uC0AC\uB0E5\uAFBC\uC758 \uBC1C"
+  - title: "\uAC00\uBCBC\uC6B4 \uBC1C\uB180\uB9BC"
     description: "\uC774\uB3D9 \uC18D\uB3C4 +15%"
     icon: {fileID: -623423789, guid: c928026d7f14ad9468785a200069b767, type: 3}
     kind: 2
@@ -132,8 +132,8 @@ MonoBehaviour:
     kind: 3
     amount: 25
     maxStacks: 6
-  - title: "\uCC44\uC9D1 \uBCF8\uB2A5"
-    description: "\uACBD\uD5D8\uCE58 \uD68D\uB4DD \uBC18\uACBD +1.2"
+  - title: "\uC2DC\uAC04 \uC870\uAC01 \uAC10\uC751"
+    description: "\uC2DC\uAC04 \uC870\uAC01 \uD68D\uB4DD \uBC18\uACBD +1.2"
     icon: {fileID: 1312703325, guid: c928026d7f14ad9468785a200069b767, type: 3}
     kind: 4
     amount: 1.2
@@ -144,8 +144,8 @@ MonoBehaviour:
     kind: 5
     amount: 1
     maxStacks: 3
-  - title: "\uCCAB \uBC88\uC9F8 \uCC3D"
-    description: "\uC790\uB3D9 \uCC3D \uB358\uC9C0\uAE30 \uD574\uAE08\n\uD55C \uBC88\uC5D0
+  - title: "\uC601\uCC3D \uAC1C\uBC29"
+    description: "\uC88C\uD074\uB9AD \uC720\uC9C0 \uC2DC \uC601\uCC3D \uBC1C\uC0AC\n\uD55C \uBC88\uC5D0
       \uC801 3\uB9C8\uB9AC \uAD00\uD1B5"
     icon: {fileID: 1207388847, guid: c928026d7f14ad9468785a200069b767, type: 3}
     kind: 6
@@ -157,14 +157,14 @@ MonoBehaviour:
     kind: 7
     amount: 1
     maxStacks: 4
-  - title: "[\uC804\uC124] \uBC1C\uAD6C\uB974\uAE30 \uB304\uC2A4"
+  - title: "\uBCBD\uC0AC\uBB34"
     description: "Q: \uC81C\uC790\uB9AC \uB9AC\uB4EC \uC758\uC2DD\n\uC804\uBD80 \uC131\uACF5\uD558\uBA74
       \uAC70\uB300\uD55C \uCDA9\uACA9\uD30C!"
     icon: {fileID: 354705522, guid: c928026d7f14ad9468785a200069b767, type: 3}
     kind: 8
     amount: 1
     maxStacks: 1
-  - title: "\uBD88\uC758 \uBC1C\uACAC"
+  - title: "\uB3C4\uAE68\uBE44\uBD88"
     description: "\uB3CC\xB7\uCC3D \uC801\uC911 \uC2DC \uD654\uC0C1 \uBD80\uC5EC\n\uAE30\uBCF8
       \uCD08\uB2F9 6 \uD53C\uD574, 3\uCD08 \uC9C0\uC18D \xB7 \uC7AC\uC801\uC911 \uC2DC
       \uC2DC\uAC04 \uAC31\uC2E0"
@@ -172,35 +172,35 @@ MonoBehaviour:
     kind: 9
     amount: 1
     maxStacks: 1
-  - title: "\uB728\uAC70\uC6B4 \uBD88\uC528"
-    description: "[\uBD88\uC758 \uBC1C\uACAC \uD544\uC694] \uD654\uC0C1 \uCD08\uB2F9
+  - title: "\uAC70\uC13C \uBD88\uC528"
+    description: "[\uB3C4\uAE68\uBE44\uBD88 \uD544\uC694] \uD654\uC0C1 \uCD08\uB2F9
       \uD53C\uD574 +3"
     icon: {fileID: -420883787, guid: b29d52d19564c8a49a6e9a25d238acdd, type: 3}
     kind: 10
     amount: 3
     maxStacks: 4
-  - title: "\uC624\uB798 \uD0C0\uB294 \uBD88"
-    description: "[\uBD88\uC758 \uBC1C\uACAC \uD544\uC694] \uD654\uC0C1 \uC9C0\uC18D
+  - title: "\uAEBC\uC9C0\uC9C0 \uC54A\uB294 \uBD88"
+    description: "[\uB3C4\uAE68\uBE44\uBD88 \uD544\uC694] \uD654\uC0C1 \uC9C0\uC18D
       \uC2DC\uAC04 +1.5\uCD08"
     icon: {fileID: 2090373105, guid: b29d52d19564c8a49a6e9a25d238acdd, type: 3}
     kind: 11
     amount: 1.5
     maxStacks: 3
-  - title: "\uBD88\uC528 \uD655\uC0B0"
-    description: "[\uBD88\uC758 \uBC1C\uACAC \uD544\uC694] \uBD88\uD0C0\uB294 \uC801
+  - title: "\uC62E\uACA8\uBD99\uB294 \uBD88\uC528"
+    description: "[\uB3C4\uAE68\uBE44\uBD88 \uD544\uC694] \uBD88\uD0C0\uB294 \uC801
       \uCC98\uCE58 \uC2DC\n\uC8FC\uBCC0 3m \uC801\uC5D0\uAC8C \uD654\uC0C1 \uC804\uD30C"
     icon: {fileID: 146590320, guid: b29d52d19564c8a49a6e9a25d238acdd, type: 3}
     kind: 12
     amount: 1
     maxStacks: 1
-  - title: "\uBD88\uC758 \uCDA4"
-    description: "[\uBD88\uC758 \uBC1C\uACAC + \uBC1C\uAD6C\uB974\uAE30 \uD544\uC694]\n\uBC1C\uAD6C\uB974\uAE30
+  - title: "\uB3C4\uAE68\uBE44 \uCDA4"
+    description: "[\uB3C4\uAE68\uBE44\uBD88 + \uBCBD\uC0AC\uBB34 \uD544\uC694]\n\uBCBD\uC0AC\uBB34
       \uC131\uACF5 \uCDA9\uACA9\uD30C\uC5D0 \uD654\uC0C1 \uCD94\uAC00"
     icon: {fileID: -327470151, guid: b29d52d19564c8a49a6e9a25d238acdd, type: 3}
     kind: 13
     amount: 1
     maxStacks: 1
-  - title: "\uD295\uAE30\uB294 \uB3CC"
+  - title: "\uB3C4\uAE68\uBE44 \uB3CC\uD314\uB9E4"
     description: "\uB3CC\uC774 \uADFC\uCC98 \uB2E4\uB978 \uC801\uC5D0\uAC8C 1\uD68C
       \uB3C4\uC57D\n\uAC19\uC740 \uC801 \uC7AC\uC801\uC911 \uBD88\uAC00 \xB7 \uBD88
       \uD6A8\uACFC \uC720\uC9C0"
@@ -208,7 +208,7 @@ MonoBehaviour:
     kind: 14
     amount: 1
     maxStacks: 1
-  - title: "\uAC00\uC2DC \uAC00\uC8FD"
+  - title: "\uC561\uB9C9\uC774 \uBC18\uACA9"
     description: "\uD53C\uD574\uB97C \uBC1B\uACE0 \uC0DD\uC874\uD558\uBA74 8\uBC29\uD5A5
       \uAC00\uC2DC \uBC1C\uC0AC\n\uAE30\uBCF8 \uD53C\uD574 18 \xB7 \uC0AC\uAC70\uB9AC
       5m"
@@ -216,14 +216,14 @@ MonoBehaviour:
     kind: 15
     amount: 1
     maxStacks: 1
-  - title: "\uD68C\uC804 \uBD88\uAF43"
+  - title: "\uB9F4\uB3C4\uB294 \uB3C4\uAE68\uBE44\uBD88"
     description: "\uD50C\uB808\uC774\uC5B4 \uC8FC\uC704\uB97C \uB3C4\uB294 \uBD88\uAF43
       2\uAC1C \uC0DD\uC131\n\uCD94\uAC00 \uD68D\uB4DD\uB9C8\uB2E4 \uBD88\uAF43 +1\uAC1C"
     icon: {fileID: 1924013442, guid: b29d52d19564c8a49a6e9a25d238acdd, type: 3}
     kind: 16
     amount: 1
     maxStacks: 6
-  - title: "\uBF08 \uBD80\uBA54\uB791"
+  - title: "\uB3CC\uC544\uC624\uB294 \uC8FC\uC220 \uBF08"
     description: "\uC88C\uD074\uB9AD\uC744 \uB204\uB974\uBA74 \uC870\uC900 \uBC29\uD5A5\uC73C\uB85C
       \uBF08 \uD22C\uCC99\n\uB3CC\uC544\uC624\uBA74\uC11C\uB3C4 \uC801\uC744 \uAD00\uD1B5
       \uACF5\uACA9"

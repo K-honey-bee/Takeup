@@ -21,11 +21,11 @@ namespace TakeUp.Prototype
         {
             if (settings.fire == null) settings.fire = new FireSettings();
             var entries = new List<AugmentDefinition>(settings.augments ?? Array.Empty<AugmentDefinition>());
-            Add(entries, AugmentKind.FireDiscovery, "불의 발견", "돌·창 적중 시 화상 부여\n기본 초당 6 피해, 3초 지속 · 재적중 시 시간 갱신", 1, 1);
-            Add(entries, AugmentKind.FireDamage, "뜨거운 불씨", "[불의 발견 필요] 화상 초당 피해 +3", 3, 4);
-            Add(entries, AugmentKind.FireDuration, "오래 타는 불", "[불의 발견 필요] 화상 지속 시간 +1.5초", 1.5f, 3);
-            Add(entries, AugmentKind.FireSpread, "불씨 확산", "[불의 발견 필요] 불타는 적 처치 시\n주변 3m 적에게 화상 전파", 1, 1);
-            Add(entries, AugmentKind.FireDance, "불의 춤", "[불의 발견 + 발구르기 필요]\n발구르기 성공 충격파에 화상 추가", 1, 1);
+            Add(entries, AugmentKind.FireDiscovery, "도깨비불", "돌·창 적중 시 화상 부여\n기본 초당 6 피해, 3초 지속 · 재적중 시 시간 갱신", 1, 1);
+            Add(entries, AugmentKind.FireDamage, "거센 불씨", "[도깨비불 필요] 화상 초당 피해 +3", 3, 4);
+            Add(entries, AugmentKind.FireDuration, "꺼지지 않는 불", "[도깨비불 필요] 화상 지속 시간 +1.5초", 1.5f, 3);
+            Add(entries, AugmentKind.FireSpread, "옮겨붙는 불씨", "[도깨비불 필요] 불타는 적 처치 시\n주변 3m 적에게 화상 전파", 1, 1);
+            Add(entries, AugmentKind.FireDance, "도깨비 춤", "[도깨비불 + 벽사무 필요]\n벽사무 성공 충격파에 화상 추가", 1, 1);
             settings.augments = entries.ToArray();
         }
         static void Add(List<AugmentDefinition> entries, AugmentKind kind, string title, string description, float amount, int cap)

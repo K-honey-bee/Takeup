@@ -17,7 +17,7 @@ namespace TakeUp.Prototype.Editor
                 if (GUILayout.Button("일시정지 메뉴 배치")) Preview("Pause Menu");
                 if (GUILayout.Button("완료 화면 배치")) Preview("Stage Complete");
                 if (GUILayout.Button("게임오버 화면 배치")) Preview("Game Over");
-                if (GUILayout.Button("발구르기 리듬 UI 배치")) Preview("Stomp Dance");
+                if (GUILayout.Button("벽사무 리듬 UI 배치")) Preview("Stomp Dance");
             }
             DrawDefaultInspector();
         }

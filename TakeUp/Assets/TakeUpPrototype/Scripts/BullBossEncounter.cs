@@ -15,7 +15,7 @@ namespace TakeUp.Prototype
         public LineRenderer waveVisual, chargeVisual;
         public Text instructionText, healthText;
         public Image healthFill;
-        public string DisplayName => "고대 황소";
+        public string DisplayName => "수호 황소";
         public float Health { get; private set; }
         public float MaximumHealth => settings.health;
         public bool IsDefeated => Phase == BullPhase.Defeated;

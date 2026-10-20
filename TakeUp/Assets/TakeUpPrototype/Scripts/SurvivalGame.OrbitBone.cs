@@ -7,7 +7,7 @@ namespace TakeUp.Prototype
     [Serializable]
     public sealed class OrbitBoneSettings
     {
-        [Header("회전 불꽃 — 첫 획득 2개 / 이후 +1개")]
+        [Header("맴도는 도깨비불 — 첫 획득 2개 / 이후 +1개")]
         public Sprite orbitFireSprite;
         public Color orbitFireTint = Color.white;
         [Min(.05f)] public float orbitFireSize = .7f;
@@ -15,7 +15,7 @@ namespace TakeUp.Prototype
         public float orbitDegreesPerSecond = 150;
         [Min(0)] public float orbitDamage = 12;
         [Min(.05f)] public float orbitHitInterval = .3f;
-        [Header("뼈 부메랑 — 좌클릭 유지 시 마우스 방향 발사")]
+        [Header("돌아오는 주술 뼈 — 좌클릭 유지 시 마우스 방향 발사")]
         public Sprite boneSprite;
         public Color boneTint = Color.white;
         public Vector2 boneSize = new Vector2(.8f, .3f);

@@ -22,9 +22,9 @@ namespace TakeUp.Prototype
             if (settings.primitive == null) settings.primitive = new PrimitiveAugmentSettings();
             var cards = new List<AugmentDefinition>(settings.augments ?? Array.Empty<AugmentDefinition>());
             if (!cards.Exists(a => a != null && a.kind == AugmentKind.RicochetStone))
-                cards.Add(new AugmentDefinition { title = "튕기는 돌", description = "돌이 근처 다른 적에게 1회 도약\n같은 적 재적중 불가 · 불 효과 유지", kind = AugmentKind.RicochetStone, amount = 1, maxStacks = 1 });
+                cards.Add(new AugmentDefinition { title = "도깨비 돌팔매", description = "돌이 근처 다른 적에게 1회 도약\n같은 적 재적중 불가 · 불 효과 유지", kind = AugmentKind.RicochetStone, amount = 1, maxStacks = 1 });
             if (!cards.Exists(a => a != null && a.kind == AugmentKind.ThornSkin))
-                cards.Add(new AugmentDefinition { title = "가시 가죽", description = "피해를 받고 생존하면 8방향 가시 발사\n기본 피해 18 · 사거리 5m", kind = AugmentKind.ThornSkin, amount = 1, maxStacks = 1 });
+                cards.Add(new AugmentDefinition { title = "액막이 반격", description = "피해를 받고 생존하면 8방향 가시 발사\n기본 피해 18 · 사거리 5m", kind = AugmentKind.ThornSkin, amount = 1, maxStacks = 1 });
             settings.augments = cards.ToArray();
         }
     }

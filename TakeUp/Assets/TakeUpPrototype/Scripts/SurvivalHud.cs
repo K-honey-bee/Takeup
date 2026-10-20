@@ -41,7 +41,7 @@ namespace TakeUp.Prototype
                 events.transform.SetParent(transform);
             }
             var header = Panel(root, "Status", ink, new Vector2(0, 1), new Vector2(1, 1), new Vector2(18, -126), new Vector2(-18, -18));
-            Label(header, "TAKEUP  /  선사시대", 22, gold, new Vector2(20, -8), new Vector2(420, 32));
+            Label(header, "시간의 집 / 조선 균열", 22, gold, new Vector2(20, -8), new Vector2(420, 32));
             status = Label(header, "", 20, Color.white, new Vector2(460, -12), new Vector2(740, 32));
             healthFill = Bar(header, "HP", new Vector2(20, -49), new Vector2(400, 18), new Color(0.93f, 0.37f, 0.35f));
             healthLabel = Label(header, "", 13, Color.white, new Vector2(24, -49), new Vector2(390, 18));
@@ -50,7 +50,7 @@ namespace TakeUp.Prototype
             equipment = Label(header, "", 15, new Color(0.7f, 0.78f, 0.76f), new Vector2(460, -50), new Vector2(740, 28));
             stageFill = Bar(header, "Stage", new Vector2(460, -86), new Vector2(740, 5), gold);
             var footer = Panel(root, "Controls", ink, Vector2.zero, new Vector2(1, 0), new Vector2(18, 16), new Vector2(-18, 58));
-            Label(footer, "WASD 이동 · Shift 대시 · Q 발구르기 · 춤: A/D 또는 ←/→ · Tab 증강 · ESC 정지", 16,
+            Label(footer, "WASD 이동 · Shift 대시 · Q 벽사무 · 춤: A/D 또는 ←/→ · Tab 증강 · ESC 정지", 16,
                 new Color(0.75f, 0.81f, 0.79f), new Vector2(20, -6), new Vector2(1200, 30));
             overlay = Panel(root, "Overlay", new Color(0.015f, 0.03f, 0.03f, 0.92f), Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
             choiceContent = ContentRoot("Augment Choices");
@@ -68,18 +68,18 @@ namespace TakeUp.Prototype
             int seconds = Mathf.FloorToInt(game.Elapsed);
             status.text = $"레벨 {game.Level:00}    처치 {game.Kills:000}    웨이브 {game.Wave}    {seconds / 60:00}:{seconds % 60:00}";
             healthLabel.text = $"체력  {Mathf.CeilToInt(game.Health)} / {Mathf.CeilToInt(game.MaximumHealth)}";
-            xpLabel.text = $"경험치  {game.Experience} / {game.RequiredExperience}";
+            xpLabel.text = $"시간 조각  {game.Experience} / {game.RequiredExperience}";
             Fill(healthFill, game.Health / game.MaximumHealth);
             Fill(xpFill, (float)game.Experience / game.RequiredExperience);
             Fill(stageFill, game.ActiveBoss != null ? 1 - game.ActiveBoss.Health / game.ActiveBoss.MaximumHealth : game.Elapsed / game.settings.stageDuration);
-            equipment.text = $"돌 던지기  ·  {(game.HasSpear ? "관통 창 장착" : "창 미해금")}     |     생존 목표 {game.settings.stageDuration:0}초";
+            equipment.text = $"돌팔매  ·  {(game.HasSpear ? "영창 장착" : "영창 미해금")}     |     균열 탐색 {game.settings.stageDuration:0}초";
             RefreshSkillHud();
         }
 
         public void ShowChoices()
         {
             ClearContent(choiceContent);
-            Label(content, $"레벨 {game.Level}  /  새로운 생존 기술", 32, gold, new Vector2(0, 0), new Vector2(1060, 50), TextAnchor.MiddleCenter);
+            Label(content, $"레벨 {game.Level}  /  새로운 균열 증강", 32, gold, new Vector2(0, 0), new Vector2(1060, 50), TextAnchor.MiddleCenter);
             Label(content, $"하나를 선택하세요. 선택 중에는 전투가 멈춥니다.  (남은 선택 {game.PendingChoices})", 18,
                 Color.white, new Vector2(0, -56), new Vector2(1060, 32), TextAnchor.MiddleCenter);
             for (int i = 0; i < game.Choices.Count; i++)
@@ -114,15 +114,15 @@ namespace TakeUp.Prototype
         {
             ClearContent(success ? victoryContent : defeatContent);
             bool bossFight = game.ActiveBoss != null;
-            Label(content, success ? (bossFight ? game.ActiveBoss.DisplayName + " 처치 완료!" : "생존 완료  ·  보스 진입 준비") : "이번 생존은 여기까지", 36, gold,
+            Label(content, success ? (bossFight ? game.ActiveBoss.DisplayName + " 처치 완료!" : "균열 중심 발견  ·  보스 진입 준비") : "이번 파견은 여기까지", 36, gold,
                 new Vector2(0, -45), new Vector2(1060, 70), TextAnchor.MiddleCenter);
             Label(content, $"레벨 {game.Level}    ·    처치 {game.Kills}    ·    생존 {game.Elapsed:0}초", 24, Color.white,
                 new Vector2(0, -130), new Vector2(1060, 50), TextAnchor.MiddleCenter);
-            Label(content, success ? (bossFight ? "첫 번째 보스를 물리쳤습니다.\n다시 도전하거나 생존 스테이지로 돌아갈 수 있습니다." : "다음 상대: 고대 문어\n색상 순서 바위 숨기 · 촉수 공격 · 잉크 장판\n획득한 증강과 현재 체력을 가지고 진입합니다.") : "패턴을 살피고 다시 도전하세요.", 20,
+            Label(content, success ? (bossFight ? "균열의 수호자를 제압했습니다.\n다시 도전하거나 조선 균열로 돌아갈 수 있습니다." : "다음 상대: 먹물 요괴\n봉인석 색상 기억 · 촉수 공격 · 먹물 장판\n획득한 증강과 현재 체력을 가지고 진입합니다.") : "패턴을 살피고 다시 도전하세요.", 20,
                 new Color(0.74f, 0.83f, 0.79f), new Vector2(0, -195), new Vector2(1060, 100), TextAnchor.MiddleCenter);
-            Button(content, success && !bossFight ? "문어 보스 진입" : "다시 도전", new Vector2(350, -330), new Vector2(360, 60),
+            Button(content, success && !bossFight ? "해안 균열 진입" : "다시 도전", new Vector2(350, -330), new Vector2(360, 60),
                 success && !bossFight ? game.EnterBossScene : game.Restart);
-            Button(content, bossFight ? "생존 스테이지로 돌아가기" : "생존 다시 시작", new Vector2(350, -400), new Vector2(360, 48), game.ReturnToSurvival);
+            Button(content, bossFight ? "조선 균열로 돌아가기" : "다시 파견하기", new Vector2(350, -400), new Vector2(360, 48), game.ReturnToSurvival);
         }
 
         public void HideOverlay() { if (overlay != null) overlay.gameObject.SetActive(false); }

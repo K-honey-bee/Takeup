@@ -149,14 +149,14 @@ namespace TakeUp.Prototype.Editor
             var fill = Rect("Fill", bar, Vector2.zero, Vector2.zero);
             fill.anchorMin = Vector2.zero; fill.anchorMax = Vector2.one; fill.offsetMin = fill.offsetMax = Vector2.zero;
             boss.healthFill = fill.gameObject.AddComponent<Image>(); boss.healthFill.color = new Color(.78f, .34f, .65f);
-            boss.healthText = Label("Boss Health Text", panel, "고대 문어", Vector2.zero, new Vector2(660, 20), 16);
+            boss.healthText = Label("Boss Health Text", panel, "먹물 요괴", Vector2.zero, new Vector2(660, 20), 16);
             boss.colorLights = new Image[4];
             for (int i = 0; i < 4; i++)
             {
                 var cell = Rect("Memory Color " + (i + 1), panel, new Vector2(-66 + i * 44, -27), new Vector2(32, 16));
                 boss.colorLights[i] = cell.gameObject.AddComponent<Image>(); boss.colorLights[i].color = OctopusBossEncounter.Colors[i];
             }
-            boss.instructionText = Label("Boss Instructions", panel, "바위 뒤로 숨으세요", new Vector2(0, -48), new Vector2(1060, 27), 20);
+            boss.instructionText = Label("Boss Instructions", panel, "봉인석 뒤로 숨으세요", new Vector2(0, -48), new Vector2(1060, 27), 20);
             boss.phaseText = Label("Pattern Timer", panel, "", new Vector2(0, -77), new Vector2(1060, 22), 15);
             panel.SetSiblingIndex(0);
         }

@@ -8,7 +8,7 @@ namespace TakeUp.Prototype
 
     public sealed partial class OctopusBossEncounter : MonoBehaviour, IBossEncounter
     {
-        public string DisplayName => "고대 문어";
+        public string DisplayName => "먹물 요괴";
         public float MaximumHealth => settings.health;
         public Transform Body => bossBody;
         public OctopusBossSettings settings;
@@ -51,7 +51,7 @@ namespace TakeUp.Prototype
             healthText.font = instructionText.font = phaseText.font = runtimeFont;
             BuildSweepFan(); InitializeNewVisuals(); HideAttackVisuals();
             InitializeMobilePatterns();
-            SetPhase(OctopusPhase.Intro, 2.5f, "문어가 깨어납니다 · 마우스 조준 / 좌클릭을 누르고 공격");
+            SetPhase(OctopusPhase.Intro, 2.5f, "먹물 요괴가 깨어납니다 · 마우스 조준 / 좌클릭을 누르고 공격");
             RefreshHud();
         }
 
@@ -110,7 +110,7 @@ namespace TakeUp.Prototype
                     bool safe = IsCovered(game.PlayerPosition, memorySequence[MemoryStep]);
                     if (!safe) game.DamagePlayer(settings.memoryDamage);
                     bodyArtwork.color = Colors[memorySequence[MemoryStep]];
-                    SetPhase(OctopusPhase.MemoryBlast, .45f, safe ? "방어 성공!" : "파동에 맞았습니다! 바위의 반대편으로 숨으세요"); break;
+                    SetPhase(OctopusPhase.MemoryBlast, .45f, safe ? "방어 성공!" : "파동에 맞았습니다! 봉인석의 반대편으로 숨으세요"); break;
                 case OctopusPhase.MemoryBlast:
                     MemoryStep++;
                     if (MemoryStep < 4) BeginHide(); else Recover();
@@ -150,7 +150,7 @@ namespace TakeUp.Prototype
                 rock.safeMarker.transform.position = (Vector2)rock.transform.position + away * (rock.WorldRadius + .65f);
                 rock.safeMarker.gameObject.SetActive(rock.colorIndex == memorySequence[MemoryStep]);
             }
-            SetPhase(OctopusPhase.MemoryHide, settings.hideTime, $"{MemoryStep + 1}/4  {Names[memorySequence[MemoryStep]]} 바위 뒤! 문어 → 바위 → 나 순서로");
+            SetPhase(OctopusPhase.MemoryHide, settings.hideTime, $"{MemoryStep + 1}/4  {Names[memorySequence[MemoryStep]]} 봉인석 뒤! 먹물 요괴 → 봉인석 → 나 순서로");
         }
 
         public bool IsCovered(Vector2 playerPosition, int colorIndex)
@@ -246,7 +246,7 @@ namespace TakeUp.Prototype
         void RefreshHud()
         {
             healthFill.rectTransform.anchorMax = new Vector2(Mathf.Clamp01(Health / settings.health), 1);
-            healthText.text = $"고대 문어   {Mathf.CeilToInt(Health)} / {settings.health:0}";
+            healthText.text = $"먹물 요괴   {Mathf.CeilToInt(Health)} / {settings.health:0}";
             instructionText.text = Instruction;
             phaseText.text = IsDefeated ? "승리" : $"다음 동작까지 {Mathf.Max(0, Remaining):0.0}초";
         }

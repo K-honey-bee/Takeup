@@ -28,7 +28,7 @@ namespace TakeUp.Prototype
         [Min(0.1f)] public float spearInterval = 1.5f;
         [Min(1)] public float spearSpeed = 16;
         public Vector2 spearSize = new Vector2(0.8f, 0.18f);
-        [Header("경험치 / Experience")]
+        [Header("시간 조각 / Experience")]
         public Sprite experienceSprite;
         public Color experienceTint = new Color(0.3f, 1f, 0.7f);
         [Min(1)] public int firstLevelExperience = 6;
@@ -57,13 +57,13 @@ namespace TakeUp.Prototype
         [Min(0.05f)] public float dashDuration = 0.18f;
         [Min(0.1f)] public float dashCooldown = 2;
         public AudioClip dashSound;
-        [Header("전설 스킬 / 발구르기 댄스")]
+        [Header("전설 스킬 / 벽사무")]
         public StompDanceSettings dance = new StompDanceSettings();
         [Header("불 증강 / 화상") ]
         public FireSettings fire = new FireSettings();
-        [Header("선사시대 증강 / 돌과 가시")]
+        [Header("조선 균열 증강 / 돌과 가시")]
         public PrimitiveAugmentSettings primitive = new PrimitiveAugmentSettings();
-        [Header("회전 불꽃 / 뼈 부메랑 이미지와 수치")]
+        [Header("맴도는 도깨비불 / 돌아오는 주술 뼈 이미지와 수치")]
         public OrbitBoneSettings orbitBone = new OrbitBoneSettings();
         [Header("명중 섬광 / 돌 파편")]
         public HitEffectSettings hitEffect = new HitEffectSettings();

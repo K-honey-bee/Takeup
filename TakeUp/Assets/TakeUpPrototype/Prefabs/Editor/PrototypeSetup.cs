@@ -34,19 +34,19 @@ namespace TakeUp.Prototype.Editor
                 settings = ScriptableObject.CreateInstance<SurvivalSettings>();
                 settings.enemies = new[]
                 {
-                    new EnemyDefinition { displayName = "작은 야수", health = 28, speed = 1.65f, damage = 8, experience = 1, tint = new Color(0.8f, 0.36f, 0.3f) },
-                    new EnemyDefinition { displayName = "날쌘 야수", firstWave = 2, health = 20, speed = 2.8f, damage = 6, experience = 2, size = 0.55f, spawnWeight = 0.5f, tint = new Color(0.8f, 0.65f, 0.28f) },
-                    new EnemyDefinition { displayName = "큰 야수", firstWave = 3, health = 85, speed = 1.1f, damage = 16, experience = 4, size = 1.3f, spawnWeight = 0.3f, tint = new Color(0.53f, 0.4f, 0.75f) }
+                    new EnemyDefinition { displayName = "균열 들짐승", health = 28, speed = 1.65f, damage = 8, experience = 1, tint = new Color(0.8f, 0.36f, 0.3f) },
+                    new EnemyDefinition { displayName = "날쌘 균열 짐승", firstWave = 2, health = 20, speed = 2.8f, damage = 6, experience = 2, size = 0.55f, spawnWeight = 0.5f, tint = new Color(0.8f, 0.65f, 0.28f) },
+                    new EnemyDefinition { displayName = "거대 균열 짐승", firstWave = 3, health = 85, speed = 1.1f, damage = 16, experience = 4, size = 1.3f, spawnWeight = 0.3f, tint = new Color(0.53f, 0.4f, 0.75f) }
                 };
                 settings.augments = new[]
                 {
-                    Augment("날카로운 돌", "돌과 창의 피해량 +25%", AugmentKind.Damage, 0.25f, 8),
+                    Augment("날 선 돌팔매", "돌과 창의 피해량 +25%", AugmentKind.Damage, 0.25f, 8),
                     Augment("재빠른 손", "돌과 창의 공격 속도 +20%", AugmentKind.AttackSpeed, 0.2f, 6),
-                    Augment("사냥꾼의 발", "이동 속도 +15%", AugmentKind.MoveSpeed, 0.15f, 4),
+                    Augment("가벼운 발놀림", "이동 속도 +15%", AugmentKind.MoveSpeed, 0.15f, 4),
                     Augment("강인한 몸", "최대 체력 +25\n체력 25 회복", AugmentKind.MaxHealth, 25, 6),
-                    Augment("채집 본능", "경험치 획득 반경 +1.2", AugmentKind.PickupRadius, 1.2f, 5),
+                    Augment("시간 조각 감응", "시간 조각 획득 반경 +1.2", AugmentKind.PickupRadius, 1.2f, 5),
                     Augment("한 줌의 돌", "동시에 던지는 돌 +1", AugmentKind.ExtraStone, 1, 3),
-                    Augment("첫 번째 창", "자동 창 던지기 해금\n한 번에 적 3마리 관통", AugmentKind.Spear, 1, 1),
+                    Augment("영창 개방", "좌클릭 유지 시 영창 발사\n한 번에 적 3마리 관통", AugmentKind.Spear, 1, 1),
                     Augment("자연 회복", "매초 체력 1 회복", AugmentKind.Regeneration, 1, 4)
                 };
                 AssetDatabase.CreateAsset(settings, Folder + "/Data/PrehistoricSettings.asset");
@@ -54,7 +54,7 @@ namespace TakeUp.Prototype.Editor
             var augments = new System.Collections.Generic.List<AugmentDefinition>(settings.augments ?? Array.Empty<AugmentDefinition>());
             if (!augments.Exists(a => a != null && a.kind == AugmentKind.StompDance))
             {
-                augments.Add(Augment("[전설] 발구르기 댄스", "Q: 제자리 리듬 의식\n전부 성공하면 거대한 충격파!", AugmentKind.StompDance, 1, 1));
+                augments.Add(Augment("벽사무", "Q: 제자리 리듬 의식\n전부 성공하면 거대한 충격파!", AugmentKind.StompDance, 1, 1));
                 settings.augments = augments.ToArray();
                 EditorUtility.SetDirty(settings);
             }

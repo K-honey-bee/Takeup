@@ -18,7 +18,7 @@ namespace TakeUp.Prototype
             dancePanel = Panel(root, "Stomp Dance", new Color(0.035f, 0.055f, 0.075f, 0.94f),
                 new Vector2(0.5f, 0), new Vector2(0.5f, 0), new Vector2(-450, 76), new Vector2(450, 286));
             if (game.settings.dance.panelSprite != null) dancePanel.GetComponent<Image>().sprite = game.settings.dance.panelSprite;
-            danceTitle = Label(dancePanel, "발구르기 댄스", 26, gold, new Vector2(20, -8), new Vector2(860, 40), TextAnchor.MiddleCenter);
+            danceTitle = Label(dancePanel, "벽사무", 26, gold, new Vector2(20, -8), new Vector2(860, 40), TextAnchor.MiddleCenter);
             noteRow = Fixed(dancePanel, "Notes", new Vector2(20, -54), new Vector2(860, 50), Color.clear);
             var timingBar = Fixed(dancePanel, "Beat timing", new Vector2(100, -121), new Vector2(700, 18), new Color(0.15f, 0.2f, 0.22f));
             timingWindow = Panel(timingBar, "Hit window", new Color(0.35f, 0.65f, 0.45f),
@@ -34,7 +34,7 @@ namespace TakeUp.Prototype
         {
             string dash = game.DashCooldown > 0 ? $"{game.DashCooldown:0.0}초" : "준비";
             string dance = !game.HasDance ? "미획득" : game.DanceCooldown > 0 ? $"{game.DanceCooldown:0.0}초" : "준비";
-            equipment.text = $"돌{(game.HasSpear ? " + 창" : "")}    Shift 대시 {dash}    Q 발구르기 {dance}";
+            equipment.text = $"돌{(game.HasSpear ? " + 창" : "")}    Shift 대시 {dash}    Q 벽사무 {dance}";
             bool visible = game.State == RunState.Dancing;
             dancePanel.gameObject.SetActive(visible);
             if (!visible || game.DanceJudge == null) return;
@@ -56,7 +56,7 @@ namespace TakeUp.Prototype
                 noteLabels[i].text = sprite == null ? (judge.Note(index) == BeatDirection.Left ? "←" : "→") : "";
                 noteLabels[i].color = color;
             }
-            danceTitle.text = game.DanceResolved ? game.DanceFeedback : $"발구르기 댄스  {judge.Hits} / {judge.Count}";
+            danceTitle.text = game.DanceResolved ? game.DanceFeedback : $"벽사무  {judge.Hits} / {judge.Count}";
             danceTitle.color = game.DanceResolved && !game.DanceSucceeded ? new Color(1, 0.5f, 0.5f) : gold;
             danceHint.text = game.DanceResolved ? "카메라와 전투가 원래대로 돌아갑니다" : game.DanceFeedback + "\n움직이는 점이 중앙선에 올 때 입력";
             float interval = 60 / Mathf.Max(40, game.settings.dance.bpm);

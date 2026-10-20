@@ -498,7 +498,7 @@ GameObject:
   - component: {fileID: 49393693}
   - component: {fileID: 49393692}
   m_Layer: 0
-  m_Name: "\uB808\uBCA8 1  /  \uC0C8\uB85C\uC6B4 \uC0DD\uC874 \uAE30\uC220"
+  m_Name: "\uB808\uBCA8 1  /  \uC0C8\uB85C\uC6B4 \uADE0\uC5F4 \uC99D\uAC15"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -569,7 +569,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uB808\uBCA8 1  /  \uC0C8\uB85C\uC6B4 \uC0DD\uC874 \uAE30\uC220"
+  m_Text: "\uB808\uBCA8 1  /  \uC0C8\uB85C\uC6B4 \uADE0\uC5F4 \uC99D\uAC15"
 --- !u!222 &49393694
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2031,7 +2031,7 @@ GameObject:
   - component: {fileID: 250661975}
   - component: {fileID: 250661974}
   m_Layer: 0
-  m_Name: "\uC774\uBC88 \uC0DD\uC874\uC740 \uC5EC\uAE30\uAE4C\uC9C0"
+  m_Name: "\uC774\uBC88 \uD30C\uACAC\uC740 \uC5EC\uAE30\uAE4C\uC9C0"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2102,7 +2102,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uC774\uBC88 \uC0DD\uC874\uC740 \uC5EC\uAE30\uAE4C\uC9C0"
+  m_Text: "\uC774\uBC88 \uD30C\uACAC\uC740 \uC5EC\uAE30\uAE4C\uC9C0"
 --- !u!222 &250661976
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2397,7 +2397,7 @@ GameObject:
   - component: {fileID: 334499964}
   - component: {fileID: 334499963}
   m_Layer: 0
-  m_Name: "\uACBD\uD5D8\uCE58\uB97C \uBAA8\uC73C\uACE0 \uC99D\uAC15\uC744 \uC870\uD569\uD574
+  m_Name: "\uC2DC\uAC04 \uC870\uAC01\uB97C \uBAA8\uC73C\uACE0 \uC99D\uAC15\uC744 \uC870\uD569\uD574
     \uB2E4\uC2DC \uB3C4\uC804\uD558\uC138\uC694."
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3633,7 +3633,7 @@ GameObject:
   - component: {fileID: 502812586}
   - component: {fileID: 502812585}
   m_Layer: 0
-  m_Name: "\uACBD\uD5D8\uCE58 \uD68D\uB4DD \uBC18\uACBD +1.2"
+  m_Name: "\uC2DC\uAC04 \uC870\uAC01 \uD68D\uB4DD \uBC18\uACBD +1.2"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3704,7 +3704,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uACBD\uD5D8\uCE58 \uD68D\uB4DD \uBC18\uACBD +1.2"
+  m_Text: "\uC2DC\uAC04 \uC870\uAC01 \uD68D\uB4DD \uBC18\uACBD +1.2"
 --- !u!222 &502812587
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4687,7 +4687,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uACE0\uB300 \uBB38\uC5B4 \uCC98\uCE58 \uC644\uB8CC!"
+  m_Text: "\uBA39\uBB3C \uC694\uAD34 \uCC98\uCE58 \uC644\uB8CC!"
 --- !u!222 &722396093
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -7359,8 +7359,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uCCAB \uBC88\uC9F8 \uBCF4\uC2A4\uB97C \uBB3C\uB9AC\uCCE4\uC2B5\uB2C8\uB2E4.\n\uB2E4\uC2DC
-    \uB3C4\uC804\uD558\uAC70\uB098 \uC0DD\uC874 \uC2A4\uD14C\uC774\uC9C0\uB85C \uB3CC\uC544\uAC08
+  m_Text: "\uADE0\uC5F4\uC758 \uC218\uD638\uC790\uB97C \uC81C\uC555\uD588\uC2B5\uB2C8\uB2E4.\n\uB2E4\uC2DC
+    \uB3C4\uC804\uD558\uAC70\uB098 \uC870\uC120 \uADE0\uC5F4\uB85C \uB3CC\uC544\uAC08
     \uC218 \uC788\uC2B5\uB2C8\uB2E4."
 --- !u!222 &1032605762
 CanvasRenderer:
@@ -7569,7 +7569,7 @@ GameObject:
   - component: {fileID: 1047107854}
   - component: {fileID: 1047107853}
   m_Layer: 0
-  m_Name: "\uB0A0\uCE74\uB85C\uC6B4 \uB3CC"
+  m_Name: "\uB0A0 \uC120 \uB3CC\uD314\uB9E4"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7640,7 +7640,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uB0A0\uCE74\uB85C\uC6B4 \uB3CC"
+  m_Text: "\uB0A0 \uC120 \uB3CC\uD314\uB9E4"
 --- !u!222 &1047107855
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8724,7 +8724,7 @@ GameObject:
   - component: {fileID: 1141446784}
   - component: {fileID: 1141446783}
   m_Layer: 0
-  m_Name: "Button \uC0DD\uC874 \uB2E4\uC2DC \uC2DC\uC791"
+  m_Name: "Button \uB2E4\uC2DC \uD30C\uACAC\uD558\uAE30"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9421,7 +9421,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uACE0\uB300 \uBB38\uC5B4"
+  m_Text: "\uBA39\uBB3C \uC694\uAD34"
 --- !u!1 &1240773527
 GameObject:
   m_ObjectHideFlags: 0
@@ -10261,7 +10261,7 @@ GameObject:
   - component: {fileID: 1355148842}
   - component: {fileID: 1355148841}
   m_Layer: 0
-  m_Name: "Button \uC0DD\uC874 \uB2E4\uC2DC \uC2DC\uC791"
+  m_Name: "Button \uB2E4\uC2DC \uD30C\uACAC\uD558\uAE30"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10981,7 +10981,7 @@ GameObject:
   - component: {fileID: 1446782326}
   - component: {fileID: 1446782325}
   m_Layer: 0
-  m_Name: "\uC0DD\uC874 \uB2E4\uC2DC \uC2DC\uC791"
+  m_Name: "\uB2E4\uC2DC \uD30C\uACAC\uD558\uAE30"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11052,7 +11052,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uC0DD\uC874 \uC2A4\uD14C\uC774\uC9C0\uB85C \uB3CC\uC544\uAC00\uAE30"
+  m_Text: "\uC870\uC120 \uADE0\uC5F4\uB85C \uB3CC\uC544\uAC00\uAE30"
 --- !u!222 &1446782327
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -11383,7 +11383,7 @@ GameObject:
   - component: {fileID: 1513402446}
   - component: {fileID: 1513402445}
   m_Layer: 0
-  m_Name: "TAKEUP  /  \uC120\uC0AC\uC2DC\uB300"
+  m_Name: "\uC2DC\uAC04\uC758 \uC9D1 / \uC870\uC120 \uADE0\uC5F4"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11935,7 +11935,7 @@ GameObject:
   - component: {fileID: 1602670266}
   - component: {fileID: 1602670265}
   m_Layer: 0
-  m_Name: "\uC0AC\uB0E5\uAFBC\uC758 \uBC1C  [\uBBF8\uD68D\uB4DD]"
+  m_Name: "\uAC00\uBCBC\uC6B4 \uBC1C\uB180\uB9BC  [\uBBF8\uD68D\uB4DD]"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -12006,7 +12006,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uC0AC\uB0E5\uAFBC\uC758 \uBC1C  [\uBBF8\uD68D\uB4DD]"
+  m_Text: "\uAC00\uBCBC\uC6B4 \uBC1C\uB180\uB9BC  [\uBBF8\uD68D\uB4DD]"
 --- !u!222 &1602670267
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -12725,7 +12725,7 @@ GameObject:
   - component: {fileID: 1804862387}
   - component: {fileID: 1804862386}
   m_Layer: 0
-  m_Name: "\uC0DD\uC874 \uB2E4\uC2DC \uC2DC\uC791"
+  m_Name: "\uB2E4\uC2DC \uD30C\uACAC\uD558\uAE30"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -12796,7 +12796,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uC0DD\uC874 \uC2A4\uD14C\uC774\uC9C0\uB85C \uB3CC\uC544\uAC00\uAE30"
+  m_Text: "\uC870\uC120 \uADE0\uC5F4\uB85C \uB3CC\uC544\uAC00\uAE30"
 --- !u!222 &1804862388
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -12998,7 +12998,7 @@ GameObject:
   - component: {fileID: 1847208746}
   - component: {fileID: 1847208747}
   m_Layer: 0
-  m_Name: "\uBC1C\uAD6C\uB974\uAE30 \uB304\uC2A4"
+  m_Name: "\uBCBD\uC0AC\uBB34"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13037,7 +13037,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uBC1C\uAD6C\uB974\uAE30 \uB304\uC2A4"
+  m_Text: "\uBCBD\uC0AC\uBB34"
 --- !u!114 &1847208747
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13184,7 +13184,7 @@ GameObject:
   - component: {fileID: 1857262662}
   - component: {fileID: 1857262661}
   m_Layer: 0
-  m_Name: "\uCC44\uC9D1 \uBCF8\uB2A5  [\uBBF8\uD68D\uB4DD]"
+  m_Name: "\uC2DC\uAC04 \uC870\uAC01 \uAC10\uC751  [\uBBF8\uD68D\uB4DD]"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13255,7 +13255,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uCC44\uC9D1 \uBCF8\uB2A5  [\uBBF8\uD68D\uB4DD]"
+  m_Text: "\uC2DC\uAC04 \uC870\uAC01 \uAC10\uC751  [\uBBF8\uD68D\uB4DD]"
 --- !u!222 &1857262663
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -13342,7 +13342,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uBC14\uC704 \uB4A4\uB85C \uC228\uC73C\uC138\uC694"
+  m_Text: "\uBD09\uC778\uC11D \uB4A4\uB85C \uC228\uC73C\uC138\uC694"
 --- !u!1 &1869454304
 GameObject:
   m_ObjectHideFlags: 0
@@ -13947,7 +13947,7 @@ GameObject:
   - component: {fileID: 1923400293}
   - component: {fileID: 1923400292}
   m_Layer: 0
-  m_Name: "\uB0A0\uCE74\uB85C\uC6B4 \uB3CC  [\uBBF8\uD68D\uB4DD]"
+  m_Name: "\uB0A0 \uC120 \uB3CC\uD314\uB9E4  [\uBBF8\uD68D\uB4DD]"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14018,7 +14018,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uB0A0\uCE74\uB85C\uC6B4 \uB3CC  [\uBBF8\uD68D\uB4DD]"
+  m_Text: "\uB0A0 \uC120 \uB3CC\uD314\uB9E4  [\uBBF8\uD68D\uB4DD]"
 --- !u!222 &1923400294
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -14747,7 +14747,7 @@ GameObject:
   - component: {fileID: 2074001633}
   - component: {fileID: 2074001632}
   m_Layer: 0
-  m_Name: "\uC0AC\uB0E5\uAFBC\uC758 \uBC1C"
+  m_Name: "\uAC00\uBCBC\uC6B4 \uBC1C\uB180\uB9BC"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14818,7 +14818,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uC0AC\uB0E5\uAFBC\uC758 \uBC1C"
+  m_Text: "\uAC00\uBCBC\uC6B4 \uBC1C\uB180\uB9BC"
 --- !u!222 &2074001634
 CanvasRenderer:
   m_ObjectHideFlags: 0

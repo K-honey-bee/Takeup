@@ -96,7 +96,7 @@ namespace TakeUp.Prototype
                     if (FinaleColorAt(game.PlayerPosition) != memorySequence[MemoryStep])
                     {
                         HideAttackVisuals(); Health = settings.health * .3f;
-                        SetPhase(OctopusPhase.Recovery, 1.2f, "발악 실패! 문어 체력 30% 회복 · 촉수 폭주 재개");
+                        SetPhase(OctopusPhase.Recovery, 1.2f, "발악 실패! 먹물 요괴 체력 30% 회복 · 촉수 폭주 재개");
                     }
                     else
                     {
@@ -110,7 +110,7 @@ namespace TakeUp.Prototype
                     else
                     {
                         HideAttackVisuals(); bodyArtwork.color = new Color(.3f, .3f, .35f);
-                        SetPhase(OctopusPhase.Defeated, 0, "발악 돌파! 문어를 물리쳤습니다!"); game.CompleteBossFight();
+                        SetPhase(OctopusPhase.Defeated, 0, "발악 돌파! 먹물 요괴를 물리쳤습니다!"); game.CompleteBossFight();
                     }
                     return true;
             }
