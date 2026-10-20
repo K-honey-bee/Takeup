@@ -182,7 +182,7 @@ namespace TakeUp.Prototype
             float slow = ActiveBoss != null ? ActiveBoss.MovementMultiplier(player.position) : 1;
             Vector2 position = (Vector2)player.position + Vector2.ClampMagnitude(input, 1) * moveSpeed * slow * dt;
             player.position = ClampToArena(position);
-            if (Mathf.Abs(input.x) > 0.01f) playerRenderer.flipX = input.x < 0;
+           
         }
 
         void TickSpawner(float dt)
@@ -281,7 +281,13 @@ namespace TakeUp.Prototype
             Vector2 direction = (Vector2)(aimRay.GetPoint(aimDistance) - player.position);
             if (direction.sqrMagnitude < 0.0001f) return;
             direction.Normalize();
-            if (Mathf.Abs(direction.x) > 0.01f) playerRenderer.flipX = direction.x < 0;
+
+            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+
+            playerRenderer.flipX = false;
+            playerRenderer.transform.rotation =
+                Quaternion.Euler(0f, 0f, angle + 90f);
+
             if (!mouse.leftButton.isPressed) return;
             if (StackCount(AugmentKind.BoneBoomerang) > 0 && boneTimer <= 0)
             {

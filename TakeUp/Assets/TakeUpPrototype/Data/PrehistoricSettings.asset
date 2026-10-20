@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a8267b01a885e845a79d15139df9ba4, type: 3}
   m_Name: PrehistoricSettings
   m_EditorClassIdentifier: Assembly-CSharp::TakeUp.Prototype.SurvivalSettings
-  playerSprite: {fileID: 0}
+  playerSprite: {fileID: 21300000, guid: 3a424d8b8b87545499634cd6dbd0f485, type: 3}
   playerTint: {r: 0.97, g: 0.74, b: 0.35, a: 1}
   playerSize: 0.8
   maxHealth: 100
-  moveSpeed: 5
+  moveSpeed: 6.69
   hurtInvulnerability: 0.6
   stoneSprite: {fileID: 2039115102, guid: 8172be07b434c144089e0c177248d59e, type: 3}
   stoneTint: {r: 0.85, g: 0.88, b: 0.86, a: 1}
@@ -24,13 +24,13 @@ MonoBehaviour:
   stoneInterval: 0.65
   stoneSpeed: 12
   attackRange: 10
-  stoneSize: 0.4
+  stoneSize: 4
   spearSprite: {fileID: 2111647569, guid: 8172be07b434c144089e0c177248d59e, type: 3}
   spearTint: {r: 1, g: 0.8, b: 0.45, a: 1}
   spearDamage: 32
   spearInterval: 1.5
   spearSpeed: 16
-  spearSize: {x: 0.8, y: 0.18}
+  spearSize: {x: 1.8, y: 0.2}
   experienceSprite: {fileID: 0}
   experienceTint: {r: 0.3, g: 1, b: 0.7, a: 1}
   firstLevelExperience: 3
