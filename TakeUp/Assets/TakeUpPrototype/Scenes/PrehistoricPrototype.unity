@@ -2139,8 +2139,8 @@ GameObject:
   - component: {fileID: 334499964}
   - component: {fileID: 334499963}
   m_Layer: 0
-  m_Name: "\uC2DC\uAC04 \uC870\uAC01\uB97C \uBAA8\uC73C\uACE0 \uC99D\uAC15\uC744 \uC870\uD569\uD574
-    \uB2E4\uC2DC \uB3C4\uC804\uD558\uC138\uC694."
+  m_Name: "\uC2DC\uAC04 \uC870\uAC01\uB97C \uBAA8\uC73C\uACE0 \uC99D\uAC15\uC744
+    \uC870\uD569\uD574 \uB2E4\uC2DC \uB3C4\uC804\uD558\uC138\uC694."
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6321,8 +6321,8 @@ GameObject:
   - component: {fileID: 1046171851}
   - component: {fileID: 1046171850}
   m_Layer: 0
-  m_Name: "WASD \uC774\uB3D9 \xB7 Shift \uB300\uC2DC \xB7 Q \uBCBD\uC0AC\uBB34
-    \xB7 \uCDA4: A/D \uB610\uB294 \u2190/\u2192 \xB7 Tab \uC99D\uAC15 \xB7 ESC \uC815\uC9C0"
+  m_Name: "WASD \uC774\uB3D9 \xB7 Shift \uB300\uC2DC \xB7 Q \uBCBD\uC0AC\uBB34 \xB7
+    \uCDA4: A/D \uB610\uB294 \u2190/\u2192 \xB7 Tab \uC99D\uAC15 \xB7 ESC \uC815\uC9C0"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6393,8 +6393,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "WASD \uC774\uB3D9 \xB7 Shift \uB300\uC2DC \xB7 Q \uBCBD\uC0AC\uBB34
-    \xB7 \uCDA4: A/D \uB610\uB294 \xB7 Tab \uC99D\uAC15 \xB7 ESC \uC815\uC9C0"
+  m_Text: "WASD \uC774\uB3D9 \xB7 Shift \uB300\uC2DC \xB7 Q \uBCBD\uC0AC\uBB34 \xB7
+    \uCDA4: A/D \uB610\uB294 \xB7 Tab \uC99D\uAC15 \xB7 ESC \uC815\uC9C0"
 --- !u!222 &1046171852
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -11803,7 +11803,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: -20
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: 2a62b3105cbee5d49b50384ab0aa24e0, type: 3}
+  m_Sprite: {fileID: 21300000, guid: f25d0588643052b4ba11932f7b3e47ee, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

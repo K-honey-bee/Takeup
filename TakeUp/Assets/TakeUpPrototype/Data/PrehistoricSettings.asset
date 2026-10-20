@@ -52,7 +52,7 @@ MonoBehaviour:
   enemies:
   - prefab: {fileID: 4322050038169260442, guid: 8bc4692131eae20469fa667e1a771d1e, type: 3}
     displayName: "\uADE0\uC5F4 \uB4E4\uC9D0\uC2B9"
-    sprite: {fileID: 876486182, guid: 2730458e073955d489a5a5511c4fac87, type: 3}
+    sprite: {fileID: -874127063, guid: ea18d4df4df7d17489f9d5d2e1f84ff2, type: 3}
     tint: {r: 1, g: 1, b: 1, a: 1}
     size: 0.75
     health: 28
@@ -61,6 +61,14 @@ MonoBehaviour:
     experience: 1
     firstWave: 1
     spawnWeight: 1
+    chargeEnabled: 0
+    chargeRange: 5
+    chargeWarning: 0.65
+    chargeSpeed: 8
+    chargeDuration: 0.45
+    chargeRecovery: 0.55
+    chargeCooldown: 2.5
+    chargeWarningColor: {r: 0.8, g: 0.35, b: 1, a: 1}
     knockbackDistance: 0.65
     knockbackDuration: 0.16
     deathFrames: []
@@ -71,15 +79,7 @@ MonoBehaviour:
     corpseBlinkInterval: 0.1
   - prefab: {fileID: 7332539394433539582, guid: 3fe0e8561c0816543a38e615f654272f, type: 3}
     displayName: "\uB5A0\uB3C4\uB294 \uB3C4\uAE68\uBE44\uBD88"
-    chargeEnabled: 1
-    chargeRange: 5
-    chargeWarning: 0.65
-    chargeSpeed: 8
-    chargeDuration: 0.45
-    chargeRecovery: 0.55
-    chargeCooldown: 2.5
-    chargeWarningColor: {r: 0.8, g: 0.35, b: 1, a: 1}
-    sprite: {fileID: 1345396793, guid: 2730458e073955d489a5a5511c4fac87, type: 3}
+    sprite: {fileID: 1554330680, guid: ea18d4df4df7d17489f9d5d2e1f84ff2, type: 3}
     tint: {r: 1, g: 1, b: 1, a: 1}
     size: 0.55
     health: 20
@@ -88,6 +88,14 @@ MonoBehaviour:
     experience: 2
     firstWave: 2
     spawnWeight: 0.5
+    chargeEnabled: 1
+    chargeRange: 5
+    chargeWarning: 0.65
+    chargeSpeed: 8
+    chargeDuration: 0.45
+    chargeRecovery: 0.55
+    chargeCooldown: 2.5
+    chargeWarningColor: {r: 0.8, g: 0.35, b: 1, a: 1}
     knockbackDistance: 0.65
     knockbackDuration: 0.16
     deathFrames: []
@@ -98,7 +106,7 @@ MonoBehaviour:
     corpseBlinkInterval: 0.1
   - prefab: {fileID: 2111426484862797062, guid: a463acc4c26eac9488d573170e4d6ca9, type: 3}
     displayName: "\uAC70\uB300 \uADE0\uC5F4 \uC9D0\uC2B9"
-    sprite: {fileID: -407179706, guid: 2730458e073955d489a5a5511c4fac87, type: 3}
+    sprite: {fileID: -1798538951, guid: ea18d4df4df7d17489f9d5d2e1f84ff2, type: 3}
     tint: {r: 1, g: 1, b: 1, a: 1}
     size: 1.3
     health: 85
@@ -107,6 +115,14 @@ MonoBehaviour:
     experience: 4
     firstWave: 3
     spawnWeight: 0.3
+    chargeEnabled: 0
+    chargeRange: 5
+    chargeWarning: 0.65
+    chargeSpeed: 8
+    chargeDuration: 0.45
+    chargeRecovery: 0.55
+    chargeCooldown: 2.5
+    chargeWarningColor: {r: 0.8, g: 0.35, b: 1, a: 1}
     knockbackDistance: 0.65
     knockbackDuration: 0.16
     deathFrames: []
@@ -118,57 +134,57 @@ MonoBehaviour:
   augments:
   - title: "\uB0A0 \uC120 \uB3CC\uD314\uB9E4"
     description: "\uB3CC\uACFC \uCC3D\uC758 \uD53C\uD574\uB7C9 +25%"
-    icon: {fileID: 1229297514, guid: c928026d7f14ad9468785a200069b767, type: 3}
+    icon: {fileID: -1638061899, guid: d98b5637045df45408ec7abdc7710637, type: 3}
     kind: 0
     amount: 0.25
     maxStacks: 8
   - title: "\uC7AC\uBE60\uB978 \uC190"
     description: "\uB3CC\uACFC \uCC3D\uC758 \uACF5\uACA9 \uC18D\uB3C4 +20%"
-    icon: {fileID: 199287593, guid: c928026d7f14ad9468785a200069b767, type: 3}
+    icon: {fileID: 346028246, guid: d98b5637045df45408ec7abdc7710637, type: 3}
     kind: 1
     amount: 0.2
     maxStacks: 6
   - title: "\uAC00\uBCBC\uC6B4 \uBC1C\uB180\uB9BC"
     description: "\uC774\uB3D9 \uC18D\uB3C4 +15%"
-    icon: {fileID: -623423789, guid: c928026d7f14ad9468785a200069b767, type: 3}
+    icon: {fileID: 342742056, guid: d98b5637045df45408ec7abdc7710637, type: 3}
     kind: 2
     amount: 0.15
     maxStacks: 4
   - title: "\uAC15\uC778\uD55C \uBAB8"
     description: "\uCD5C\uB300 \uCCB4\uB825 +25\n\uCCB4\uB825 25 \uD68C\uBCF5"
-    icon: {fileID: 831235533, guid: c928026d7f14ad9468785a200069b767, type: 3}
+    icon: {fileID: -2105365294, guid: d98b5637045df45408ec7abdc7710637, type: 3}
     kind: 3
     amount: 25
     maxStacks: 6
   - title: "\uC2DC\uAC04 \uC870\uAC01 \uAC10\uC751"
     description: "\uC2DC\uAC04 \uC870\uAC01 \uD68D\uB4DD \uBC18\uACBD +1.2"
-    icon: {fileID: 1312703325, guid: c928026d7f14ad9468785a200069b767, type: 3}
+    icon: {fileID: 599504573, guid: d98b5637045df45408ec7abdc7710637, type: 3}
     kind: 4
     amount: 1.2
     maxStacks: 5
   - title: "\uD55C \uC90C\uC758 \uB3CC"
     description: "\uB3D9\uC2DC\uC5D0 \uB358\uC9C0\uB294 \uB3CC +1"
-    icon: {fileID: -899211520, guid: c928026d7f14ad9468785a200069b767, type: 3}
+    icon: {fileID: -922861822, guid: d98b5637045df45408ec7abdc7710637, type: 3}
     kind: 5
     amount: 1
     maxStacks: 3
   - title: "\uC601\uCC3D \uAC1C\uBC29"
-    description: "\uC88C\uD074\uB9AD \uC720\uC9C0 \uC2DC \uC601\uCC3D \uBC1C\uC0AC\n\uD55C \uBC88\uC5D0
-      \uC801 3\uB9C8\uB9AC \uAD00\uD1B5"
-    icon: {fileID: 1207388847, guid: c928026d7f14ad9468785a200069b767, type: 3}
+    description: "\uC88C\uD074\uB9AD \uC720\uC9C0 \uC2DC \uC601\uCC3D \uBC1C\uC0AC\n\uD55C
+      \uBC88\uC5D0 \uC801 3\uB9C8\uB9AC \uAD00\uD1B5"
+    icon: {fileID: 451790604, guid: d98b5637045df45408ec7abdc7710637, type: 3}
     kind: 6
     amount: 1
     maxStacks: 1
   - title: "\uC790\uC5F0 \uD68C\uBCF5"
     description: "\uB9E4\uCD08 \uCCB4\uB825 1 \uD68C\uBCF5"
-    icon: {fileID: 1653308287, guid: c928026d7f14ad9468785a200069b767, type: 3}
+    icon: {fileID: -1144847610, guid: d98b5637045df45408ec7abdc7710637, type: 3}
     kind: 7
     amount: 1
     maxStacks: 4
   - title: "\uBCBD\uC0AC\uBB34"
     description: "Q: \uC81C\uC790\uB9AC \uB9AC\uB4EC \uC758\uC2DD\n\uC804\uBD80 \uC131\uACF5\uD558\uBA74
       \uAC70\uB300\uD55C \uCDA9\uACA9\uD30C!"
-    icon: {fileID: 354705522, guid: c928026d7f14ad9468785a200069b767, type: 3}
+    icon: {fileID: -1183491220, guid: d98b5637045df45408ec7abdc7710637, type: 3}
     kind: 8
     amount: 1
     maxStacks: 1
@@ -176,35 +192,35 @@ MonoBehaviour:
     description: "\uB3CC\xB7\uCC3D \uC801\uC911 \uC2DC \uD654\uC0C1 \uBD80\uC5EC\n\uAE30\uBCF8
       \uCD08\uB2F9 6 \uD53C\uD574, 3\uCD08 \uC9C0\uC18D \xB7 \uC7AC\uC801\uC911 \uC2DC
       \uC2DC\uAC04 \uAC31\uC2E0"
-    icon: {fileID: -817478072, guid: b29d52d19564c8a49a6e9a25d238acdd, type: 3}
+    icon: {fileID: -63763834, guid: 7692ee121465e91458f7aaaffc59ea98, type: 3}
     kind: 9
     amount: 1
     maxStacks: 1
   - title: "\uAC70\uC13C \uBD88\uC528"
     description: "[\uB3C4\uAE68\uBE44\uBD88 \uD544\uC694] \uD654\uC0C1 \uCD08\uB2F9
       \uD53C\uD574 +3"
-    icon: {fileID: -420883787, guid: b29d52d19564c8a49a6e9a25d238acdd, type: 3}
+    icon: {fileID: -519271890, guid: 7692ee121465e91458f7aaaffc59ea98, type: 3}
     kind: 10
     amount: 3
     maxStacks: 4
   - title: "\uAEBC\uC9C0\uC9C0 \uC54A\uB294 \uBD88"
     description: "[\uB3C4\uAE68\uBE44\uBD88 \uD544\uC694] \uD654\uC0C1 \uC9C0\uC18D
       \uC2DC\uAC04 +1.5\uCD08"
-    icon: {fileID: 2090373105, guid: b29d52d19564c8a49a6e9a25d238acdd, type: 3}
+    icon: {fileID: 753078058, guid: 7692ee121465e91458f7aaaffc59ea98, type: 3}
     kind: 11
     amount: 1.5
     maxStacks: 3
   - title: "\uC62E\uACA8\uBD99\uB294 \uBD88\uC528"
     description: "[\uB3C4\uAE68\uBE44\uBD88 \uD544\uC694] \uBD88\uD0C0\uB294 \uC801
       \uCC98\uCE58 \uC2DC\n\uC8FC\uBCC0 3m \uC801\uC5D0\uAC8C \uD654\uC0C1 \uC804\uD30C"
-    icon: {fileID: 146590320, guid: b29d52d19564c8a49a6e9a25d238acdd, type: 3}
+    icon: {fileID: 1338020211, guid: 7692ee121465e91458f7aaaffc59ea98, type: 3}
     kind: 12
     amount: 1
     maxStacks: 1
   - title: "\uB3C4\uAE68\uBE44 \uCDA4"
     description: "[\uB3C4\uAE68\uBE44\uBD88 + \uBCBD\uC0AC\uBB34 \uD544\uC694]\n\uBCBD\uC0AC\uBB34
       \uC131\uACF5 \uCDA9\uACA9\uD30C\uC5D0 \uD654\uC0C1 \uCD94\uAC00"
-    icon: {fileID: -327470151, guid: b29d52d19564c8a49a6e9a25d238acdd, type: 3}
+    icon: {fileID: 845703467, guid: 7692ee121465e91458f7aaaffc59ea98, type: 3}
     kind: 13
     amount: 1
     maxStacks: 1
@@ -212,7 +228,7 @@ MonoBehaviour:
     description: "\uB3CC\uC774 \uADFC\uCC98 \uB2E4\uB978 \uC801\uC5D0\uAC8C 1\uD68C
       \uB3C4\uC57D\n\uAC19\uC740 \uC801 \uC7AC\uC801\uC911 \uBD88\uAC00 \xB7 \uBD88
       \uD6A8\uACFC \uC720\uC9C0"
-    icon: {fileID: -893753794, guid: b29d52d19564c8a49a6e9a25d238acdd, type: 3}
+    icon: {fileID: 154922700, guid: 7692ee121465e91458f7aaaffc59ea98, type: 3}
     kind: 14
     amount: 1
     maxStacks: 1
@@ -220,14 +236,14 @@ MonoBehaviour:
     description: "\uD53C\uD574\uB97C \uBC1B\uACE0 \uC0DD\uC874\uD558\uBA74 8\uBC29\uD5A5
       \uAC00\uC2DC \uBC1C\uC0AC\n\uAE30\uBCF8 \uD53C\uD574 18 \xB7 \uC0AC\uAC70\uB9AC
       5m"
-    icon: {fileID: -475837754, guid: b29d52d19564c8a49a6e9a25d238acdd, type: 3}
+    icon: {fileID: 1922952526, guid: 7692ee121465e91458f7aaaffc59ea98, type: 3}
     kind: 15
     amount: 1
     maxStacks: 1
   - title: "\uB9F4\uB3C4\uB294 \uB3C4\uAE68\uBE44\uBD88"
     description: "\uD50C\uB808\uC774\uC5B4 \uC8FC\uC704\uB97C \uB3C4\uB294 \uBD88\uAF43
       2\uAC1C \uC0DD\uC131\n\uCD94\uAC00 \uD68D\uB4DD\uB9C8\uB2E4 \uBD88\uAF43 +1\uAC1C"
-    icon: {fileID: 1924013442, guid: b29d52d19564c8a49a6e9a25d238acdd, type: 3}
+    icon: {fileID: -436976154, guid: 7692ee121465e91458f7aaaffc59ea98, type: 3}
     kind: 16
     amount: 1
     maxStacks: 6
@@ -235,7 +251,7 @@ MonoBehaviour:
     description: "\uC88C\uD074\uB9AD\uC744 \uB204\uB974\uBA74 \uC870\uC900 \uBC29\uD5A5\uC73C\uB85C
       \uBF08 \uD22C\uCC99\n\uB3CC\uC544\uC624\uBA74\uC11C\uB3C4 \uC801\uC744 \uAD00\uD1B5
       \uACF5\uACA9"
-    icon: {fileID: -1192711238, guid: b29d52d19564c8a49a6e9a25d238acdd, type: 3}
+    icon: {fileID: -740588921, guid: 7692ee121465e91458f7aaaffc59ea98, type: 3}
     kind: 17
     amount: 1
     maxStacks: 1
@@ -302,3 +318,15 @@ MonoBehaviour:
     boneSpeed: 10
     boneReturnSpeed: 14
     boneSpinDegreesPerSecond: 720
+  hitEffect:
+    flashSprite: {fileID: -1747658626, guid: 52abafaed86ad834a9ab96372b7ccc3a, type: 3}
+    fragment1: {fileID: -1765753461, guid: 52abafaed86ad834a9ab96372b7ccc3a, type: 3}
+    fragment2: {fileID: -2065688718, guid: 52abafaed86ad834a9ab96372b7ccc3a, type: 3}
+    fragment3: {fileID: 63229807, guid: 52abafaed86ad834a9ab96372b7ccc3a, type: 3}
+    flashSize: 0.65
+    flashDuration: 0.09
+    fragmentSize: 0.16
+    fragmentDuration: 0.3
+    fragmentSpeed: 3
+    fragmentGravity: 6
+    fragmentSpin: 540
