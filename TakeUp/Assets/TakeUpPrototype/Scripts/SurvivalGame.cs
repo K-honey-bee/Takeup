@@ -128,6 +128,8 @@ namespace TakeUp.Prototype
                 else if (keyboard.digit2Key.wasPressedThisFrame) ChooseAugment(1);
                 else if (keyboard.digit3Key.wasPressedThisFrame) ChooseAugment(2);
             }
+            if (State == RunState.Playing || State == RunState.Dancing)
+                TickHitEffects(Mathf.Min(Time.deltaTime, .05f));
             if (State == RunState.Dancing) { TickDance(Time.unscaledDeltaTime); return; }
             if (State != RunState.Playing) return;
             float dt = Mathf.Min(Time.deltaTime, 0.05f);
@@ -318,6 +320,7 @@ namespace TakeUp.Prototype
                 if (!shot.hitBoss && ActiveBoss != null && !MapWall.Blocks(from, ActiveBoss.Position) && ActiveBoss.HitBySegment(from, to, shot.radius))
                 {
                     shot.hitBoss = true; ActiveBoss.Damage(shot.damage); if (shot.burning) IgniteBoss(); shot.pierce = 0;
+                    SpawnHitEffect(ActiveBoss.Position - shot.direction * ActiveBoss.Radius, shot.direction);
                     if (TryRicochet(shot, to)) continue;
                 }
                 for (int j = enemies.Count - 1; j >= 0 && shot.pierce > 0; j--)
@@ -331,6 +334,8 @@ namespace TakeUp.Prototype
                     shot.hit.Add(enemy); shot.pierce--;
                     if (shot.burning) Ignite(enemy);
                     enemy.health -= shot.damage; enemy.flash = 0.1f;
+                    SpawnHitEffect((Vector2)enemy.body.position - shot.direction * enemy.radius, shot.direction,
+                        enemy.renderer.sortingLayerID, enemy.renderer.sortingOrder + 2);
                     KnockBackEnemy(enemy, shot.direction);
                     if (enemy.health <= 0)
                     {

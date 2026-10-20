@@ -65,6 +65,24 @@ namespace TakeUp.Prototype
         public PrimitiveAugmentSettings primitive = new PrimitiveAugmentSettings();
         [Header("회전 불꽃 / 뼈 부메랑 이미지와 수치")]
         public OrbitBoneSettings orbitBone = new OrbitBoneSettings();
+        [Header("명중 섬광 / 돌 파편")]
+        public HitEffectSettings hitEffect = new HitEffectSettings();
+    }
+
+    [Serializable]
+    public sealed class HitEffectSettings
+    {
+        public Sprite flashSprite;
+        public Sprite fragment1;
+        public Sprite fragment2;
+        public Sprite fragment3;
+        [Min(.01f)] public float flashSize = .65f;
+        [Min(.01f)] public float flashDuration = .09f;
+        [Min(.01f)] public float fragmentSize = .16f;
+        [Min(.01f)] public float fragmentDuration = .3f;
+        [Min(0)] public float fragmentSpeed = 3f;
+        [Min(0)] public float fragmentGravity = 6f;
+        [Min(0)] public float fragmentSpin = 540f;
     }
 
     [Serializable]
