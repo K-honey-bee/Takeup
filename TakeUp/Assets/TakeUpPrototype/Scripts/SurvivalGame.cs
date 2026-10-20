@@ -34,6 +34,9 @@ namespace TakeUp.Prototype
             public Vector2 knockbackDirection;
             public float knockbackRemaining;
             public float nextOrbitHit;
+            public int chargePhase;
+            public float chargeTimer;
+            public Vector2 chargeDirection;
             public Transform body;
             public SpriteRenderer renderer;
             public float health, speed, damage, radius, flash;
@@ -239,12 +242,17 @@ namespace TakeUp.Prototype
                     if (distance < desired && distance > 0.001f) separation += apart / distance * (desired - distance);
                 }
                 if (enemy.knockbackRemaining > 0) TickEnemyKnockback(enemy, dt);
-                else enemy.body.position += (Vector3)(Vector2.ClampMagnitude(delta.normalized + separation * 2, 1) * enemy.speed * dt);
+                else if (!TickEnemyCharge(enemy, delta, dt))
+                    enemy.body.position += (Vector3)(Vector2.ClampMagnitude(delta.normalized + separation * 2, 1) * enemy.speed * dt);
                 enemy.body.position = MapWall.Constrain(beforeMovement, enemy.body.position, enemy.radius);
-                enemy.renderer.flipX = delta.x < 0;
+                enemy.renderer.flipX = (enemy.chargePhase == 1 || enemy.chargePhase == 2 ? enemy.chargeDirection.x : delta.x) < 0;
                 enemy.flash = Mathf.Max(0, enemy.flash - dt);
                 enemy.renderer.color = enemy.flash > 0 ? Color.white : enemy.burnRemaining > 0 ? Color.Lerp(enemy.color, FlameColor, .35f + .2f * Mathf.Sin(enemy.burnRemaining * 14)) : enemy.color;
-                if (Vector2.Distance(player.position, enemy.body.position) < enemy.radius + VisualRadius(playerRenderer)) DamagePlayer(enemy.damage);
+                if (enemy.chargePhase == 1 && enemy.flash <= 0)
+                    enemy.renderer.color = Color.Lerp(enemy.color, enemy.definition.chargeWarningColor, .5f + .5f * Mathf.Sin(enemy.chargeTimer * 25));
+                Vector2 travel = (Vector2)enemy.body.position - beforeMovement;
+                float contactT = travel.sqrMagnitude > .0001f ? Mathf.Clamp01(Vector2.Dot((Vector2)player.position - beforeMovement, travel) / travel.sqrMagnitude) : 0;
+                if (Vector2.Distance(player.position, beforeMovement + travel * contactT) < enemy.radius + VisualRadius(playerRenderer)) DamagePlayer(enemy.damage);
                 if (State == RunState.Dead) return;
             }
         }

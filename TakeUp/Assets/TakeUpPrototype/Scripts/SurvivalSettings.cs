@@ -100,6 +100,15 @@ namespace TakeUp.Prototype
         [Min(1)] public int experience = 1;
         [Min(1)] public int firstWave = 1;
         [Min(0.01f)] public float spawnWeight = 1;
+        [Header("도깨비불 돌진 / 끄면 기본 추적")]
+        public bool chargeEnabled;
+        [Min(.1f)] public float chargeRange = 5;
+        [Min(.1f)] public float chargeWarning = .65f;
+        [Min(.1f)] public float chargeSpeed = 8;
+        [Min(.05f)] public float chargeDuration = .45f;
+        [Min(.05f)] public float chargeRecovery = .55f;
+        [Min(.1f)] public float chargeCooldown = 2.5f;
+        public Color chargeWarningColor = new Color(.8f, .35f, 1);
         [Header("피격 밀림")]
         [Min(0)] public float knockbackDistance = .65f;
         [Min(.01f)] public float knockbackDuration = .16f;
