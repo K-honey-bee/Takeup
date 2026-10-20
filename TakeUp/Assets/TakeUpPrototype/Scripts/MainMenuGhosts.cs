@@ -5,19 +5,24 @@ using UnityEngine.UI;
 namespace TakeUp.Prototype
 {
     [RequireComponent(typeof(RectTransform))]
+    [RequireComponent(typeof(CanvasRenderer))]
     public sealed class MainMenuGhosts : MonoBehaviour
     {
         [Header("메인 배경")]
+
         public Color backgroundColor = new Color(.46f, .48f, .50f, 1);
         public Color ghostColor = new Color(.90f, .97f, .93f, 1);
         public Color outlineColor = new Color(.19f, .24f, .25f, 1);
+
         [Header("또잉 등장")]
+
         [Min(.1f)] public float popDuration = .8f;
         [Min(0)] public float firstDelay = .35f;
         [Min(0)] public float stagger = .65f;
         [Range(.2f, .65f)] public float sizeRatio = .48f;
         [Range(.35f, .85f)] public float visibleFraction = .65f;
         [Min(0)] public float floatAmount = 5;
+
         [Header("마우스를 따라가는 눈")]
         [Range(0, 16)] public float pupilTravel = 9;
         [Min(.1f)] public float eyeFollowSpeed = 12;
@@ -72,7 +77,7 @@ namespace TakeUp.Prototype
 
         static RectTransform Oval(Transform parent, string label, Vector2 position, Vector2 size, Color color)
         {
-            var graphic = new GameObject(label, typeof(RectTransform), typeof(MenuGhostOval)).GetComponent<MenuGhostOval>();
+            var graphic = new GameObject(label, typeof(RectTransform),typeof(CanvasRenderer), typeof(MenuGhostOval)).GetComponent<MenuGhostOval>();
             graphic.transform.SetParent(parent, false);
             graphic.rectTransform.anchoredPosition = position;
             graphic.rectTransform.sizeDelta = size;
