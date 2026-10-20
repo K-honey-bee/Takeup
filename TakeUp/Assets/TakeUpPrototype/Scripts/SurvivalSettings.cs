@@ -57,6 +57,10 @@ namespace TakeUp.Prototype
         [Min(0.05f)] public float dashDuration = 0.18f;
         [Min(0.1f)] public float dashCooldown = 2;
         public AudioClip dashSound;
+        [Header("플레이어 전투 소리")]
+        public AudioClip attackSound;
+        public AudioClip hurtSound;
+        [Range(0, 1)] public float combatVolume = .8f;
         [Header("전설 스킬 / 벽사무")]
         public StompDanceSettings dance = new StompDanceSettings();
         [Header("불 증강 / 화상") ]

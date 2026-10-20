@@ -52,6 +52,19 @@ namespace TakeUp.Prototype
                 game.scenePlayer.transform.position += Vector3.up * 4;
                 for (int i = 0; i < 150; i++) Invoke(game, "TickOrbitBone", .02f);
                 Require(bones.Count == 0, "return tracks moving player");
+                var flights = (IList)Field(game, "spiritFlights");
+                for (int i = 0; i < 400 && flights.Count == 0; i++) Invoke(game, "TickOrbitBone", .02f);
+                Require(flights.Count == 3 && fires.Count == 0, "all orbit fires launch after hold");
+                var flight = flights[0];
+                var flightVisual = (SpriteRenderer)Field(flight, "visual");
+                Vector2 launchPosition = flightVisual.transform.position;
+                Vector2 launchDirection = (Vector2)Field(flight, "direction");
+                game.scenePlayer.transform.position += Vector3.up * 10;
+                Invoke(game, "TickOrbitBone", .02f);
+                Require(Vector2.Distance(flightVisual.transform.position,
+                    launchPosition + launchDirection * config.orbitLaunchSpeed * .02f) < .001f, "launched fire moves independently of player");
+                for (int i = 0; i < 100; i++) Invoke(game, "TickOrbitBone", .02f);
+                Require(flights.Count == 0 && fires.Count == 3, "fires respawn after flight and repeat delay");
                 Require(Array.Exists(game.settings.augments, a => a != null && a.kind == AugmentKind.OrbitFire)
                     && Array.Exists(game.settings.augments, a => a != null && a.kind == AugmentKind.BoneBoomerang), "both cards registered");
                 Debug.Log("PASS: orbit 2 then +1, sprite slots, follow player, contact cooldown, bone outbound/return hits and moving-player catch, augment registration.");

@@ -308,6 +308,7 @@ namespace TakeUp.Prototype
 
         void Fire(Vector2 direction, bool spear)
         {
+            PlayAttackSound();
             var prefab = spear ? spearPrefab : stonePrefab;
             var renderer = prefab != null ? SpawnVisual(prefab, player.position) : Visual(spear ? "Spear" : "Stone", spear ? settings.spearSprite : settings.stoneSprite,
                 spear ? square : circle, spear ? settings.spearTint : settings.stoneTint,
@@ -452,6 +453,8 @@ namespace TakeUp.Prototype
         {
             if (State != RunState.Playing || invulnerability > 0 || dashRemaining > 0 || amount <= 0) return;
             Health = Mathf.Max(0, Health - amount); invulnerability = settings.hurtInvulnerability;
+            if (settings.hurtSound != null && skillAudio != null)
+                skillAudio.PlayOneShot(settings.hurtSound, settings.combatVolume);
             if (Health > 0 && StackCount(AugmentKind.ThornSkin) > 0) ReleaseThorns();
             if (Health <= 0) { State = RunState.Dead; hud.ShowEnd(false); }
         }
