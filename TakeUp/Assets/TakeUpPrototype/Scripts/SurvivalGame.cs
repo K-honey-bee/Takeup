@@ -88,6 +88,7 @@ namespace TakeUp.Prototype
                 settings.playerTint, Vector2.one * settings.playerSize, Vector2.zero, 10);
             player = playerRenderer.transform;
             playerColor = playerRenderer.color;
+            normalPlayerSprite = playerRenderer.sprite;
             if (worldCamera == null) worldCamera = Camera.main;
             worldCamera.orthographic = true;
             if (scenePlayer == null)
@@ -453,6 +454,13 @@ namespace TakeUp.Prototype
         {
             if (State != RunState.Playing || invulnerability > 0 || dashRemaining > 0 || amount <= 0) return;
             Health = Mathf.Max(0, Health - amount); invulnerability = settings.hurtInvulnerability;
+            if (settings.playerHurtSprite != null)
+            {
+                if (hurtSpriteRoutine != null)
+                    StopCoroutine(hurtSpriteRoutine);
+
+                hurtSpriteRoutine = StartCoroutine(ShowPlayerHurtSprite());
+            }
             if (settings.hurtSound != null && skillAudio != null)
                 skillAudio.PlayOneShot(settings.hurtSound, settings.combatVolume);
             if (Health > 0 && StackCount(AugmentKind.ThornSkin) > 0) ReleaseThorns();
@@ -533,6 +541,19 @@ namespace TakeUp.Prototype
         {
             CleanupSkills();
             foreach (var sprite in generatedSprites) if (sprite != null) { Destroy(sprite.texture); Destroy(sprite); }
+        }
+
+        Coroutine hurtSpriteRoutine;
+        Sprite normalPlayerSprite;
+
+        System.Collections.IEnumerator ShowPlayerHurtSprite()
+        {
+            playerRenderer.sprite = settings.playerHurtSprite;
+
+            yield return new WaitForSeconds(settings.hurtSpriteDuration);
+
+            playerRenderer.sprite = normalPlayerSprite;
+            hurtSpriteRoutine = null;
         }
     }
 }

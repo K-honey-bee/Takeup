@@ -13,11 +13,13 @@ MonoBehaviour:
   m_Name: PrehistoricSettings
   m_EditorClassIdentifier: Assembly-CSharp::TakeUp.Prototype.SurvivalSettings
   playerSprite: {fileID: 21300000, guid: 3a424d8b8b87545499634cd6dbd0f485, type: 3}
+  playerHurtSprite: {fileID: 21300000, guid: 11172d27378663a4e83178d88a53e313, type: 3}
+  hurtSpriteDuration: 0.2
   playerTint: {r: 0.97, g: 0.74, b: 0.35, a: 1}
   playerSize: 0.8
   maxHealth: 100
   moveSpeed: 6.69
-  hurtInvulnerability: 0.6
+  hurtInvulnerability: 1.5
   stoneSprite: {fileID: 2039115102, guid: 8172be07b434c144089e0c177248d59e, type: 3}
   stoneTint: {r: 0.85, g: 0.88, b: 0.86, a: 1}
   stoneDamage: 18
@@ -31,20 +33,20 @@ MonoBehaviour:
   spearInterval: 1.5
   spearSpeed: 16
   spearSize: {x: 1.8, y: 0.2}
-  experienceSprite: {fileID: 0}
+  experienceSprite: {fileID: 21300000, guid: 9bd162afeada3ca4f9fab05df5777d14, type: 3}
   experienceTint: {r: 0.3, g: 1, b: 0.7, a: 1}
   firstLevelExperience: 3
-  experienceGrowth: 20
-  pickupRadius: 2
+  experienceGrowth: 6
+  pickupRadius: 3
   pickupSpeed: 10
   groundSprite: {fileID: 21300000, guid: 2a62b3105cbee5d49b50384ab0aa24e0, type: 3}
   groundTint: {r: 1, g: 1, b: 1, a: 1}
   arenaHalfSize: {x: 32, y: 24}
   cameraSize: 9
   maxAliveEnemies: 100
-  waveDuration: 30
-  stageDuration: 180
-  initialSpawnInterval: 0.9
+  waveDuration: 40
+  stageDuration: 240
+  initialSpawnInterval: 0.8
   minimumSpawnInterval: 0.18
   spawnIntervalMultiplierPerWave: 0.78
   healthGrowthPerWave: 0.25
@@ -241,8 +243,9 @@ MonoBehaviour:
     amount: 1
     maxStacks: 1
   - title: "\uB9F4\uB3C4\uB294 \uB3C4\uAE68\uBE44\uBD88"
-    description: "3\uCD08 \uD68C\uC804 \uD6C4 \uBC14\uAE65\uC73C\uB85C \uB0A0\uC544\uAC00\uB294 \uBD88\uAF43
-      2\uAC1C \uC0DD\uC131\n\uCD94\uAC00 \uD68D\uB4DD\uB9C8\uB2E4 \uBD88\uAF43 +1\uAC1C"
+    description: "3\uCD08 \uD68C\uC804 \uD6C4 \uBC14\uAE65\uC73C\uB85C \uB0A0\uC544\uAC00\uB294
+      \uBD88\uAF43 2\uAC1C \uC0DD\uC131\n\uCD94\uAC00 \uD68D\uB4DD\uB9C8\uB2E4 \uBD88\uAF43
+      +1\uAC1C"
     icon: {fileID: -436976154, guid: 7692ee121465e91458f7aaaffc59ea98, type: 3}
     kind: 16
     amount: 1
@@ -259,6 +262,9 @@ MonoBehaviour:
   dashDuration: 0.18
   dashCooldown: 2
   dashSound: {fileID: 8300000, guid: 155e6f7c71ae84d41a23d9bc501237c0, type: 3}
+  attackSound: {fileID: 8300000, guid: be450934764ed5e498cd5b5176653f10, type: 3}
+  hurtSound: {fileID: 8300000, guid: be60d3302b5cdc74180481f8ac0099d4, type: 3}
+  combatVolume: 0.073
   dance:
     startUnlocked: 1
     sequence: 00000000010000000000000001000000000000000000000001000000
@@ -304,18 +310,22 @@ MonoBehaviour:
   orbitBone:
     orbitFireSprite: {fileID: 1924013442, guid: b29d52d19564c8a49a6e9a25d238acdd, type: 3}
     orbitFireTint: {r: 1, g: 1, b: 1, a: 1}
-    orbitFireSize: 0.7
-    orbitRadius: 2
+    orbitFireSize: 8
+    orbitRadius: 4
     orbitDegreesPerSecond: 150
     orbitDamage: 12
     orbitHitInterval: 0.3
+    orbitHoldDuration: 3
+    orbitLaunchSpeed: 7
+    orbitFlightDuration: 1.2
+    orbitRepeatDelay: 0.5
     boneSprite: {fileID: -1192711238, guid: b29d52d19564c8a49a6e9a25d238acdd, type: 3}
     boneTint: {r: 1, g: 1, b: 1, a: 1}
-    boneSize: {x: 0.8, y: 0.3}
+    boneSize: {x: 1.5, y: 0.8}
     boneDamage: 22
-    boneInterval: 1.4
+    boneInterval: 1
     boneDistance: 6
-    boneSpeed: 10
+    boneSpeed: 12
     boneReturnSpeed: 14
     boneSpinDegreesPerSecond: 720
   hitEffect:

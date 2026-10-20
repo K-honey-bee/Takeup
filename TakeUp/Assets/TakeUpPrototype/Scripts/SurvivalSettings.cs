@@ -8,6 +8,10 @@ namespace TakeUp.Prototype
     {
         [Header("플레이어 / Player")]
         public Sprite playerSprite;
+        [Header("플레이어 피격 이미지")]
+        public Sprite playerHurtSprite;
+        [Min(0.01f)] public float hurtSpriteDuration = 0.2f;
+
         public Color playerTint = new Color(0.97f, 0.74f, 0.35f);
         [Min(0.1f)] public float playerSize = 0.8f;
         [Min(1)] public float maxHealth = 100;
@@ -113,19 +117,24 @@ namespace TakeUp.Prototype
         [Min(.05f)] public float chargeRecovery = .55f;
         [Min(.1f)] public float chargeCooldown = 2.5f;
         public Color chargeWarningColor = new Color(.8f, .35f, 1);
+
         [Header("피격 밀림")]
         [Min(0)] public float knockbackDistance = .65f;
         [Min(.01f)] public float knockbackDuration = .16f;
+
         [Header("처치 애니메이션 / 시체")]
         [Tooltip("처치 스프라이트를 재생 순서대로 넣습니다. 비워두면 바로 시체로 전환합니다.")]
         public Sprite[] deathFrames;
         [Min(1)] public float deathFramesPerSecond = 12;
+
         [Tooltip("애니메이션 후 남는 시체 이미지. 비워두면 마지막 처치 프레임 또는 기존 이미지를 사용합니다.")]
         public Sprite corpseSprite;
         [Min(0)] public float corpseHoldTime = .5f;
         [Min(0)] public int corpseBlinkCount = 3;
         [Min(.02f)] public float corpseBlinkInterval = .1f;
     }
+
+
 
     public enum AugmentKind { Damage, AttackSpeed, MoveSpeed, MaxHealth, PickupRadius, ExtraStone, Spear, Regeneration, StompDance, FireDiscovery, FireDamage, FireDuration, FireSpread, FireDance, RicochetStone, ThornSkin, OrbitFire, BoneBoomerang }
 
@@ -151,12 +160,14 @@ namespace TakeUp.Prototype
         [Min(1)] public float radius = 14;
         [Min(1)] public float waveSpeed = 20;
         public Color shockwaveColor = new Color(1, 0.78f, 0.3f, 0.85f);
+
         [Header("이미지 / 비워 두면 기본 도형 사용")]
         public Sprite[] danceFrames;
         public Sprite shockwaveSprite;
         public Sprite leftArrow;
         public Sprite rightArrow;
         public Sprite panelSprite;
+
         [Header("오디오 / 비워 두면 임시 박자음 사용")]
         public AudioClip music;
         public AudioClip beatSound;
@@ -180,4 +191,8 @@ namespace TakeUp.Prototype
         public float amount = 0.2f;
         [Min(1)] public int maxStacks = 5;
     }
+
+
+
 }
+

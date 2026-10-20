@@ -365,10 +365,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TakeUp.Prototype.SceneLoader
   tips:
-  - image: {fileID: 0}
-    tip: 
+  - image: {fileID: 21300000, guid: 63183d95b030a0549884dd2abd06bb6a, type: 3}
+    tip: "TIP.\uBE68\uAC04 \uC720\uB839\uC740 \uC9D1\uC5D0\uC11C \uB9E8\uB0A0 \uC6B4\uB3D9\uB9CC
+      \uD55C\uB2E4\uACE0 \uD569\uB2C8\uB2E4"
+  - image: {fileID: 21300000, guid: 6185368468dc7e84ca6834793e1b2c1e, type: 3}
+    tip: "TIP. \uB178\uB780 \uBCC4\uC740 \uC7A0\uB9CC \uC790\uBA74 \uC5C4\uCCAD\uB09C
+      \uBBF8\uB140\uAC00 \uB41C\uB2E4\uACE0 \uD569\uB2C8\uB2E4."
+  - image: {fileID: 21300000, guid: c2006e6b3dab7bf46b7b377e2b2db7c8, type: 3}
+    tip: "TIP. \uAC01 \uBCF4\uC2A4\uB4E4\uC740 \uBBF8\uB9AC \uC0C9\uAE54\uC744 \uBCF4\uC5EC\uC918\uC694"
+  - image: {fileID: 21300000, guid: ab1431d78ec2c7c4fbc1284288831dfb, type: 3}
+    tip: "TIP. \uC544\uC9C1 \uC5F4\uC2EC\uD788 \uC81C\uC791\uC911 \uC785\uB2C8\uB2E4."
+  - image: {fileID: 21300000, guid: 75bebe05ecfcad04db23ed9bf380bdf0, type: 3}
+    tip: "TIP. \uC7A0\uC744 \uB108\uBB34 \uC624\uB798 \uC790\uBA74 \uD5C8\uB9AC\uAC00
+      \uC544\uD30C\uC694"
   fadeDuration: 0.2
-  minimumDisplayTime: 0.7
+  minimumDisplayTime: 3
   screenCanvas: {fileID: 5445611133022273478}
   screenGroup: {fileID: 5020601416971904054}
   blackBackground: {fileID: 4584749108786282998}

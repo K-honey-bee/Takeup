@@ -36,6 +36,11 @@ namespace TakeUp.Prototype
         public GameObject startButton;
         public AudioSource voiceSource;
         public VideoPlayer voiceVideo;
+        [Header("대화 종료 후 이미지 ")]
+        public GameObject storyEndImage;
+        [Min(0)]
+        public float endImageDuration = 2f;
+
 
         public bool Finished { get; private set; }
         public int CurrentLine => lineIndex;
@@ -63,6 +68,9 @@ namespace TakeUp.Prototype
             voiceVideo.errorReceived += VideoError;
             startButton.SetActive(false);
             dialoguePanel.SetActive(false);
+
+            if (storyEndImage != null)
+                storyEndImage.SetActive(false);
         }
 
         IEnumerator Start()
@@ -177,13 +185,18 @@ namespace TakeUp.Prototype
 
         void Finish()
         {
+            if (Finished) return;
+
             Finished = true;
             spaceHeld = 0;
             StopVoice();
             dialoguePanel.SetActive(false);
+
             // Revealing the button never invokes its click action.
-            if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(null);
-            startButton.SetActive(true);
+            if (EventSystem.current != null)
+                EventSystem.current.SetSelectedGameObject(null);
+
+            StartCoroutine(ShowEndingImage());
         }
 
         void OnDisable() { spaceHeld = 0; StopVoice(); }
@@ -195,6 +208,26 @@ namespace TakeUp.Prototype
                 voiceVideo.errorReceived -= VideoError;
             }
             if (runtimeFont != null) Destroy(runtimeFont);
+        }
+
+        IEnumerator ShowEndingImage()
+        {
+            startButton.SetActive(false);
+
+            if (storyEndImage != null)
+            {
+                storyEndImage.SetActive(true);
+
+                yield return new WaitForSecondsRealtime(endImageDuration);
+
+                storyEndImage.SetActive(false);
+            }
+
+            // 이미지 표시 중 선택된 UI가 있더라도 해제한다.
+            if (EventSystem.current != null)
+                EventSystem.current.SetSelectedGameObject(null);
+
+            startButton.SetActive(true);
         }
     }
 }
