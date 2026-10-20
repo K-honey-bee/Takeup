@@ -71,6 +71,7 @@ namespace TakeUp.Prototype
 
         void Start()
         {
+            PrepareBossPlayer();
             if (settings == null || settings.enemies == null || settings.enemies.Length == 0)
             {
                 Debug.LogError("TakeUp: SurvivalSettings와 몬스터 설정을 연결하세요.");
@@ -172,9 +173,12 @@ namespace TakeUp.Prototype
         void LateUpdate()
         {
             if (player == null || worldCamera == null) return;
+            worldCamera.transform.position -= bossShakeOffset;
+            bossShakeOffset = Vector3.zero;
             Vector3 target = player.position + cameraOffset;
             if (followPlayer) worldCamera.transform.position = Vector3.Lerp(worldCamera.transform.position, target, 1 - Mathf.Exp(-10 * Time.unscaledDeltaTime));
             UpdateSkillCamera();
+            ApplyBossShake();
         }
 
         public void MovePlayer(Vector2 input, float dt)
@@ -539,6 +543,8 @@ namespace TakeUp.Prototype
 
         void OnDestroy()
         {
+            if (worldCamera != null) worldCamera.transform.position -= bossShakeOffset;
+            if (runtimeBossSettings != null) Destroy(runtimeBossSettings);
             CleanupSkills();
             foreach (var sprite in generatedSprites) if (sprite != null) { Destroy(sprite.texture); Destroy(sprite); }
         }

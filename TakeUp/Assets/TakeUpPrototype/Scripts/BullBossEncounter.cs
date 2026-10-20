@@ -40,7 +40,11 @@ namespace TakeUp.Prototype
             Hide(); SetPhase(BullPhase.Intro, 2, "황소 · 충격파는 Shift 대시로 통과! 돌진은 흰 벽으로 유도하세요");
         }
         void SetPhase(BullPhase phase, float duration, string text)
-        { Phase = phase; Remaining = duration; instruction = text; Refresh(); }
+        {
+            if (phase == BullPhase.Shockwave || phase == BullPhase.Charge || phase == BullPhase.Stunned)
+                game.ShakeBossAttack();
+            Phase = phase; Remaining = duration; instruction = text; Refresh();
+        }
         void Refresh()
         {
             healthText.text = $"{DisplayName}  {Mathf.CeilToInt(Health)} / {MaximumHealth:0}";

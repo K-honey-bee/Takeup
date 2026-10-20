@@ -195,6 +195,7 @@ namespace TakeUp.Prototype
                 if (!strike.hit && strike.remaining <= 0)
                 {
                     strike.hit = true; strike.remaining = .28f;
+                    game.ShakeBossAttack();
                     strike.warning.gameObject.SetActive(false); strike.arm.gameObject.SetActive(true);
                     Vector2 delta = game.PlayerPosition - strike.center;
                     bool inside = strike.circular ? delta.magnitude <= strike.size.x * .5f + .3f
@@ -230,6 +231,7 @@ namespace TakeUp.Prototype
                 var bomb = inkBombs[i]; bomb.remaining -= dt;
                 Size(bomb.visual, Vector2.one * Mathf.Lerp(.65f, 1.5f, 1 - Mathf.Clamp01(bomb.remaining / settings.bombFuse)));
                 if (bomb.remaining > 0) continue;
+                game.ShakeBossAttack();
                 Vector2 point = bomb.visual.transform.position;
                 for (int shot = 0; shot < 8; shot++)
                 {

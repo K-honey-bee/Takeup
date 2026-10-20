@@ -9,6 +9,50 @@ namespace TakeUp.Prototype
         [Header("보스 씬 전용 / 생존 씬에서는 비움")]
         public OctopusBossEncounter bossEncounter;
         public BullBossEncounter bullEncounter;
+        [Tooltip("보스전에서도 사용할 일반 맵의 플레이어 설정입니다.")]
+        public SurvivalSettings bossPlayerSource;
+        [Min(0)] public float bossShakeStrength = .16f;
+        [Min(.01f)] public float bossShakeDuration = .18f;
+        SurvivalSettings runtimeBossSettings;
+        Vector3 bossShakeOffset;
+        float bossShakeRemaining;
+
+        void PrepareBossPlayer()
+        {
+            if (ActiveBoss == null) return;
+            var source = bossEntry != null ? bossEntry.playerSettings : bossPlayerSource;
+            if (source == null) return;
+            runtimeBossSettings = Instantiate(source);
+            runtimeBossSettings.arenaHalfSize = settings.arenaHalfSize;
+            runtimeBossSettings.cameraSize = settings.cameraSize;
+            runtimeBossSettings.groundSprite = settings.groundSprite;
+            runtimeBossSettings.groundTint = settings.groundTint;
+            settings = runtimeBossSettings;
+            if (scenePlayer != null && source.playerSprite != null)
+            {
+                scenePlayer.sprite = source.playerSprite;
+            }
+        }
+
+        public void ShakeBossAttack()
+        {
+            bossShakeRemaining = bossShakeDuration;
+        }
+
+        void ApplyBossShake()
+        {
+            if (State != RunState.Playing && State != RunState.Dancing)
+            {
+                bossShakeRemaining = 0;
+                return;
+            }
+            if (bossShakeRemaining <= 0) return;
+            bossShakeRemaining = Mathf.Max(0, bossShakeRemaining - Time.unscaledDeltaTime);
+            float strength = bossShakeStrength * bossShakeRemaining / Mathf.Max(.01f, bossShakeDuration);
+            float time = Time.unscaledTime * 45;
+            bossShakeOffset = new Vector3(Mathf.Sin(time), Mathf.Sin(time * 1.37f)) * strength;
+            worldCamera.transform.position += bossShakeOffset;
+        }
         public IBossEncounter ActiveBoss => bullEncounter != null ? (IBossEncounter)bullEncounter : bossEncounter;
         sealed class BossEntry
         {
@@ -16,6 +60,7 @@ namespace TakeUp.Prototype
             public float hp, maxHp, speed, damage, attackSpeed, pickup, regeneration;
             public bool spear;
             public OrbitBoneSettings orbitBone;
+            public SurvivalSettings playerSettings;
             public Dictionary<AugmentKind, int> stacks;
         }
         static BossEntry bossEntry;
@@ -44,7 +89,7 @@ namespace TakeUp.Prototype
             if (ActiveBoss != null || State != RunState.BossReady) return;
             bossEntry = new BossEntry { level = Level, kills = Kills, stones = stoneCount, hp = Health, maxHp = MaximumHealth,
                 speed = moveSpeed, damage = damageMultiplier, attackSpeed = attackSpeed, pickup = pickupRadius,
-                regeneration = regeneration, spear = HasSpear, orbitBone = settings.orbitBone, stacks = new Dictionary<AugmentKind, int>(stacks) };
+                regeneration = regeneration, spear = HasSpear, playerSettings = settings, orbitBone = settings.orbitBone, stacks = new Dictionary<AugmentKind, int>(stacks) };
             SceneLoader.Load("OctopusBossPrototype");
         }
 

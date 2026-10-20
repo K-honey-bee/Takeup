@@ -99,6 +99,7 @@ namespace TakeUp.Prototype
                     SetPhase(OctopusPhase.SlamImpact, .35f, "양쪽 촉수 내려치기!"); break;
                 case OctopusPhase.SlamImpact: Recover(); break;
                 case OctopusPhase.InkWarning:
+                    game.ShakeBossAttack();
                     AddInk(inkTarget); AddInk(inkTarget + new Vector2(-2.6f, .8f)); AddInk(inkTarget + new Vector2(2.6f, .8f));
                     Recover(); break;
                 case OctopusPhase.MemoryShow:
@@ -240,6 +241,9 @@ namespace TakeUp.Prototype
         void SetLights(int index) { for (int i = 0; i < colorLights.Length; i++) colorLights[i].color = i == index ? Colors[i] : Colors[i] * new Color(.25f, .25f, .25f, 1); }
         void SetPhase(OctopusPhase phase, float duration, string instruction)
         {
+            if (phase == OctopusPhase.Sweep || phase == OctopusPhase.SlamImpact ||
+                phase == OctopusPhase.MemoryBlast || phase == OctopusPhase.RageImpact ||
+                phase == OctopusPhase.FinaleImpact) game.ShakeBossAttack();
             Phase = phase; Remaining = duration; Instruction = instruction;
             if (ProtectedColorPhase || phase == OctopusPhase.Defeated) ClearMobileHazards();
         }

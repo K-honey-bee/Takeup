@@ -3329,6 +3329,9 @@ MonoBehaviour:
   bossEncounter: {fileID: 476413667}
   bullEncounter: {fileID: 0}
   settings: {fileID: 11400000, guid: 9cffc2c8cdebf014ca26a36e804703f1, type: 2}
+  bossPlayerSource: {fileID: 11400000, guid: 4c11db1808c8ab0449ae7559834f6c73, type: 2}
+  bossShakeStrength: 0.16
+  bossShakeDuration: 0.18
   worldCamera: {fileID: 2104950384}
   hud: {fileID: 476413664}
   scenePlayer: {fileID: 558926752}
