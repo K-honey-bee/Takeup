@@ -34,6 +34,9 @@ namespace TakeUp.Prototype
         public Image portraitImage;
         public Text speakerText, dialogueText, hintText;
         public GameObject startButton;
+        public bool playOnStart = true;
+        public string nextSceneAfterDialogue;
+        public event Action Completed;
         public AudioSource voiceSource;
         public VideoPlayer voiceVideo;
         [Header("대화 종료 후 이미지 ")]
@@ -76,7 +79,19 @@ namespace TakeUp.Prototype
         IEnumerator Start()
         {
             while (SceneLoader.IsLoading) yield return null;
+            if (!playOnStart) yield break;
             ready = true;
+            ShowLine(0);
+        }
+
+        public void PlayLines(StoryLine[] sequence)
+        {
+            StopAllCoroutines();
+            lines = sequence ?? Array.Empty<StoryLine>();
+            Finished = false;
+            ready = true;
+            spaceHeld = 0;
+            startButton.SetActive(false);
             ShowLine(0);
         }
 
@@ -196,7 +211,9 @@ namespace TakeUp.Prototype
             if (EventSystem.current != null)
                 EventSystem.current.SetSelectedGameObject(null);
 
-            StartCoroutine(ShowEndingImage());
+            if (Completed != null) Completed.Invoke();
+            else if (!string.IsNullOrEmpty(nextSceneAfterDialogue)) SceneLoader.Load(nextSceneAfterDialogue);
+            else StartCoroutine(ShowEndingImage());
         }
 
         void OnDisable() { spaceHeld = 0; StopVoice(); }

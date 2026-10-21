@@ -1466,6 +1466,8 @@ MonoBehaviour:
   dialogueText: {fileID: 1463596024}
   hintText: {fileID: 988739340}
   startButton: {fileID: 381009056}
+  playOnStart: 1
+  nextSceneAfterDialogue: DispatchTutorial
   voiceSource: {fileID: 2034717597}
   voiceVideo: {fileID: 2034717596}
   storyEndImage: {fileID: 0}
