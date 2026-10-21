@@ -97,6 +97,7 @@ namespace TakeUp.Prototype
         public static void InstallAndBuild()
         {
             Install();
+            DispatchLayoutMigration.Apply();
             var report=BuildPipeline.BuildPlayer(new BuildPlayerOptions {
                 scenes=new[] {Path,"Assets/TakeUpPrototype/Scenes/PrehistoricPrototype.unity","Assets/TakeUpPrototype/Scenes/OctopusBossPrototype.unity"},
                 locationPathName="Builds/DispatchValidation/TakeUpDispatch.exe", target=BuildTarget.StandaloneWindows64,options=BuildOptions.Development

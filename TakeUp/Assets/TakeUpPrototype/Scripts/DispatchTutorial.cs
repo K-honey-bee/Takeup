@@ -10,8 +10,9 @@ namespace TakeUp.Prototype
     public sealed class DispatchTutorial : MonoBehaviour
     {
         public enum Step { Office, Pan, SimulationIntro, Move, Attack, Dash, Mission, Coffin, Arrival, Loading }
-        [Header("이미지 / 비워 두면 임시 도형 표시")]
+        [HideInInspector]
         public Sprite officeImage, dispatchRoomImage, simulationImage, playerImage, jaeheeImage, coffinImage;
+        [Header("설명 그림 / 배경과 캐릭터는 Hierarchy의 Sprite Renderer에서 편집")]
         public Sprite movementGuide, attackGuide, dashGuide, missionImage;
         public Sprite[] joseonImages = Array.Empty<Sprite>();
         [Header("추가 대사 / 음성과 초상화도 각 줄에 연결 가능")]
@@ -21,22 +22,29 @@ namespace TakeUp.Prototype
         [Min(.1f)] public float coffinDropDuration = 1, ascentDuration = 1.2f, arrivalImageDuration = 2;
         [Min(.1f)] public float moveSpeed = 5, dashDistance = 3, dashDuration = .18f;
         [Min(1)] public int requiredHits = 3;
+        [Min(.01f)] public float goalRadius = .8f, targetRadius = .7f;
+        [Min(.01f)] public float shotInterval = .22f, shotSpeed = 12, shotLifetime = 2;
         public string gameScene = "PrehistoricPrototype";
         [Header("씬 연결")]
         public Camera sceneCamera;
         public StoryDialogue dialogue;
         public SpriteRenderer office, room, player, jaehee, coffin, target, goal;
+        public SpriteRenderer simulation, projectileTemplate;
+        [Header("Hierarchy의 배치 지점 / Scene에서 이동 도구로 조절")]
+        public Transform officeCameraPoint, roomCameraPoint;
+        public Transform playerTrainingPoint, jaeheeRoomPoint, playerMissionPoint;
+        public Transform coffinStartPoint, coffinDockPoint, coffinExitPoint;
+        public Transform trainingMinPoint, trainingMaxPoint;
+        [HideInInspector] public bool editableLayoutInstalled;
         public Image guide, arrival;
         public Text instruction;
         public Button departButton;
         public Step CurrentStep { get; private set; }
         public int TargetHits { get; private set; }
-        public Vector3 OfficeCameraPosition = new Vector3(0, 0, -10);
-        public Vector3 RoomCameraPosition = new Vector3(24, 0, -10);
+        [HideInInspector] public Vector3 OfficeCameraPosition = new Vector3(0, 0, -10);
+        [HideInInspector] public Vector3 RoomCameraPosition = new Vector3(24, 0, -10);
         readonly List<Projectile> shots = new List<Projectile>();
         sealed class Projectile { public GameObject visual; public Vector2 direction; public float life = 2; }
-        Sprite placeholder;
-        Texture2D placeholderTexture;
         float fireClock, dashRemaining;
         Vector2 dashDirection, moveDirection = Vector2.right;
         bool dialogueDone;
@@ -45,17 +53,8 @@ namespace TakeUp.Prototype
         {
             instruction.font = dialogue.speakerText.font;
             departButton.GetComponentInChildren<Text>(true).font = dialogue.speakerText.font;
-            placeholderTexture = new Texture2D(1, 1);
-            placeholderTexture.SetPixel(0, 0, Color.white); placeholderTexture.Apply();
-            placeholder = Sprite.Create(placeholderTexture, new Rect(0, 0, 1, 1), Vector2.one * .5f, 1);
-            Paint(office, officeImage, new Vector2(22, 12), new Color(.85f, .8f, .74f));
-            Paint(room, dispatchRoomImage, new Vector2(22, 12), new Color(.32f, .42f, .47f));
-            Paint(player, playerImage, Vector2.one * .9f, new Color(.5f, .95f, .85f));
-            Paint(jaehee, jaeheeImage, Vector2.one, new Color(1, .85f, .35f));
-            Paint(coffin, coffinImage, new Vector2(1.7f, 2.8f), new Color(.35f, .22f, .3f));
-            Paint(goal, null, Vector2.one * 1.3f, new Color(.3f, .9f, .7f, .5f));
-            Paint(target, null, Vector2.one * 1.2f, new Color(1, .4f, .4f));
-            sceneCamera.transform.position = OfficeCameraPosition;
+            sceneCamera.transform.position = officeCameraPoint.position;
+            simulation.gameObject.SetActive(false); projectileTemplate.gameObject.SetActive(false);
             coffin.gameObject.SetActive(false); goal.gameObject.SetActive(false); target.gameObject.SetActive(false);
             guide.gameObject.SetActive(false); arrival.gameObject.SetActive(false); departButton.gameObject.SetActive(false);
             dialogue.Completed += DialogueCompleted;
@@ -66,14 +65,6 @@ namespace TakeUp.Prototype
                 StartCoroutine(SmokeTest());
         }
 
-        void Paint(SpriteRenderer renderer, Sprite sprite, Vector2 size, Color fallback)
-        {
-            renderer.sprite = sprite != null ? sprite : placeholder;
-            renderer.color = sprite != null ? Color.white : fallback;
-            Vector2 bounds = renderer.sprite.bounds.size;
-            float scale = Mathf.Min(size.x / Mathf.Max(.001f, bounds.x), size.y / Mathf.Max(.001f, bounds.y));
-            renderer.transform.localScale = sprite != null ? Vector3.one * scale : new Vector3(size.x, size.y, 1);
-        }
         void DialogueCompleted() { dialogueDone = true; }
         IEnumerator Say(StoryLine[] lines)
         {
@@ -87,27 +78,27 @@ namespace TakeUp.Prototype
             instruction.text = "출동 준비실";
             yield return Say(officeLines);
             CurrentStep = Step.Pan;
-            yield return Slide(sceneCamera.transform, OfficeCameraPosition, RoomCameraPosition, panDuration);
-            player.transform.position = new Vector3(21, -2, 0);
-            jaehee.transform.position = new Vector3(26, -2, 0);
+            yield return Slide(sceneCamera.transform, sceneCamera.transform.position, roomCameraPoint.position, panDuration);
+            player.transform.position = playerTrainingPoint.position;
+            jaehee.transform.position = jaeheeRoomPoint.position;
             CurrentStep = Step.SimulationIntro;
             yield return Say(simulationLines);
-            if (simulationImage != null) Paint(room, simulationImage, new Vector2(22, 12), Color.white);
+            room.gameObject.SetActive(false); simulation.gameObject.SetActive(true);
             jaehee.gameObject.SetActive(false);
             CurrentStep = Step.Move;
             ShowGuide(movementGuide, "WASD로 초록색 표시까지 이동하세요");
-            goal.transform.position = new Vector3(27, 1, 0); goal.gameObject.SetActive(true);
+            goal.gameObject.SetActive(true);
             while (CurrentStep == Step.Move) yield return null;
             goal.gameObject.SetActive(false);
             ShowGuide(attackGuide, $"마우스로 빨간 표적을 조준하고 좌클릭을 꾹 누르세요 · 0/{requiredHits}");
-            target.transform.position = new Vector3(28, 1, 0); target.gameObject.SetActive(true);
+            target.gameObject.SetActive(true);
             while (CurrentStep == Step.Attack) yield return null;
             ClearShots(); target.gameObject.SetActive(false);
             ShowGuide(dashGuide, "WASD로 방향을 잡고 Shift로 대시하세요");
             while (CurrentStep == Step.Dash) yield return null;
             guide.gameObject.SetActive(false); instruction.text = "훈련 완료 · 임무 안내";
-            Paint(room, dispatchRoomImage, new Vector2(22, 12), new Color(.32f, .42f, .47f));
-            player.transform.position = new Vector3(23, -2, 0);
+            simulation.gameObject.SetActive(false); room.gameObject.SetActive(true);
+            player.transform.position = playerMissionPoint.position;
             jaehee.gameObject.SetActive(true);
             ShowGuide(missionImage, "조선 균열 조사 임무");
             yield return Say(missionLines);
@@ -116,7 +107,7 @@ namespace TakeUp.Prototype
         }
         void ShowGuide(Sprite sprite, string text)
         {
-            guide.sprite = sprite; guide.preserveAspect = true;
+            guide.sprite = sprite;
             guide.gameObject.SetActive(sprite != null); instruction.text = text;
         }
         void Update()
@@ -152,13 +143,14 @@ namespace TakeUp.Prototype
             if (CurrentStep != Step.Move && CurrentStep != Step.Attack && CurrentStep != Step.Dash) return;
             if (input.sqrMagnitude > .01f) moveDirection = input.normalized;
             if (dashRemaining <= 0) MoveClamped(Vector2.ClampMagnitude(input, 1) * moveSpeed * dt);
-            if (CurrentStep == Step.Move && Vector2.Distance(player.transform.position, goal.transform.position) < .8f)
+            if (CurrentStep == Step.Move && Vector2.Distance(player.transform.position, goal.transform.position) < goalRadius)
                 CurrentStep = Step.Attack;
         }
         void MoveClamped(Vector2 delta)
         {
             Vector3 p = player.transform.position + (Vector3)delta;
-            p.x = Mathf.Clamp(p.x, 15, 33); p.y = Mathf.Clamp(p.y, -4, 2.5f);
+            p.x = Mathf.Clamp(p.x, Mathf.Min(trainingMinPoint.position.x, trainingMaxPoint.position.x), Mathf.Max(trainingMinPoint.position.x, trainingMaxPoint.position.x));
+            p.y = Mathf.Clamp(p.y, Mathf.Min(trainingMinPoint.position.y, trainingMaxPoint.position.y), Mathf.Max(trainingMinPoint.position.y, trainingMaxPoint.position.y));
             player.transform.position = p;
         }
         public void FireAt(Vector2 aim)
@@ -166,21 +158,19 @@ namespace TakeUp.Prototype
             if (CurrentStep != Step.Attack || fireClock > 0) return;
             Vector2 delta = aim - (Vector2)player.transform.position;
             if (delta.sqrMagnitude < .001f) return;
-            fireClock = .22f;
-            var shot = new GameObject("Simulation projectile", typeof(SpriteRenderer));
-            shot.transform.SetParent(transform); shot.transform.position = player.transform.position;
-            var sr = shot.GetComponent<SpriteRenderer>(); sr.sprite = placeholder; sr.color = Color.white; sr.sortingOrder = 12;
-            shot.transform.localScale = Vector3.one * .18f;
-            shots.Add(new Projectile { visual = shot, direction = delta.normalized });
+            fireClock = shotInterval;
+            var shot = Instantiate(projectileTemplate, player.transform.position, projectileTemplate.transform.rotation, transform);
+            shot.gameObject.SetActive(true);
+            shots.Add(new Projectile { visual = shot.gameObject, direction = delta.normalized, life = shotLifetime });
         }
         void TickProjectiles(float dt)
         {
             for (int i = shots.Count - 1; i >= 0; i--)
             {
                 var shot = shots[i]; Vector2 from = shot.visual.transform.position;
-                Vector2 to = from + shot.direction * (12 * dt);
+                Vector2 to = from + shot.direction * (shotSpeed * dt);
                 shot.visual.transform.position = to; shot.life -= dt;
-                bool hit = CurrentStep == Step.Attack && OctopusBossEncounter.SegmentDistance(target.transform.position, from, to) < .7f;
+                bool hit = CurrentStep == Step.Attack && OctopusBossEncounter.SegmentDistance(target.transform.position, from, to) < targetRadius;
                 if (hit)
                 {
                     TargetHits++;
@@ -205,21 +195,20 @@ namespace TakeUp.Prototype
         {
             instruction.text = "전송 장치 연결 중…";
             coffin.gameObject.SetActive(true);
-            Vector3 dock = new Vector3(24, 1.4f, 0);
-            yield return Slide(coffin.transform, new Vector3(24, 10, 0), dock, coffinDropDuration);
+            Vector3 dock = coffinDockPoint.position;
+            yield return Slide(coffin.transform, coffinStartPoint.position, dock, coffinDropDuration);
             player.gameObject.SetActive(true);
             yield return Slide(player.transform, player.transform.position, dock, ascentDuration);
             player.gameObject.SetActive(false);
-            yield return Slide(coffin.transform, dock, new Vector3(24, 11, 0), ascentDuration);
+            yield return Slide(coffin.transform, dock, coffinExitPoint.position, ascentDuration);
             CurrentStep = Step.Arrival; instruction.text = "조선 · 시간 균열 발생 지역";
             arrival.gameObject.SetActive(true);
-            arrival.color = joseonImages.Length > 0 && joseonImages[0] != null ? Color.white : new Color(.13f, .2f, .23f);
-            arrival.sprite = joseonImages.Length > 0 ? joseonImages[0] : null;
+            if (joseonImages.Length > 0 && joseonImages[0] != null) arrival.sprite = joseonImages[0];
             yield return Say(arrivalLines);
             foreach (var sprite in joseonImages)
             {
                 if (sprite == null) continue;
-                arrival.sprite = sprite; arrival.color = Color.white;
+                arrival.sprite = sprite;
                 yield return new WaitForSecondsRealtime(arrivalImageDuration);
             }
             if (joseonImages.Length == 0) yield return new WaitForSecondsRealtime(arrivalImageDuration);
@@ -242,8 +231,19 @@ namespace TakeUp.Prototype
         {
             if (dialogue != null) dialogue.Completed -= DialogueCompleted;
             ClearShots();
-            if (placeholder != null) Destroy(placeholder);
-            if (placeholderTexture != null) Destroy(placeholderTexture);
+        }
+        void OnDrawGizmosSelected()
+        {
+            Gizmos.color = Color.green;
+            if (goal != null) Gizmos.DrawWireSphere(goal.transform.position, goalRadius);
+            Gizmos.color = Color.red;
+            if (target != null) Gizmos.DrawWireSphere(target.transform.position, targetRadius);
+            Gizmos.color = Color.cyan;
+            if (trainingMinPoint != null && trainingMaxPoint != null)
+                Gizmos.DrawWireCube((trainingMinPoint.position + trainingMaxPoint.position) * .5f, new Vector3(Mathf.Abs(trainingMaxPoint.position.x-trainingMinPoint.position.x),Mathf.Abs(trainingMaxPoint.position.y-trainingMinPoint.position.y),0));
+            if (officeCameraPoint != null && roomCameraPoint != null) Gizmos.DrawLine(officeCameraPoint.position, roomCameraPoint.position);
+            if (coffinStartPoint != null && coffinDockPoint != null && coffinExitPoint != null)
+            { Gizmos.DrawLine(coffinStartPoint.position, coffinDockPoint.position); Gizmos.DrawLine(coffinDockPoint.position, coffinExitPoint.position); }
         }
         IEnumerator SmokeTest()
         {
