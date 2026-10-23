@@ -1064,7 +1064,7 @@ MonoBehaviour:
   shotInterval: 0.22
   shotSpeed: 12
   shotLifetime: 2
-  gameScene: PrehistoricPrototype
+  gameScene: JoseonWaveOne
   sceneCamera: {fileID: 2007469168}
   dialogue: {fileID: 455784997}
   office: {fileID: 1481689781}
