@@ -72,7 +72,7 @@ namespace TakeUp.Prototype
             Fill(healthFill, game.Health / game.MaximumHealth);
             Fill(xpFill, (float)game.Experience / game.RequiredExperience);
             Fill(stageFill, game.ActiveBoss != null ? 1 - game.ActiveBoss.Health / game.ActiveBoss.MaximumHealth : game.Elapsed / game.settings.stageDuration);
-            equipment.text = $"돌팔매  ·  {(game.HasSpear ? "영창 장착" : "영창 미해금")}     |     균열 탐색 {game.settings.stageDuration:0}초";
+            equipment.text = $"{game.WeaponLabel}  ·  {(game.HasSpear ? "영창 장착" : "영창 미해금")}     |     균열 탐색 {game.settings.stageDuration:0}초";
             RefreshSkillHud();
         }
 

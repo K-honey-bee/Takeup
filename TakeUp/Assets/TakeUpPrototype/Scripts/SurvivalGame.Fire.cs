@@ -55,6 +55,7 @@ namespace TakeUp.Prototype
         public bool CanOfferAugment(AugmentDefinition augment)
         {
             if (augment == null || StackCount(augment.kind) >= augment.maxStacks) return false;
+            if (!WeaponAllows(augment.kind)) return false;
             switch (augment.kind)
             {
                 case AugmentKind.FireDamage: case AugmentKind.FireDuration: case AugmentKind.FireSpread: return HasFire;

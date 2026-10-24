@@ -136,7 +136,7 @@ namespace TakeUp.Prototype
 
 
 
-    public enum AugmentKind { Damage, AttackSpeed, MoveSpeed, MaxHealth, PickupRadius, ExtraStone, Spear, Regeneration, StompDance, FireDiscovery, FireDamage, FireDuration, FireSpread, FireDance, RicochetStone, ThornSkin, OrbitFire, BoneBoomerang }
+    public enum AugmentKind { Damage, AttackSpeed, MoveSpeed, MaxHealth, PickupRadius, ExtraStone, Spear, Regeneration, StompDance, FireDiscovery, FireDamage, FireDuration, FireSpread, FireDance, RicochetStone, ThornSkin, OrbitFire, BoneBoomerang, SwordReach, SwordDouble, SwordWave, SwordEcho, SwordSpin, SwordOverload }
 
     public enum BeatDirection { Left, Right }
 

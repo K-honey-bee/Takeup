@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 namespace TakeUp.Prototype
 {
-    public enum RunState { Playing, ChoosingAugment, Paused, Dead, BossReady, Dancing, Codex }
+    public enum RunState { Playing, ChoosingAugment, Paused, Dead, BossReady, Dancing, Codex, ChoosingWeapon }
 
     public sealed partial class SurvivalGame : MonoBehaviour
     {
@@ -79,6 +79,7 @@ namespace TakeUp.Prototype
                 return;
             }
             circle = MakeSprite(0); diamond = MakeSprite(1); square = MakeSprite(2);
+            InitializeWeaponSettings();
             world = runtimeRoot;
             if (world == null) { world = new GameObject("Runtime World").transform; world.SetParent(transform); }
             MaximumHealth = Health = settings.maxHealth;
@@ -110,6 +111,9 @@ namespace TakeUp.Prototype
             InitializeSkills();
             InitializeOrbitBone();
             InitializeBossMode();
+            BeginWeaponSelection();
+            if (System.Array.IndexOf(System.Environment.GetCommandLineArgs(), "--takeup-weapon-smoke") >= 0)
+                gameObject.AddComponent<WeaponSmokeTest>().game = this;
             if (System.Array.IndexOf(System.Environment.GetCommandLineArgs(), "--takeup-boss-transition") >= 0)
                 gameObject.AddComponent<BossTransitionSmokeTest>().game = this;
             smokeMode = System.Array.IndexOf(System.Environment.GetCommandLineArgs(), "--takeup-smoke") >= 0;
@@ -125,6 +129,12 @@ namespace TakeUp.Prototype
         void Update()
         {
             var keyboard = Keyboard.current;
+            if (State == RunState.ChoosingWeapon)
+            {
+                if (keyboard != null && keyboard.digit1Key.wasPressedThisFrame) SelectWeapon(StartingWeapon.Sword);
+                else if (keyboard != null && keyboard.digit2Key.wasPressedThisFrame) SelectWeapon(StartingWeapon.Stone);
+                return;
+            }
             if (keyboard != null && keyboard.escapeKey.wasPressedThisFrame) TogglePause();
             if (keyboard != null && keyboard.tabKey.wasPressedThisFrame) ToggleCodex();
             if (State == RunState.ChoosingAugment && keyboard != null)
@@ -164,6 +174,7 @@ namespace TakeUp.Prototype
             TickEnemies(dt);
             if (State != RunState.Playing) return;
             TickWeapons(dt);
+            TickSwordEffects(dt);
             TickOrbitBone(dt);
             TickShots(dt);
             TickGems(dt);
@@ -301,8 +312,9 @@ namespace TakeUp.Prototype
             }
             if (stoneTimer <= 0)
             {
-                stoneTimer = settings.stoneInterval / attackSpeed;
-                for (int i = 0; i < stoneCount; i++)
+                stoneTimer = (SelectedWeapon == StartingWeapon.Sword ? .55f : settings.stoneInterval) / attackSpeed;
+                if (SelectedWeapon == StartingWeapon.Sword) SwingSword(direction);
+                else for (int i = 0; i < stoneCount; i++)
                 {
                     Vector2 spread = Quaternion.Euler(0, 0, (i - (stoneCount - 1) * 0.5f) * 12) * direction;
                     Fire(spread, false);
@@ -543,6 +555,7 @@ namespace TakeUp.Prototype
 
         void OnDestroy()
         {
+            if (runtimeWeaponSettings != null) Destroy(runtimeWeaponSettings);
             if (worldCamera != null) worldCamera.transform.position -= bossShakeOffset;
             if (runtimeBossSettings != null) Destroy(runtimeBossSettings);
             CleanupSkills();

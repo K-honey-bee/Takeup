@@ -89,7 +89,8 @@ namespace TakeUp.Prototype
             ClearContent(codexContent);
             Label(content, "증강 도감  /  이번 플레이의 획득 현황", 28, gold, new Vector2(0, 12), new Vector2(850, 46));
             Button(content, "닫기 [Tab]", new Vector2(875, 12), new Vector2(185, 42), game.ToggleCodex);
-            var entries = game.settings.augments ?? System.Array.Empty<AugmentDefinition>();
+            var entries = System.Array.FindAll(game.settings.augments ?? System.Array.Empty<AugmentDefinition>(),
+                a => a != null && game.WeaponAllows(a.kind));
             int pages = Mathf.Max(1, Mathf.CeilToInt(entries.Length / 6f));
             codexPage = Mathf.Clamp(codexPage, 0, pages - 1);
             for (int i = 0; i < 6; i++)

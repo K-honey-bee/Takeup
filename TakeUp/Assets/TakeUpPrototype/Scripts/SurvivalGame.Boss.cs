@@ -59,6 +59,7 @@ namespace TakeUp.Prototype
             public int level, kills, stones;
             public float hp, maxHp, speed, damage, attackSpeed, pickup, regeneration;
             public bool spear;
+            public StartingWeapon weapon;
             public OrbitBoneSettings orbitBone;
             public SurvivalSettings playerSettings;
             public Dictionary<AugmentKind, int> stacks;
@@ -71,6 +72,7 @@ namespace TakeUp.Prototype
             if (bossEntry != null)
             {
                 Level = bossEntry.level; Kills = bossEntry.kills; stoneCount = bossEntry.stones;
+                SelectedWeapon = bossEntry.weapon;
                 MaximumHealth = bossEntry.maxHp; Health = bossEntry.hp; moveSpeed = bossEntry.speed;
                 damageMultiplier = bossEntry.damage; attackSpeed = bossEntry.attackSpeed;
                 pickupRadius = bossEntry.pickup; regeneration = bossEntry.regeneration; HasSpear = bossEntry.spear;
@@ -89,7 +91,7 @@ namespace TakeUp.Prototype
             if (ActiveBoss != null || State != RunState.BossReady) return;
             bossEntry = new BossEntry { level = Level, kills = Kills, stones = stoneCount, hp = Health, maxHp = MaximumHealth,
                 speed = moveSpeed, damage = damageMultiplier, attackSpeed = attackSpeed, pickup = pickupRadius,
-                regeneration = regeneration, spear = HasSpear, playerSettings = settings, orbitBone = settings.orbitBone, stacks = new Dictionary<AugmentKind, int>(stacks) };
+                regeneration = regeneration, spear = HasSpear, weapon = SelectedWeapon, playerSettings = weaponSourceSettings, orbitBone = settings.orbitBone, stacks = new Dictionary<AugmentKind, int>(stacks) };
             SceneLoader.Load("OctopusBossPrototype");
         }
 
