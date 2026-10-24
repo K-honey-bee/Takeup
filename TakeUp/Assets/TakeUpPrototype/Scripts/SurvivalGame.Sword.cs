@@ -27,6 +27,7 @@ namespace TakeUp.Prototype
             weaponSourceSettings = bossEntry != null && bossEntry.playerSettings != null ? bossEntry.playerSettings : settings;
             runtimeWeaponSettings = Instantiate(settings);
             settings = runtimeWeaponSettings;
+            if (settings.instantSlash == null) settings.instantSlash = new InstantSlashSettings();
             var cards = new List<AugmentDefinition>();
             foreach (var card in settings.augments ?? System.Array.Empty<AugmentDefinition>())
             {
@@ -40,6 +41,7 @@ namespace TakeUp.Prototype
             Add(AugmentKind.SwordEcho, "잔류 참격", "[검] 베었던 자리에 0.35초 후\n50% 피해의 잔류 참격", 1);
             Add(AugmentKind.SwordSpin, "회전 칼날", "[검] 기본 공격 4회마다\n주변 전체에 100% 피해", 1);
             Add(AugmentKind.SwordOverload, "과부하 발도", "[검] 기본 공격 5회마다\n전방 장거리 참격 · 250% 피해", 1);
+            Add(AugmentKind.InstantSlash, "순간베기", "[검 · Q] 시간을 멈추고 낙하물을 베기\n성공: 화면 안 일반 적 처치 · 보스에 큰 피해", 1);
             foreach (var card in cards)
             {
                 if (card.kind == AugmentKind.Damage) { card.title = "무기 출력 강화"; card.description = "무기 피해량 +" + Mathf.RoundToInt(card.amount * 100) + "%"; }
@@ -65,6 +67,16 @@ namespace TakeUp.Prototype
         {
             if (State != RunState.ChoosingWeapon || (weapon != StartingWeapon.Stone && weapon != StartingWeapon.Sword)) return;
             SelectedWeapon = weapon;
+            if (weapon == StartingWeapon.Sword)
+            {
+                stacks.Remove(AugmentKind.StompDance);
+                if (settings.instantSlash.startUnlocked) stacks[AugmentKind.InstantSlash] = 1;
+            }
+            else
+            {
+                stacks.Remove(AugmentKind.InstantSlash);
+                if (settings.dance.startUnlocked) stacks[AugmentKind.StompDance] = 1;
+            }
             stoneTimer = 0;
             State = RunState.Playing;
             hud.HideOverlay();
@@ -73,6 +85,8 @@ namespace TakeUp.Prototype
 
         public bool WeaponAllows(AugmentKind kind)
         {
+            if (kind == AugmentKind.InstantSlash) return SelectedWeapon == StartingWeapon.Sword;
+            if (kind == AugmentKind.StompDance || kind == AugmentKind.FireDance) return SelectedWeapon == StartingWeapon.Stone;
             if (kind >= AugmentKind.SwordReach && kind <= AugmentKind.SwordOverload) return SelectedWeapon == StartingWeapon.Sword;
             if (kind == AugmentKind.ExtraStone || kind == AugmentKind.RicochetStone) return SelectedWeapon == StartingWeapon.Stone;
             return true;

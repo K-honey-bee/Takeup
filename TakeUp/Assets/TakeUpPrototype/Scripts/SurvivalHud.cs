@@ -50,7 +50,7 @@ namespace TakeUp.Prototype
             equipment = Label(header, "", 15, new Color(0.7f, 0.78f, 0.76f), new Vector2(460, -50), new Vector2(740, 28));
             stageFill = Bar(header, "Stage", new Vector2(460, -86), new Vector2(740, 5), gold);
             var footer = Panel(root, "Controls", ink, Vector2.zero, new Vector2(1, 0), new Vector2(18, 16), new Vector2(-18, 58));
-            Label(footer, "WASD 이동 · Shift 대시 · Q 벽사무 · 춤: A/D 또는 ←/→ · Tab 증강 · ESC 정지", 16,
+            Label(footer, "WASD 이동 · Shift 대시 · Q 무기 스킬 · 좌클릭 공격 / 드래그 베기 · Tab 증강 · ESC 정지", 16,
                 new Color(0.75f, 0.81f, 0.79f), new Vector2(20, -6), new Vector2(1200, 30));
             overlay = Panel(root, "Overlay", new Color(0.015f, 0.03f, 0.03f, 0.92f), Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
             choiceContent = ContentRoot("Augment Choices");
@@ -74,6 +74,7 @@ namespace TakeUp.Prototype
             Fill(stageFill, game.ActiveBoss != null ? 1 - game.ActiveBoss.Health / game.ActiveBoss.MaximumHealth : game.Elapsed / game.settings.stageDuration);
             equipment.text = $"{game.WeaponLabel}  ·  {(game.HasSpear ? "영창 장착" : "영창 미해금")}     |     균열 탐색 {game.settings.stageDuration:0}초";
             RefreshSkillHud();
+            RefreshInstantSlashHud();
         }
 
         public void ShowChoices()

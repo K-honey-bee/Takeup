@@ -76,7 +76,7 @@ namespace TakeUp.Prototype
         public bool StartDance()
         {
             var config = settings.dance;
-            if (State != RunState.Playing || !HasDance || DanceCooldown > 0 || dashRemaining > 0
+            if (SelectedWeapon != StartingWeapon.Stone || State != RunState.Playing || !HasDance || DanceCooldown > 0 || dashRemaining > 0
                 || config.sequence == null || config.sequence.Length == 0) return false;
             DanceJudge = new RhythmJudge(config.sequence, config.firstBeatTime, config.bpm, config.hitWindow);
             DanceResolved = DanceSucceeded = false;
@@ -194,6 +194,7 @@ namespace TakeUp.Prototype
 
         void TickSkills(float dt)
         {
+            InstantSlashCooldown = Mathf.Max(0, InstantSlashCooldown - dt);
             DanceCooldown = Mathf.Max(0, DanceCooldown - dt);
             DashCooldown = Mathf.Max(0, DashCooldown - dt);
             TickShockwaves(dt);

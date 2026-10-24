@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 namespace TakeUp.Prototype
 {
-    public enum RunState { Playing, ChoosingAugment, Paused, Dead, BossReady, Dancing, Codex, ChoosingWeapon }
+    public enum RunState { Playing, ChoosingAugment, Paused, Dead, BossReady, Dancing, Codex, ChoosingWeapon, InstantSlashing }
 
     public sealed partial class SurvivalGame : MonoBehaviour
     {
@@ -114,6 +114,8 @@ namespace TakeUp.Prototype
             BeginWeaponSelection();
             if (System.Array.IndexOf(System.Environment.GetCommandLineArgs(), "--takeup-weapon-smoke") >= 0)
                 gameObject.AddComponent<WeaponSmokeTest>().game = this;
+            if (System.Array.IndexOf(System.Environment.GetCommandLineArgs(), "--takeup-instant-smoke") >= 0)
+                gameObject.AddComponent<InstantSlashSmokeTest>().game = this;
             if (System.Array.IndexOf(System.Environment.GetCommandLineArgs(), "--takeup-boss-transition") >= 0)
                 gameObject.AddComponent<BossTransitionSmokeTest>().game = this;
             smokeMode = System.Array.IndexOf(System.Environment.GetCommandLineArgs(), "--takeup-smoke") >= 0;
@@ -146,11 +148,12 @@ namespace TakeUp.Prototype
             if (State == RunState.Playing || State == RunState.Dancing)
                 TickHitEffects(Mathf.Min(Time.deltaTime, .05f));
             if (State == RunState.Dancing) { TickDance(Time.unscaledDeltaTime); return; }
+            if (State == RunState.InstantSlashing) { TickInstantSlash(Time.unscaledDeltaTime); return; }
             if (State != RunState.Playing) return;
             float dt = Mathf.Min(Time.deltaTime, 0.05f);
             TickEnemyDeaths(dt);
             TickSkills(dt);
-            if (keyboard != null && keyboard.qKey.wasPressedThisFrame && StartDance()) return;
+            if (keyboard != null && keyboard.qKey.wasPressedThisFrame && StartWeaponSkill()) return;
             Elapsed += dt;
             invulnerability = Mathf.Max(0, invulnerability - dt);
             Health = Mathf.Min(MaximumHealth, Health + regeneration * dt);
@@ -186,6 +189,7 @@ namespace TakeUp.Prototype
             if (player == null || worldCamera == null) return;
             worldCamera.transform.position -= bossShakeOffset;
             bossShakeOffset = Vector3.zero;
+            if (State == RunState.InstantSlashing || (State == RunState.Paused && pausedState == RunState.InstantSlashing)) return;
             Vector3 target = player.position + cameraOffset;
             if (followPlayer) worldCamera.transform.position = Vector3.Lerp(worldCamera.transform.position, target, 1 - Mathf.Exp(-10 * Time.unscaledDeltaTime));
             UpdateSkillCamera();
@@ -486,13 +490,15 @@ namespace TakeUp.Prototype
         public void TogglePause()
         {
             if (State == RunState.Codex) { ToggleCodex(); return; }
-            if (State == RunState.Playing || State == RunState.Dancing)
+            if (State == RunState.Playing || State == RunState.Dancing || State == RunState.InstantSlashing)
             {
+                if (State == RunState.InstantSlashing) PauseInstantEffects(true);
                 pausedState = State; PauseSkillAudio(); State = RunState.Paused; hud.ShowPause();
             }
             else if (State == RunState.Paused)
             {
                 State = pausedState; ResumeSkillAudio(); hud.HideOverlay();
+                if (State == RunState.InstantSlashing) PauseInstantEffects(false);
             }
         }
 
@@ -555,6 +561,7 @@ namespace TakeUp.Prototype
 
         void OnDestroy()
         {
+            CleanupInstantSlash();
             if (runtimeWeaponSettings != null) Destroy(runtimeWeaponSettings);
             if (worldCamera != null) worldCamera.transform.position -= bossShakeOffset;
             if (runtimeBossSettings != null) Destroy(runtimeBossSettings);

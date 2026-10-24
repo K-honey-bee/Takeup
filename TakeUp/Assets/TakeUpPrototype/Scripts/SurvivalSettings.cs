@@ -67,6 +67,8 @@ namespace TakeUp.Prototype
         [Range(0, 1)] public float combatVolume = .8f;
         [Header("전설 스킬 / 벽사무")]
         public StompDanceSettings dance = new StompDanceSettings();
+        [Header("검 전용 Q / 순간베기")]
+        public InstantSlashSettings instantSlash = new InstantSlashSettings();
         [Header("불 증강 / 화상") ]
         public FireSettings fire = new FireSettings();
         [Header("조선 균열 증강 / 돌과 가시")]
@@ -136,7 +138,7 @@ namespace TakeUp.Prototype
 
 
 
-    public enum AugmentKind { Damage, AttackSpeed, MoveSpeed, MaxHealth, PickupRadius, ExtraStone, Spear, Regeneration, StompDance, FireDiscovery, FireDamage, FireDuration, FireSpread, FireDance, RicochetStone, ThornSkin, OrbitFire, BoneBoomerang, SwordReach, SwordDouble, SwordWave, SwordEcho, SwordSpin, SwordOverload }
+    public enum AugmentKind { Damage, AttackSpeed, MoveSpeed, MaxHealth, PickupRadius, ExtraStone, Spear, Regeneration, StompDance, FireDiscovery, FireDamage, FireDuration, FireSpread, FireDance, RicochetStone, ThornSkin, OrbitFire, BoneBoomerang, SwordReach, SwordDouble, SwordWave, SwordEcho, SwordSpin, SwordOverload, InstantSlash }
 
     public enum BeatDirection { Left, Right }
 

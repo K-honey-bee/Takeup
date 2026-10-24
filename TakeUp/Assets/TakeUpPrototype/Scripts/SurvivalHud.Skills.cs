@@ -34,7 +34,9 @@ namespace TakeUp.Prototype
         {
             string dash = game.DashCooldown > 0 ? $"{game.DashCooldown:0.0}초" : "준비";
             string dance = !game.HasDance ? "미획득" : game.DanceCooldown > 0 ? $"{game.DanceCooldown:0.0}초" : "준비";
-            equipment.text = $"돌{(game.HasSpear ? " + 창" : "")}    Shift 대시 {dash}    Q 벽사무 {dance}";
+            bool sword = game.SelectedWeapon == StartingWeapon.Sword;
+            string slash = !game.HasInstantSlash ? "미획득" : game.InstantSlashCooldown > 0 ? $"{game.InstantSlashCooldown:0.0}초" : "준비";
+            equipment.text = $"{game.WeaponLabel}    Shift 대시 {dash}    Q {(sword ? "순간베기 " + slash : "벽사무 " + dance)}";
             bool visible = game.State == RunState.Dancing;
             dancePanel.gameObject.SetActive(visible);
             if (!visible || game.DanceJudge == null) return;
