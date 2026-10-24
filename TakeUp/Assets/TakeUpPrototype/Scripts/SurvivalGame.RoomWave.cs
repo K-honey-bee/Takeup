@@ -42,7 +42,7 @@ namespace TakeUp.Prototype
                 Rect trigger = room.bounds;
                 // Match the wall half-thickness + collision radius. A wider inset lets
                 // players skirt the perimeter and bypass the encounter trigger.
-                float inset = Mathf.Max(playerRenderer.bounds.extents.x, playerRenderer.bounds.extents.y) + .25f;
+                float inset = roomPlayerMoveRadius + 0.25f;
                 trigger.xMin += inset; trigger.xMax -= inset; trigger.yMin += inset; trigger.yMax -= inset;
                 if (room.enemyCount > 0 && !room.entered && trigger.Contains(player.position))
                 {
