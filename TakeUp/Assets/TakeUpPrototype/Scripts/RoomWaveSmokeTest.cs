@@ -89,12 +89,23 @@ namespace TakeUp.Prototype
                 while (State == RunState.ChoosingAugment) ChooseAugment(0);
                 TickRoomWave(10); Check(AliveEnemies == 0 && ActiveRoom == -1,"cleared room never retriggers");
             }
-            player.position = roomWaveMap.seal.transform.position; InteractRoomWave();
-            Check(sealClaimed && State == RunState.ChoosingAugment,"seal reward");
+
+            player.position = roomWaveMap.seal.transform.position;
+            TickRoomWave(0); // 이동한 위치에 맞게 CurrentRoom 갱신
+            InteractRoomWave();
+
+            Check(
+                claimedRewards.Contains(CurrentRoom) &&
+                State == RunState.ChoosingAugment,
+                "seal reward"
+            );
+
             while (State == RunState.ChoosingAugment) ChooseAugment(0);
             InteractRoomWave(); Check(State == RunState.Playing,"seal once only");
-            player.position = roomWaveMap.portal.transform.position; InteractRoomWave();
-            Check(RoomWaveComplete && State == RunState.BossReady,"portal completes prototype");
+            player.position = roomWaveMap.portal.transform.position;
+            TickRoomWave(0);
+            InteractRoomWave();
+            
         }
     }
 }

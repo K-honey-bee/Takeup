@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -5,106 +6,313 @@ namespace TakeUp.Prototype
 {
     public sealed partial class SurvivalGame
     {
-        [Header("1웨이브 방 탐험 / 전용 씬에서 연결")]
+        [Header("방 탐험 맵")]
         public RoomWaveMap roomWaveMap;
+
         public bool RoomWaveActive => roomWaveMap != null;
         public bool RoomWaveComplete { get; private set; }
         public int CurrentRoom { get; private set; }
         public int ActiveRoom { get; private set; } = -1;
+
         int roomSpawned;
         float roomSpawnClock;
-        bool sealClaimed;
-        public int RoomRemaining => ActiveRoom < 0 ? 0 : roomWaveMap.rooms[ActiveRoom].enemyCount - roomSpawned + enemies.Count;
-        public float RoomProgress => !RoomWaveActive ? 0 : ((roomWaveMap.rooms[1].cleared ? 1 : 0) + (roomWaveMap.rooms[2].cleared ? 1 : 0)) / 2f;
+
+        readonly HashSet<int> claimedRewards = new HashSet<int>();
+
         public string RoomInstruction { get; private set; }
+
+        public int RoomRemaining => ActiveRoom < 0
+            ? 0
+            : Mathf.Max(
+                0,
+                roomWaveMap.rooms[ActiveRoom].enemyCount
+                - roomSpawned + enemies.Count
+            );
+
+        string RoomType(int index)
+        {
+            var loader = roomWaveMap.GetComponent<JsonRoomMapLoader>();
+
+            if (loader != null && loader.RoomTypes != null)
+                return loader.RoomTypes[index];
+
+            // 기존 6개 방 조선 맵도 사용할 수 있도록 유지합니다.
+            switch (index)
+            {
+                case 0: return "start";
+                case 3: return "exit";
+                case 4: return "optional";
+                case 5: return "reward";
+                default: return "combat";
+            }
+        }
+
+        public float RoomProgress
+        {
+            get
+            {
+                if (!RoomWaveActive) return 0;
+
+                int required = 0;
+                int cleared = 0;
+
+                for (int i = 0; i < roomWaveMap.rooms.Length; i++)
+                {
+                    if (RoomType(i) != "combat") continue;
+
+                    required++;
+
+                    if (roomWaveMap.rooms[i].cleared)
+                        cleared++;
+                }
+
+                return required == 0 ? 1f : (float)cleared / required;
+            }
+        }
 
         void InitializeRoomWave()
         {
             if (!RoomWaveActive) return;
+
+            RoomWaveComplete = false;
+            ActiveRoom = -1;
+            claimedRewards.Clear();
+
             roomWaveMap.SetGates(false);
-            foreach (var room in roomWaveMap.rooms) { room.entered = false; room.cleared = false; }
-            player.position = roomWaveMap.rooms[0].bounds.center;
-            cameraOffset = new Vector3(0,0,-10);
+
+            foreach (var room in roomWaveMap.rooms)
+            {
+                room.entered = false;
+                room.cleared = room.enemyCount <= 0;
+            }
+
+            CurrentRoom = 0;
+
+            for (int i = 0; i < roomWaveMap.rooms.Length; i++)
+            {
+                if (RoomType(i) != "start") continue;
+                CurrentRoom = i;
+                break;
+            }
+
+            player.position = roomWaveMap.rooms[CurrentRoom].bounds.center;
+
+            cameraOffset = new Vector3(0, 0, -10);
             worldCamera.transform.position = player.position + cameraOffset;
             followPlayer = true;
-            RoomInstruction = "아래 마을길로 이동 · 마우스 조준 / 좌클릭 공격";
+
+            RoomInstruction = "방을 탐색하세요 · 좌클릭 공격";
         }
 
         void TickRoomWave(float dt)
         {
             if (RoomWaveComplete) return;
+
             for (int i = 0; i < roomWaveMap.rooms.Length; i++)
-                if (roomWaveMap.rooms[i].bounds.Contains(player.position)) CurrentRoom = i;
+            {
+                if (roomWaveMap.rooms[i].bounds.Contains(player.position))
+                    CurrentRoom = i;
+            }
+
             if (ActiveRoom < 0)
             {
                 var room = roomWaveMap.rooms[CurrentRoom];
-                // Close only once the whole player is safely inside, not in the doorway.
+                string type = RoomType(CurrentRoom);
+
                 Rect trigger = room.bounds;
-                // Match the wall half-thickness + collision radius. A wider inset lets
-                // players skirt the perimeter and bypass the encounter trigger.
-                float inset = roomPlayerMoveRadius + 0.25f;
-                trigger.xMin += inset; trigger.xMax -= inset; trigger.yMin += inset; trigger.yMax -= inset;
-                if (room.enemyCount > 0 && !room.entered && trigger.Contains(player.position))
+
+                // 이동 반경 0.4 + 문 두께 여유.
+                const float inset = .65f;
+                trigger.xMin += inset;
+                trigger.xMax -= inset;
+                trigger.yMin += inset;
+                trigger.yMax -= inset;
+
+                bool combat = type == "combat" || type == "optional";
+
+                if (combat &&
+                    room.enemyCount > 0 &&
+                    !room.entered &&
+                    trigger.Contains(player.position))
                 {
-                    room.entered = true; ActiveRoom = CurrentRoom; roomSpawned = 0;
+                    room.entered = true;
+                    ActiveRoom = CurrentRoom;
+                    roomSpawned = 0;
                     roomSpawnClock = roomWaveMap.warningDuration;
+
                     roomWaveMap.SetGates(true);
-                    // Clear old projectiles so they cannot hit a new encounter before it starts.
-                    foreach (var shot in shots) Destroy(shot.body.gameObject);
+
+                    foreach (var shot in shots)
+                        Destroy(shot.body.gameObject);
+
                     shots.Clear();
                 }
             }
+
             if (ActiveRoom >= 0)
             {
                 var room = roomWaveMap.rooms[ActiveRoom];
-                RoomInstruction = $"{room.title} · 출입구 봉쇄 · 남은 적 {RoomRemaining} (등장 대기 포함)";
+
+                RoomInstruction =
+                    $"{room.title} · 남은 적 {RoomRemaining}";
+
                 roomSpawnClock -= dt;
-                if (roomSpawned < room.enemyCount && roomSpawnClock <= 0 && enemies.Count < Mathf.Max(1,settings.maxAliveEnemies))
+
+                if (roomSpawned < room.enemyCount &&
+                    roomSpawnClock <= 0 &&
+                    enemies.Count < Mathf.Max(1, settings.maxAliveEnemies))
                 {
-                    var type = settings.enemies[roomSpawned % settings.enemies.Length];
-                    if (type == null) type = settings.enemies[0];
-                    Vector2 c = room.bounds.center;
-                    // Open rectangular arenas need no pathfinding; spawn on a safe inner ring.
-                    Vector2 position = c;
-                    float best = -1;
+                    if (settings.enemies == null ||
+                        settings.enemies.Length == 0)
+                    {
+                        RoomInstruction = "Settings에 적 종류를 연결하세요.";
+                        return;
+                    }
+
+                    var type =
+                        settings.enemies[roomSpawned % settings.enemies.Length];
+
+                    if (type == null)
+                    {
+                        foreach (var candidateType in settings.enemies)
+                        {
+                            if (candidateType == null) continue;
+                            type = candidateType;
+                            break;
+                        }
+                    }
+
+                    if (type == null)
+                    {
+                        RoomInstruction = "Settings에 유효한 적 종류가 없습니다.";
+                        return;
+                    }
+
+                    Vector2 center = room.bounds.center;
+                    Vector2 spawn = center;
+                    float bestDistance = -1;
+
+                    float radiusX = Mathf.Max(0, room.bounds.width / 2 - 3);
+                    float radiusY = Mathf.Max(0, room.bounds.height / 2 - 3);
+
                     for (int j = 0; j < 12; j++)
                     {
-                        float angle = (j + roomSpawned * .37f) * Mathf.PI * 2 / 12;
-                        Vector2 candidate = c + new Vector2(Mathf.Cos(angle)*6,Mathf.Sin(angle)*3.5f);
-                        float distance = ((Vector2)player.position-candidate).sqrMagnitude;
-                        if (distance > best) { best = distance; position = candidate; }
+                        float angle =
+                            (j + roomSpawned * .37f) * Mathf.PI * 2 / 12;
+
+                        Vector2 candidate = center + new Vector2(
+                            Mathf.Cos(angle) * radiusX,
+                            Mathf.Sin(angle) * radiusY
+                        );
+
+                        float distance =
+                            ((Vector2)player.position - candidate).sqrMagnitude;
+
+                        if (distance <= bestDistance) continue;
+
+                        bestDistance = distance;
+                        spawn = candidate;
                     }
-                    SpawnEnemy(type,position); roomSpawned++;
-                    roomSpawnClock = Mathf.Max(.1f,roomWaveMap.spawnInterval);
+
+                    SpawnEnemy(type, spawn);
+                    roomSpawned++;
+                    roomSpawnClock = Mathf.Max(.1f, roomWaveMap.spawnInterval);
                 }
-                if (roomSpawned == room.enemyCount && enemies.Count == 0)
+
+                if (roomSpawned >= room.enemyCount && enemies.Count == 0)
                 {
-                    room.cleared = true; ActiveRoom = -1; roomWaveMap.SetGates(false);
-                    RoomInstruction = "전투 완료 · 출입구 개방 · 증강을 고르고 탐색하세요";
-                    PendingChoices++; OfferAugments();
+                    room.cleared = true;
+                    ActiveRoom = -1;
+                    roomWaveMap.SetGates(false);
+
+                    RoomInstruction = "전투 완료 · 증강을 선택하세요";
+                    PendingChoices++;
+                    OfferAugments();
                 }
+
                 return;
             }
+
             bool ready = RoomProgress >= 1;
-            roomWaveMap.portal.color = ready ? new Color(.3f,1,.85f) : new Color(.25f,.35f,.4f);
-            RoomInstruction = CurrentRoom == 0 ? "조선 도착 · 아래 마을길로 이동 · 좌클릭 공격" :
-                CurrentRoom == 3 ? ready ? "[E] 포탈 조사 · 1웨이브 완료" : "마을길과 포탈 수비대의 적을 모두 처치하세요" :
-                CurrentRoom == 5 ? sealClaimed ? "봉인석 복구 완료 · 포탈로 돌아가세요" : "[E] 봉인석 복구 · 체력 회복 + 증강 1회" :
-                "오른쪽: 포탈 경로 / 아래: 선택 전투와 봉인석 · 정리한 방은 안전합니다";
-            if (Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame) InteractRoomWave();
+
+            if (roomWaveMap.portal != null)
+            {
+                roomWaveMap.portal.color = ready
+                    ? new Color(.3f, 1, .85f)
+                    : new Color(.25f, .35f, .4f);
+            }
+
+            string currentType = RoomType(CurrentRoom);
+
+            if (currentType == "exit" || currentType == "boss")
+            {
+                RoomInstruction = ready
+                    ? "[E] 포탈 사용"
+                    : "필수 전투 방을 모두 정리하세요";
+            }
+            else if (currentType == "reward")
+            {
+                RoomInstruction = claimedRewards.Contains(CurrentRoom)
+                    ? "보상 획득 완료"
+                    : "방 중앙에서 [E] · 회복 + 증강";
+            }
+            else
+            {
+                RoomInstruction =
+                    $"필수 전투 진행 {RoomProgress:P0} · 방을 탐색하세요";
+            }
+
+            if (Keyboard.current != null &&
+                Keyboard.current.eKey.wasPressedThisFrame)
+            {
+                InteractRoomWave();
+            }
         }
+
         public void InteractRoomWave()
         {
-            if (!RoomWaveActive || State != RunState.Playing || ActiveRoom >= 0 || RoomWaveComplete) return;
-            if (Vector2.Distance(player.position,roomWaveMap.seal.transform.position) < 2.5f && roomWaveMap.rooms[4].cleared && !sealClaimed)
+            if (!RoomWaveActive ||
+                State != RunState.Playing ||
+                ActiveRoom >= 0 ||
+                RoomWaveComplete)
             {
-                sealClaimed = true; roomWaveMap.seal.color = new Color(.4f,.8f,.8f);
-                Health = Mathf.Min(MaximumHealth,Health + MaximumHealth * .35f);
-                PendingChoices++; OfferAugments();
+                return;
             }
-            else if (Vector2.Distance(player.position,roomWaveMap.portal.transform.position) < 2.5f && RoomProgress >= 1)
+
+            var room = roomWaveMap.rooms[CurrentRoom];
+            string type = RoomType(CurrentRoom);
+
+            bool inside = room.bounds.Contains(player.position);
+
+            if (inside &&
+                type == "reward" &&
+                !claimedRewards.Contains(CurrentRoom) &&
+                Vector2.Distance(player.position, room.bounds.center) < 2.5f)
             {
-                RoomWaveComplete = true; State = RunState.BossReady; hud.ShowEnd(true);
+                claimedRewards.Add(CurrentRoom);
+
+                Health = Mathf.Min(
+                    MaximumHealth,
+                    Health + MaximumHealth * .35f
+                );
+
+                PendingChoices++;
+                OfferAugments();
+                return;
+            }
+
+            if (inside &&
+                (type == "exit" || type == "boss") &&
+                roomWaveMap.portal != null &&
+                RoomProgress >= 1 &&
+                Vector2.Distance(
+                    player.position,
+                    roomWaveMap.portal.transform.position
+                ) < 2.5f)
+            {
+                RoomWaveComplete = true;
+                State = RunState.BossReady;
+                hud.ShowEnd(true);
             }
         }
     }

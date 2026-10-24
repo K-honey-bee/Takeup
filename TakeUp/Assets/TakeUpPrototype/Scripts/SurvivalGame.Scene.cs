@@ -31,7 +31,7 @@ namespace TakeUp.Prototype
             float right = eastBoundary != null ? eastBoundary.position.x : settings.arenaHalfSize.x;
             float bottom = southBoundary != null ? southBoundary.position.y : -settings.arenaHalfSize.y;
             float top = northBoundary != null ? northBoundary.position.y : settings.arenaHalfSize.y;
-            Vector2 margin = RoomWaveActive ? Vector2.one * roomPlayerMoveRadius : (Vector2)playerRenderer.bounds.extents;
+            Vector2 margin = RoomWaveActive ? Vector2.one * 0.4f : (Vector2)playerRenderer.bounds.extents;
             position.x = right - left <= margin.x * 2 ? (left + right) * 0.5f : Mathf.Clamp(position.x, left + margin.x, right - margin.x);
             position.y = top - bottom <= margin.y * 2 ? (top + bottom) * 0.5f : Mathf.Clamp(position.y, bottom + margin.y, top - margin.y);
             if (ActiveBoss != null) position = ActiveBoss.ConstrainMovement(player.position, position, Mathf.Max(margin.x, margin.y));
