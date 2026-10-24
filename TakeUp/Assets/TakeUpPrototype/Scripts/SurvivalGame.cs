@@ -21,7 +21,7 @@ namespace TakeUp.Prototype
         public float Health { get; private set; }
         public float MaximumHealth { get; private set; }
         public float Elapsed { get; private set; }
-        public int Wave => RoomWaveActive ? 1 : 1 + Mathf.FloorToInt(Elapsed / settings.waveDuration);
+        public int Wave => 1 + Mathf.FloorToInt(Elapsed / settings.waveDuration);
         public int AliveEnemies => enemies.Count;
         public int PendingChoices { get; private set; }
         public bool HasSpear { get; private set; }
@@ -110,7 +110,6 @@ namespace TakeUp.Prototype
             InitializeSkills();
             InitializeOrbitBone();
             InitializeBossMode();
-            InitializeRoomWave();
             if (System.Array.IndexOf(System.Environment.GetCommandLineArgs(), "--takeup-boss-transition") >= 0)
                 gameObject.AddComponent<BossTransitionSmokeTest>().game = this;
             smokeMode = System.Array.IndexOf(System.Environment.GetCommandLineArgs(), "--takeup-smoke") >= 0;
@@ -160,7 +159,6 @@ namespace TakeUp.Prototype
             if (dashRemaining > 0) TickDash(dt); else MovePlayer(input, dt);
             playerRenderer.color = invulnerability > 0 ? Color.Lerp(playerColor, Color.white, 0.65f) : playerColor;
             if (ActiveBoss != null) ActiveBoss.Tick(dt);
-            else if (RoomWaveActive) TickRoomWave(dt);
             else TickSpawner(dt);
             TickBurns(dt);
             TickEnemies(dt);
@@ -169,7 +167,7 @@ namespace TakeUp.Prototype
             TickOrbitBone(dt);
             TickShots(dt);
             TickGems(dt);
-            if (!RoomWaveActive && ActiveBoss == null && State == RunState.Playing && Elapsed >= settings.stageDuration) FinishStage();
+            if (ActiveBoss == null && State == RunState.Playing && Elapsed >= settings.stageDuration) FinishStage();
         }
 
         void LateUpdate()

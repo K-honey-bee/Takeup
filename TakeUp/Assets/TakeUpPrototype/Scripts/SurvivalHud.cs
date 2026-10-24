@@ -73,11 +73,6 @@ namespace TakeUp.Prototype
             Fill(xpFill, (float)game.Experience / game.RequiredExperience);
             Fill(stageFill, game.ActiveBoss != null ? 1 - game.ActiveBoss.Health / game.ActiveBoss.MaximumHealth : game.Elapsed / game.settings.stageDuration);
             equipment.text = $"돌팔매  ·  {(game.HasSpear ? "영창 장착" : "영창 미해금")}     |     균열 탐색 {game.settings.stageDuration:0}초";
-            if (game.RoomWaveActive)
-            {
-                equipment.text = game.RoomInstruction;
-                Fill(stageFill, game.RoomProgress);
-            }
             RefreshSkillHud();
         }
 
@@ -118,14 +113,6 @@ namespace TakeUp.Prototype
         public void ShowEnd(bool success)
         {
             ClearContent(success ? victoryContent : defeatContent);
-            if (success && game.RoomWaveComplete)
-            {
-                Label(content, "1웨이브 · 조선 현장 정리 완료", 36, gold, new Vector2(0,-45), new Vector2(1060,70), TextAnchor.MiddleCenter);
-                Label(content, $"레벨 {game.Level} · 처치 {game.Kills} · 탐색 {game.Elapsed:0}초",24,Color.white,new Vector2(0,-130),new Vector2(1060,50),TextAnchor.MiddleCenter);
-                Label(content, "1웨이브 플레이 테스트가 끝났습니다.\n2~7웨이브와 보스 연결은 후속 제작 예정입니다.",22,Color.white,new Vector2(0,-210),new Vector2(1060,100),TextAnchor.MiddleCenter);
-                Button(content,"1웨이브 다시 시작",new Vector2(350,-350),new Vector2(360,60),game.Restart);
-                return;
-            }
             bool bossFight = game.ActiveBoss != null;
             Label(content, success ? (bossFight ? game.ActiveBoss.DisplayName + " 처치 완료!" : "균열 중심 발견  ·  보스 진입 준비") : "이번 파견은 여기까지", 36, gold,
                 new Vector2(0, -45), new Vector2(1060, 70), TextAnchor.MiddleCenter);
